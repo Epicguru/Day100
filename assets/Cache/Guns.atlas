@@ -1,0 +1,34 @@
+
+Guns.png
+size: 512,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+AK-47
+  rotate: false
+  xy: 2, 2
+  size: 245, 74
+  orig: 245, 74
+  offset: 0, 0
+  index: -1
+Flash
+  rotate: false
+  xy: 2, 78
+  size: 320, 9
+  orig: 320, 9
+  offset: 0, 0
+  index: -1
+Glock
+  rotate: false
+  xy: 328, 35
+  size: 112, 52
+  orig: 112, 52
+  offset: 0, 0
+  index: -1
+Revolver
+  rotate: false
+  xy: 249, 23
+  size: 77, 53
+  orig: 77, 53
+  offset: 0, 0
+  index: -1

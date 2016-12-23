@@ -1,0 +1,150 @@
+
+UI.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Box
+  rotate: false
+  xy: 973, 474
+  size: 34, 34
+  split: 10, 10, 10, 10
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+Confirm
+  rotate: false
+  xy: 757, 169
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Cover
+  rotate: false
+  xy: 757, 308
+  size: 150, 200
+  orig: 150, 200
+  offset: 0, 0
+  index: -1
+DevCross
+  rotate: false
+  xy: 909, 446
+  size: 62, 62
+  orig: 62, 62
+  offset: 0, 0
+  index: -1
+Exit
+  rotate: false
+  xy: 828, 240
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Ground
+  rotate: false
+  xy: 909, 346
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Gun
+  rotate: false
+  xy: 757, 135
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+InnerBox
+  rotate: false
+  xy: 943, 418
+  size: 26, 26
+  split: 6, 6, 6, 6
+  orig: 26, 26
+  offset: 0, 0
+  index: -1
+Loading
+  rotate: false
+  xy: 2, 2
+  size: 309, 86
+  orig: 309, 86
+  offset: 0, 0
+  index: -1
+LoadingBarGreen
+  rotate: false
+  xy: 313, 23
+  size: 215, 65
+  split: 37, 36, 32, 32
+  orig: 215, 65
+  offset: 0, 0
+  index: -1
+LoadingBarRed
+  rotate: false
+  xy: 530, 23
+  size: 215, 65
+  split: 37, 36, 32, 32
+  orig: 215, 65
+  offset: 0, 0
+  index: -1
+New
+  rotate: false
+  xy: 757, 203
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+ObjectBox
+  rotate: false
+  xy: 757, 237
+  size: 69, 69
+  orig: 69, 69
+  offset: 0, 0
+  index: -1
+Physics
+  rotate: false
+  xy: 909, 312
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Pixel
+  rotate: false
+  xy: 313, 20
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+Refresh
+  rotate: false
+  xy: 757, 101
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Right
+  rotate: false
+  xy: 828, 274
+  size: 64, 32
+  orig: 64, 32
+  offset: 0, 0
+  index: -1
+Run
+  rotate: false
+  xy: 791, 169
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Title
+  rotate: false
+  xy: 2, 90
+  size: 753, 418
+  orig: 753, 418
+  offset: 0, 0
+  index: -1
+Up
+  rotate: false
+  xy: 909, 380
+  size: 32, 64
+  orig: 32, 64
+  offset: 0, 0
+  index: -1

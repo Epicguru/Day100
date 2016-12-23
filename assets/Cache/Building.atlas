@@ -1,0 +1,48 @@
+
+Building.png
+size: 512,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Wood_BG
+  rotate: false
+  xy: 2, 14
+  size: 128, 16
+  orig: 128, 16
+  offset: 0, 0
+  index: -1
+Wood_Base
+  rotate: false
+  xy: 2, 2
+  size: 64, 10
+  orig: 64, 10
+  offset: 0, 0
+  index: -1
+Wood_Base_Connected
+  rotate: false
+  xy: 68, 2
+  size: 64, 10
+  orig: 64, 10
+  offset: 0, 0
+  index: -1
+Wood_Base_Connected_Left
+  rotate: false
+  xy: 132, 20
+  size: 64, 10
+  orig: 64, 10
+  offset: 0, 0
+  index: -1
+Wood_Base_Connected_Right
+  rotate: false
+  xy: 198, 20
+  size: 64, 10
+  orig: 64, 10
+  offset: 0, 0
+  index: -1
+Wood_Base_Disconnected
+  rotate: false
+  xy: 264, 20
+  size: 64, 10
+  orig: 64, 10
+  offset: 0, 0
+  index: -1
