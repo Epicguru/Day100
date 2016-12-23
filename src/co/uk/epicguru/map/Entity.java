@@ -129,7 +129,7 @@ public class Entity {
 	 * Gets the name of the entity, as well as it's health and max health.
 	 */
 	public String toString(){
-		return getName() + " : " + health + "/" + startHealth + "hp";
+		return getName() + " : " + body == null ? "" : body.getPosition() + " (" + health + "/" + startHealth + "hp)";
 	}
 	
 	/**

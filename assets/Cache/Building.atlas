@@ -60,10 +60,10 @@ Wood_Beam
   orig: 16, 64
   offset: 0, 0
   index: -1
-Wood_Beam
+Wood_Beam-2
   rotate: false
   xy: 20, 20
   size: 16, 64
   orig: 16, 64
   offset: 0, 0
-  index: 2
+  index: -1

@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
-import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.instances.WoodenFloor;
 
 public class BuildingManager {
@@ -42,14 +41,18 @@ public class BuildingManager {
 		if(placingObject instanceof BuildingFloor){
 			((BuildingFloor)placingObject).cancelPlace();
 		}
+		if(placingObject instanceof BuildingBeam){
+			((BuildingBeam)placingObject).cancelPlace();
+		}
 		placingObject = null;
 	}
 
 	public static void update(float delta){
 
-		if(placing == true){
+		if(placing == false){
 			if(placingObject == null){
-				placingObject = new WoodenFloor(new Vector2(Input.getMouseWorldX(), 0));
+				placingObject = new WoodenFloor(new Vector2(Input.getMouseWorldX(), 0));					
+				//placingObject = new WoodenBeam(new Vector2(Input.getMouseWorldX(), 0));					
 			}else{
 				// Do nothing, already set.
 			}
@@ -68,6 +71,11 @@ public class BuildingManager {
 					getSnapPosition(Input.getMouseWorldPos(), placed, true);
 					floor.place(new Vector2(snapValue.a));
 				}
+				if(placingObject instanceof BuildingBeam){
+					BuildingBeam beam = (BuildingBeam)placingObject;
+					getSnapPosition(Input.getMouseWorldPos(), placed, true);
+					beam.place(new Vector2(snapValue.a));
+				}
 				placingObject = null;
 			}
 		}		
@@ -79,6 +87,11 @@ public class BuildingManager {
 				// Get snap position
 				getSnapPosition(Input.getMouseWorldPos(), placed, false);
 				((BuildingFloor)placingObject).ghostRender(batch, snapValue.a, snapValue.b);
+			}
+			if(placingObject instanceof BuildingBeam){
+				// Get snap position
+				getSnapPosition(Input.getMouseWorldPos(), placed, false);
+				((BuildingBeam)placingObject).ghostRender(batch, snapValue.a, snapValue.b);
 			}
 		}
 	}
@@ -92,8 +105,8 @@ public class BuildingManager {
 			snapValue = new ObjectPair<Vector2, Boolean>(Vector2.Zero, false);
 		}
 
-		// TODO collision detection
 		// Get snap values...
+		// FLOOR
 		if(placingObject instanceof BuildingFloor){
 			// FLOOR
 			boolean foundEdge = false;
@@ -108,28 +121,40 @@ public class BuildingManager {
 						float leftSide = object.body.getPosition().x - halfWidth;
 						float placingWidth = placingObject.texture.getRegionWidth() / Constants.PPM;
 
-						// Within 
+						// Within right side bounds
 						if(mousePos.x < rightSide + placingWidth / 2 && mousePos.x >= rightSide - placingWidth / 2){							
 							foundEdge = true;
 							snapValue.a.set(rightSide + placingWidth / 2, 0);
 							snapValue.b = isValidPos(objects);
-							if(Input.clickLeft()){
+							if(place){
 								if(snapValue.b){
-									Log.info(TAG, "Set!");
-									((BuildingFloor)placingObject).connectedRight = object;
+									//Log.info(TAG, "Set snap object to " + object.toString());
+									((BuildingFloor)placingObject).connectedLeft = object;
+									((BuildingFloor)object).connectedRight = placingObject;
 									// Get left connected
-									((BuildingFloor)placingObject).connectedLeft = getFloorToLeft(objects);
+									BuildingObject object2 = getFloorToRight(objects);
+									((BuildingFloor)placingObject).connectedRight = object2;
+									if(object2 != null && object2 instanceof BuildingFloor){
+										((BuildingFloor)object2).connectedLeft = placingObject;
+									}
 								}
 							}
-						}else if(mousePos.x > leftSide - placingWidth / 2 && mousePos.x <= leftSide + placingWidth / 2){							
+						}else if(mousePos.x > leftSide - placingWidth / 2 && mousePos.x <= leftSide + placingWidth / 2){	
+							// Left side bounds
 							foundEdge = true;
 							snapValue.a.set(leftSide - placingWidth / 2, 0);
 							snapValue.b = isValidPos(objects);
-							if(Input.clickLeft()){
+							if(place){
 								if(snapValue.b){
-									((BuildingFloor)placingObject).connectedLeft = object;
-									// Get right connected
-									((BuildingFloor)placingObject).connectedRight = getFloorToRight(objects);
+									//Log.info(TAG, "Set snap object to " + object.toString());
+									((BuildingFloor)placingObject).connectedRight = object;
+									((BuildingFloor)object).connectedLeft = placingObject;
+									// Get left connected
+									BuildingObject object2 = getFloorToLeft(objects);
+									((BuildingFloor)placingObject).connectedLeft = object2;
+									if(object2 != null && object2 instanceof BuildingFloor){
+										((BuildingFloor)object2).connectedRight = placingObject;
+									}
 								}
 							}
 						}
@@ -140,6 +165,47 @@ public class BuildingManager {
 				snapValue.a.set(mousePos.x, 0);
 				snapValue.b = isValidPos(objects);
 			}
+		}
+		
+		// BEAMS
+		if(placingObject instanceof BuildingBeam){
+			snapValue.a.set(mousePos.x, 0);
+			snapValue.b = false;
+			
+			for(BuildingObject object : objects){
+				if(object instanceof BuildingFloor){
+					// FLOOR
+					BuildingFloor floor = (BuildingFloor)object;
+					boolean hasRight = floor.connectedRight != null;
+					boolean hasLeft = floor.connectedLeft != null;
+					if(hasRight){
+						if(mousePos.x > floor.body.getPosition().x){
+							if(mousePos.x < floor.body.getPosition().x + floor.texture.getRegionWidth()){
+								if(mousePos.y > floor.getBody().getPosition().y){
+									if(mousePos.y < floor.getBody().getPosition().y + placingObject.texture.getRegionHeight() / Constants.PPM){
+										// We are in bounds
+										snapValue.a.set(object.body.getPosition().x + object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2);
+										snapValue.b = true;
+									}
+								}
+							}
+						}
+					}else if(hasLeft){
+						if(mousePos.x < floor.body.getPosition().x){
+							if(mousePos.x > floor.body.getPosition().x - floor.texture.getRegionWidth()){
+								if(mousePos.y > floor.getBody().getPosition().y){
+									if(mousePos.y < floor.getBody().getPosition().y + placingObject.texture.getRegionHeight() / Constants.PPM){
+										// We are in bounds
+										snapValue.a.set(object.body.getPosition().x - object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2);
+										snapValue.b = true;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
 		}
 
 		return snapValue;
