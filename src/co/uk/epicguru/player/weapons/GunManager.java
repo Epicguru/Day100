@@ -32,6 +32,7 @@ import co.uk.epicguru.map.Entity;
 public final class GunManager {
 
 	public static final String TAG = "Gun Manager";
+	public static int colleateralCount = 0;
 	public static ArrayList<GunDefinition> guns = new ArrayList<GunDefinition>();
 	public static ArrayList<FlashFade> flashes = new ArrayList<FlashFade>();
 	public static GunDefinition equipped;
@@ -286,6 +287,7 @@ public final class GunManager {
 		float MAX = 200; // If range is very high, this will limit. It is the end point of the ray.
 		end.x = MathUtils.cosDeg(angle) * MAX + bulletSpawn[0];
 		end.y = MathUtils.sinDeg(angle) * MAX + bulletSpawn[1];
+		colleateralCount = 0;
 		Day100.map.world.rayCast(new RayCastCallback() {
 			
 			@Override
@@ -296,7 +298,7 @@ public final class GunManager {
 					if(point.dst(bulletSpawn[0], bulletSpawn[1]) <= equipped.range)
 						((Entity)user).takeDamage(equipped.damage, new DamageData(Day100.player, angle, new Vector2(Day100.player.getBody().getPosition())));
 				}
-				return 0;
+				return colleateralCount++ + 1 < GunManager.equipped.collaterals ? 1 : 0;
 			}
 		}, new Vector2(bulletSpawn[0], bulletSpawn[1]), end);
 		

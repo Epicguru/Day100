@@ -25,9 +25,9 @@ import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
+import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
-import co.uk.epicguru.player.BotController;
 import co.uk.epicguru.player.MapBlood;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
@@ -156,6 +156,7 @@ public final class Map {
 		blood.clear();
 		GunManager.cleanTextures();
 		Entity.clearAllEntities();
+		BuildingManager.reset();
 		System.gc();
 	}
 
@@ -207,6 +208,8 @@ public final class Map {
 		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		Entity.renderAll(batch);
+		
+		BuildingManager.render(batch);
 	}
 	
 	public void renderLighting(Batch batch){
@@ -217,7 +220,7 @@ public final class Map {
 
 		batch.begin();
 	}
-
+	
 	public void update(float delta) {
 
 		timer += delta;
@@ -228,9 +231,11 @@ public final class Map {
 			object.update(delta);
 		}
 		
+		BuildingManager.update(delta);
+		
 		// TEST
 		if(MathUtils.randomBoolean(0.5f * delta)){
-			new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(-50, 50), 2));
+			//new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(-50, 50), 2));
 		}	
 		
 		Entity.updateAll(delta);
@@ -238,6 +243,7 @@ public final class Map {
 
 	public void renderUI(Batch batch) {
 		Entity.renderAllUI(batch);
+		BuildingManager.renderUI(batch);
 	}
 
 }

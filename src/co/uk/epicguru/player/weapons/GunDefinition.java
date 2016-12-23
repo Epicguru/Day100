@@ -117,6 +117,11 @@ public abstract class GunDefinition {
 	 */
 	public float damage = 20;
 	
+	/**
+	 * How many objects a bullets can penetrate in one shot. This includes enemies, and buildables.
+	 */
+	public int collaterals = 3;
+	
 	/*
 	 * SEPARATOR : METHODS BELOW
 	 */

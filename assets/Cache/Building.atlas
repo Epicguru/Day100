@@ -1,48 +1,69 @@
 
 Building.png
-size: 512,32
+size: 128,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Wood_BG
   rotate: false
-  xy: 2, 14
-  size: 128, 16
-  orig: 128, 16
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+Wood_BG_Half
+  rotate: false
+  xy: 104, 76
+  size: 16, 8
+  orig: 16, 8
   offset: 0, 0
   index: -1
 Wood_Base
   rotate: false
-  xy: 2, 2
+  xy: 38, 74
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected
   rotate: false
-  xy: 68, 2
+  xy: 38, 62
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected_Left
   rotate: false
-  xy: 132, 20
+  xy: 38, 50
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected_Right
   rotate: false
-  xy: 198, 20
+  xy: 38, 38
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Disconnected
   rotate: false
-  xy: 264, 20
+  xy: 38, 26
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
+Wood_Beam
+  rotate: false
+  xy: 2, 20
+  size: 16, 64
+  orig: 16, 64
+  offset: 0, 0
+  index: -1
+Wood_Beam
+  rotate: false
+  xy: 20, 20
+  size: 16, 64
+  orig: 16, 64
+  offset: 0, 0
+  index: 2

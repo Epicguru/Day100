@@ -121,7 +121,7 @@ public class Day100 extends ApplicationAdapter {
 		// Time scale lerp
 		if(timeScale != targetTimeScale){
 			float dst = targetTimeScale - timeScale;
-			timeScale += dst * 0.9f * deltaTime;
+			timeScale += dst * 0.05f;
 		}
 		
 		deltaTime = Gdx.graphics.getDeltaTime() * timeScale;
