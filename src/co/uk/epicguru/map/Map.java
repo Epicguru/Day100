@@ -133,7 +133,7 @@ public final class Map {
 
 	private void setupLighting(){
 		rayHandler = new RayHandler(world);
-		sun = new DirectionalLight(rayHandler, Constants.RAYS * 2, new Color(0.0f, 0.0f, 0.0f, 0.35f), -90);
+		sun = new DirectionalLight(rayHandler, Constants.RAYS * 2, new Color(0.0f, 0.0f, 0.0f, 0.9f), -90);
 	}
 
 	public boolean loadProperties(){

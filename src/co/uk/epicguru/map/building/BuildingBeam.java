@@ -30,6 +30,7 @@ public abstract class BuildingBeam extends BuildingObject {
 		FixtureDef fixture = new FixtureDef();
 		fixture.shape = shape;
 		fixture.filter.groupIndex = -123;
+		fixture.isSensor = true;
 		setBody(Day100.map.world.createBody(def));
 		getBody().createFixture(fixture);
 	}
@@ -44,6 +45,7 @@ public abstract class BuildingBeam extends BuildingObject {
 	public void place(Vector2 position){
 		getBody().setTransform(position.set(position.x, position.y + texture.getRegionHeight() / 2 / Constants.PPM), 0);
 		placed = true;
+		getBody().getFixtureList().get(0).setSensor(false);
 	}
 	
 	public void update(float delta){

@@ -6,28 +6,35 @@ filter: Nearest,Nearest
 repeat: none
 AK-47
   rotate: false
-  xy: 2, 2
+  xy: 2, 29
   size: 245, 74
   orig: 245, 74
   offset: 0, 0
   index: -1
 Flash
   rotate: false
-  xy: 2, 78
+  xy: 2, 105
   size: 320, 9
   orig: 320, 9
   offset: 0, 0
   index: -1
 Glock
   rotate: false
-  xy: 328, 35
+  xy: 249, 3
   size: 112, 52
   orig: 112, 52
   offset: 0, 0
   index: -1
+P90
+  rotate: false
+  xy: 324, 57
+  size: 161, 57
+  orig: 161, 57
+  offset: 0, 0
+  index: -1
 Revolver
   rotate: false
-  xy: 249, 23
+  xy: 363, 2
   size: 77, 53
   orig: 77, 53
   offset: 0, 0
