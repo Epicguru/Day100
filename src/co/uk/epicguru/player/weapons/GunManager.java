@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -21,32 +20,47 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import box2dLight.PointLight;
 import co.uk.epicguru.IO.JLineReader;
-import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.DamageData;
 import co.uk.epicguru.map.Entity;
-import co.uk.epicguru.map.building.BuildingObject;
-import co.uk.epicguru.particles.ParticleExplosion;
 
 public final class GunManager {
 
+	public static GunManager flashInstance;
 	public static final String TAG = "Gun Manager";
-	public static int colleateralCount = 0;
+	public int colleateralCount = 0;
 	public static ArrayList<GunDefinition> guns = new ArrayList<GunDefinition>();
-	public static ArrayList<FlashFade> flashes = new ArrayList<FlashFade>();
-	public static GunDefinition equipped;
-	private static int index = 0;
-	private static float timer = 0;
-	private static boolean canShoot = false;
-	private static PointLight flash;
-	private static float angleOffset = 0;
-	private static float angleVelocity = 0;
-	private static boolean inBurst;
-	private static int burstShotsFired = 0;
-	private static boolean shoot = false;
+	/**
+	 * NULL WARNING! CHECK
+	 */
+	public GunDefinition equipped;
+	private int index = 0;
+	private float timer = 0;
+	private boolean canShoot = false;
+	private PointLight flash;
+	private float angleOffset = 0;
+	private float angleVelocity = 0;
+	private boolean inBurst;
+	private int burstShotsFired = 0;
+	private boolean shoot = false;
+	public Entity player;
+	public Vector2 crosshair = new Vector2();
+	private boolean requestingShoot = true;
 
+	public GunManager(Entity player){
+		this.player = player;
+	}
+	
+	/**
+	 * Gets the recoil angle offset.
+	 * @return The current recoil angle offset.
+	 */
+	public float getOffset(){
+		return angleOffset;
+	}
+	
 	public static void reset() {
 		guns.clear();
 
@@ -95,21 +109,11 @@ public final class GunManager {
 
 			// Find that gun and load it.
 			Log.info(TAG, "Loading data for '" + name + "' ...");
-			GunManager.find(name).load(reader);
+			find(name).load(reader);
 
 		} while (!reader.nextLine());
 
 		reader.dispose();
-
-		index = 0;
-		equipped = guns.get(0);
-		angleOffset = 0;
-		angleVelocity = 0;
-		flash = null;
-		inBurst = false;
-		burstShotsFired = 0;
-		shoot = false;
-		FlashFade.clearAll();
 	}
 
 	/**
@@ -133,7 +137,7 @@ public final class GunManager {
 	 * 
 	 * @return The GunDefinition.
 	 */
-	public static GunDefinition next() {
+	public GunDefinition next() {
 		if (index == guns.size() - 1)
 			return guns.get(index = 0);
 		return guns.get(++index);
@@ -145,7 +149,7 @@ public final class GunManager {
 	 * 
 	 * @return The GunDefinition.
 	 */
-	public static GunDefinition previous() {
+	public GunDefinition previous() {
 		if (index == 0)
 			return guns.get(index = guns.size() - 1);
 		return guns.get(--index);
@@ -154,7 +158,7 @@ public final class GunManager {
 	/**
 	 * Gets the next firing mode for the equipped weapon.
 	 */
-	public static void nextFiringMode(){
+	public void nextFiringMode(){
 		if(equipped == null || inBurst)
 			return;
 		
@@ -165,7 +169,7 @@ public final class GunManager {
 	/**
 	 * Call to indicate a change in weapon.
 	 */
-	public static void gunChanged() {
+	public void gunChanged() {
 		timer = 0;
 		canShoot = false;
 		angleOffset = -40;
@@ -173,22 +177,17 @@ public final class GunManager {
 		inBurst = false;
 		burstShotsFired = 0;
 		shoot = false;
+		requestingShoot = false;
 	}
 
 	/**
-	 * If any textures have been flipped, this will fix them.
+	 * Requests this gun manager to shoot with the equipped weapon.
 	 */
-	public static void cleanTextures() {
-		for (GunDefinition gun : guns) {
-			TextureRegion t = gun.texture;
-			if (t.isFlipX())
-				t.flip(true, false);
-			if (t.isFlipY())
-				t.flip(false, true);
-		}
+	public void shoot(){
+		requestingShoot = true;
 	}
-
-	public static void update(float delta) {
+	
+	public void update(float delta) {
 		if (equipped == null)
 			return;
 
@@ -215,7 +214,7 @@ public final class GunManager {
 		case BURST:
 
 			canShoot = timer >= equipped.shotInterval && !inBurst;
-			if (Input.clickLeft() && canShoot) {
+			if (requestingShoot && canShoot) {
 				inBurst = true;
 				// Shoot
 				shoot = true;
@@ -239,7 +238,7 @@ public final class GunManager {
 			break;
 		case FULL:
 			canShoot = timer >= equipped.shotInterval;
-			if (Input.clickingLeft() && canShoot) {
+			if (requestingShoot && canShoot) {
 				timer = 0;
 				// Shoot
 				shoot = true;
@@ -247,7 +246,7 @@ public final class GunManager {
 			break;
 		case SEMI:
 			canShoot = timer >= equipped.shotInterval;
-			if (Input.clickLeft() && canShoot) {
+			if (requestingShoot && canShoot) {
 				timer = 0;
 				// Shoot
 				shoot = true;
@@ -255,11 +254,11 @@ public final class GunManager {
 			break;
 
 		}
-
-		FlashFade.updateAll(delta);
+		
+		requestingShoot = false;
 	}
 
-	public static void shootEquiped(float angle, float[] bulletSpawn) {
+	public void shootEquiped(float angle, float[] bulletSpawn) {
 		if (equipped == null)
 			return;
 
@@ -277,11 +276,11 @@ public final class GunManager {
 
 		// Flash
 		flash = new PointLight(Day100.map.rayHandler, Constants.RAYS, new Color(1, 1, 0, 0.4f), 10f,
-				Day100.player.body.getPosition().x, Day100.player.body.getPosition().y);
+				this.player.body.getPosition().x, this.player.body.getPosition().y);
 		flash.setActive(true);
 		
 		// Visual flash
-		flashes.add(new FlashFade(new Vector2(bulletSpawn[0], bulletSpawn[1]),  angle, equipped.range));
+		new FlashFade(new Vector2(bulletSpawn[0], bulletSpawn[1]),  angle, equipped.range);
 		
 		// RAY
 		Vector2 end = new Vector2();
@@ -289,6 +288,7 @@ public final class GunManager {
 		end.x = MathUtils.cosDeg(angle) * MAX + bulletSpawn[0];
 		end.y = MathUtils.sinDeg(angle) * MAX + bulletSpawn[1];
 		colleateralCount = 0;
+		GunManager.flashInstance = this;
 		Day100.map.world.rayCast(new RayCastCallback() {
 			
 			@Override
@@ -299,22 +299,10 @@ public final class GunManager {
 					if(point.dst(bulletSpawn[0], bulletSpawn[1]) <= equipped.range){
 						// HIT AN ENTITY
 						Entity e = ((Entity)user);
-						e.takeDamage(equipped.damage, new DamageData(Day100.player, angle, new Vector2(Day100.player.getBody().getPosition())));
-						if(e instanceof BuildingObject){
-							BuildingObject object = (BuildingObject)e;
-							int particleSize = 5; // In pixels
-							int x = object.texture.getRegionX();
-							int y = object.texture.getRegionY();
-							int width = object.texture.getRegionWidth();
-							int height = object.texture.getRegionHeight();
-							object.texture.setRegion(MathUtils.random(x, x + width), MathUtils.random(y, y + height), particleSize, particleSize);
-							new ParticleExplosion(point, angle + 180, angle + 180 + MathUtils.random(-50, 50), 5, 12, 2, 10, 1, 3, new TextureRegion(object.texture), MathUtils.random(987123897123L));
-							object.texture.setRegion(x, y, width, height);
-						}
-						
+						e.takeDamage(equipped.damage, new DamageData(GunManager.flashInstance.player, angle + 180, new Vector2(GunManager.flashInstance.player.getBody().getPosition()), point));		
 					}
 				}
-				return colleateralCount++ + 1 < GunManager.equipped.collaterals ? 1 : 0;
+				return colleateralCount++ + 1 < equipped.collaterals ? 1 : 0;
 			}
 		}, new Vector2(bulletSpawn[0], bulletSpawn[1]), end);
 		
@@ -323,26 +311,28 @@ public final class GunManager {
 	/**
 	 * Is the gun to the right side of the player?
 	 */
-	public static boolean toRight() {
-		return Input.getMouseWorldX() >= Day100.player.body.getPosition().x;
+	public boolean toRight() {
+		if(this.player.body == null)
+			return true; // Dunno
+		return crosshair.x >= this.player.body.getPosition().x;
 	}
 	
-	private static float getAngle(){
+	private float getAngle(){
 		if(equipped == null)
 			return 0;
 		float originX = equipped.texture.getRegionWidth() / Constants.PPM * equipped.holdPoint.x / 2;
 		float originY = equipped.texture.getRegionHeight() / Constants.PPM * equipped.holdPoint.y / 2;
-		Vector2 playerPosition = Day100.player.body.getPosition();
-		float angle = MathUtils.atan2(Input.getMouseWorldY() - (playerPosition.y - originX), Input.getMouseWorldX() - (playerPosition.x - originY)) * MathUtils.radiansToDegrees;
+		Vector2 playerPosition = this.player.body.getPosition();
+		float angle = MathUtils.atan2(crosshair.y - (playerPosition.y - originX), crosshair.x - (playerPosition.x - originY)) * MathUtils.radiansToDegrees;
 		return angle;
 	}
 
 	private static Sprite gun = new Sprite();
-	public static void render(Batch batch) {
+	public void render(Batch batch) {
 		if (equipped == null)
 			return;
 		
-		Vector2 playerPosition = Day100.player.body.getPosition();
+		Vector2 playerPosition = this.player.body.getPosition();
 		float offset = (toRight()) ? equipped.distanceFromPlayer : -equipped.distanceFromPlayer;
 		
 		// RENDER WEAPON
@@ -355,9 +345,6 @@ public final class GunManager {
 		gun.setPosition(playerPosition.x + offset - originX, playerPosition.y - originY);
 		gun.setRotation(getAngle() + angleOffset * (toRight() ? 1 : -1));
 		gun.draw(batch);
-
-		// FLASH
-		FlashFade.renderAll(batch);
 		
 		
 		if(!shoot)
@@ -419,7 +406,7 @@ public final class GunManager {
 		shoot = false;
 	}
 
-	public static void renderUI(Batch batch){
+	public void renderUI(Batch batch){
 		if(equipped == null)
 			return;
 		if(equipped.texture.isFlipY())
@@ -433,4 +420,10 @@ public final class GunManager {
 		return Day100.assets.get("Audio/SFX/Guns/" + name);
 	}
 
+	public void dispose(){
+		if(flashInstance == this){
+			flashInstance = null;
+		}
+	}
+	
 }

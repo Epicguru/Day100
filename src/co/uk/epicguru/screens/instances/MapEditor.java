@@ -610,7 +610,8 @@ public final class MapEditor extends GameScreen {
 				input.zoom = 1;
 			}
 			runMap.update(delta);
-			Day100.camera.position.set(Day100.player.body.getPosition().x, Day100.player.body.getPosition().y, 0);
+			if(!Day100.player.isDead())
+				Day100.camera.position.set(Day100.player.body.getPosition().x, Day100.player.body.getPosition().y, 0);
 
 			break;
 		case EXPORTING:

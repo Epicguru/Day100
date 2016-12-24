@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -20,8 +19,7 @@ import co.uk.epicguru.player.weapons.GunManager;
 public final class PlayerController extends Entity{
 
 	public PlayerRenderer renderer;
-	public Body body;
-	//private boolean TEMP_TIME_FLIP = false;
+	public GunManager gunManager;
 	
 	
 	/**
@@ -30,6 +28,7 @@ public final class PlayerController extends Entity{
 	public PlayerController(Vector2 spawn){
 		super("Player", 100);
 		setup(spawn);
+		this.gunManager = new GunManager(this);
 		GunManager.reset();
 	}
 	
@@ -84,44 +83,54 @@ public final class PlayerController extends Entity{
 			body.setLinearVelocity(-topSpeedX, body.getLinearVelocity().y);
 		}
 		
-		GunManager.update(delta);
 		if(Input.isKeyJustDown(Keys.E)){
-			GunManager.equipped = GunManager.next();
-			GunManager.gunChanged();
+			gunManager.equipped = gunManager.next();
+			gunManager.gunChanged();
 			Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.Q)){
-			GunManager.equipped = GunManager.previous();
-			GunManager.gunChanged();
+			gunManager.equipped = gunManager.previous();
+			gunManager.gunChanged();
 			Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.F) && !BuildingManager.placing){
-			GunManager.nextFiringMode();
+			gunManager.nextFiringMode();
 		}
 		
-		// Slow-Mo test
-//		if(Input.isKeyJustDown(Keys.P)){
-//			TEMP_TIME_FLIP = !TEMP_TIME_FLIP;
-//			if(TEMP_TIME_FLIP)
-//				Day100.targetTimeScale = 0.1f;
-//			else
-//				Day100.targetTimeScale = 1f;
-//		}
+		if(gunManager.equipped != null){
+			switch (gunManager.equipped.firingModes[gunManager.equipped.firingModeSelected]) {
+			case BURST:
+				if(Input.clickLeft())
+					gunManager.shoot();
+				break;
+			case FULL:
+				if(Input.clickingLeft())
+					gunManager.shoot();
+				break;
+			case SEMI:
+				if(Input.clickLeft())
+					gunManager.shoot();
+				break;	
+			}
+		}
+		
+		gunManager.crosshair.set(Input.getMouseWorldPos());
+		gunManager.update(delta);
 		
 		if(Input.isKeyJustDown(Keys.B)){
 			BuildingManager.placing = !BuildingManager.placing;
 			
 			if(!BuildingManager.placing){
-				GunManager.equipped = GunManager.guns.get(0);
+				gunManager.equipped = GunManager.guns.get(0);
 				Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
-				GunManager.gunChanged();
+				gunManager.gunChanged();
 			}
 		}
 		
 		if(BuildingManager.placing){
-			GunManager.equipped = null;
+			gunManager.equipped = null;
 		}
 	}
 	
@@ -132,12 +141,17 @@ public final class PlayerController extends Entity{
 		renderer.render(batch);
 		
 		// Guns
-		GunManager.render(batch);
+		gunManager.render(batch);
 		
 	}
 	
 	public void renderUI(Batch batch){
-		GunManager.renderUI(batch);
+		gunManager.renderUI(batch);
+	}
+	
+	public void destroyed(){
+		super.destroyed();
+		gunManager.dispose();
 	}
 	
 }

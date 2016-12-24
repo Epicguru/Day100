@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,8 +28,7 @@ import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
-import co.uk.epicguru.player.MapBlood;
-import co.uk.epicguru.player.weapons.GunManager;
+import co.uk.epicguru.player.BotController;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
 
@@ -51,7 +49,6 @@ public final class Map {
 	public float timer;
 
 	public ArrayList<MapObject> objects = new ArrayList<MapObject>();
-	public ArrayList<MapBlood> blood = new ArrayList<MapBlood>();
 
 	public Map(File source){
 		if(!source.exists())
@@ -163,8 +160,6 @@ public final class Map {
 
 	public void dispose(){
 		objects.clear();
-		blood.clear();
-		GunManager.cleanTextures();
 		Entity.clearAllEntities();
 		BuildingManager.reset();
 		System.gc();
@@ -206,16 +201,6 @@ public final class Map {
 		
 		// Draw the floor tiles
 		renderFloor(batch);
-			
-		//TEST
-		batch.flush();
-		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		
-		for(MapBlood blood : blood){
-			blood.render(batch);
-		}
-		batch.flush();
-		batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		
 		Entity.renderAll(batch);
 		
@@ -245,7 +230,8 @@ public final class Map {
 		
 		// TEST
 		if(MathUtils.randomBoolean(0.5f * delta)){
-			//new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(-50, 50), 2));
+			if(!Day100.player.isDead())
+				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
 		}	
 		
 		Entity.updateAll(delta);

@@ -16,11 +16,10 @@ public class Entity {
 	private String name;
 	private float startHealth;
 	/**
-	 * See {@link #setBody(Body)} for special body setup.
+	 * NULL WARNING! See {@link #setBody(Body)} for special body setup.
 	 */
 	public Body body;
 	float health;
-	boolean dead;
 	
 	/**
 	 * Creates a new entity for a Day100 world. An entity auto updates and renders until the {@link #isDead()} condition is met.
@@ -102,8 +101,7 @@ public class Entity {
 	 * @return Is this entity considered dead.
 	 */
 	public boolean isDead(){
-		dead = health <= 0;
-		return dead;
+		return health <= 0;
 	}
 	
 	/**

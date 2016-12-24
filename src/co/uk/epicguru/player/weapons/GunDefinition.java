@@ -274,4 +274,21 @@ public abstract class GunDefinition {
 		}
 	}
 
+	/**
+	 * Sets the firing mode to the new one IF this gun supports that firing mode.
+	 * @param mode The new firing mode.
+	 * @return Weather the operation was successful.
+	 */
+	public boolean setFiringMode(FiringMode mode){
+		if(!isFiringModeAll(mode))
+			return false;
+		
+		for(int i = 0; i < firingModes.length; i++){
+			if(firingModes[i] == mode)
+				firingModeSelected = i;
+		}
+		
+		return true;
+	}
+	
 }
