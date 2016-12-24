@@ -125,6 +125,28 @@ public class Entity {
 	}
 	
 	/**
+	 * Sends this entity to the back of the array to be rendered behind all others.
+	 */
+	public void toBack(){
+		if(!entities.contains(this))
+			return;
+		
+		entities.remove(this);
+		entities.add(0, this);
+	}
+	
+	/**
+	 * Sends this entity to the front of the array to be rendered in front of all others.
+	 */
+	public void toFront(){
+		if(!entities.contains(this))
+			return;
+		
+		entities.remove(this);
+		entities.add(this);
+	}
+	
+	/**
 	 * Gets the name of the entity, as well as it's health and max health.
 	 */
 	public String toString(){

@@ -23,6 +23,7 @@ public final class MapBlood extends Entity{
 		this.position.x -= blood.getRegionWidth() / Constants.PPM;
 		this.position.y -= blood.getRegionHeight() / Constants.PPM / 2;
 		timer = 0.3f;
+		toBack();
 	}
 	
 	public void update(float delta){
