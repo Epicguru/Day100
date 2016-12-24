@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisList;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -426,6 +427,23 @@ public final class VisUIHandler {
 		
 		physicsListOpen = false;
 		
+	}
+	
+	public static void openErrorDialog(final String message){
+		VisDialog dialog = new VisDialog("An Error Ocurred");
+		dialog.text(message);
+		dialog.pack();
+		dialog.setHeight(dialog.getHeight() + 30);
+		dialog.setWidth(dialog.getWidth() + 50);
+		dialog.closeOnEscape();
+		dialog.add(new VisTextButton("Close", new ChangeListener(){
+			public void changed(ChangeEvent arg0, Actor arg1) {
+				dialog.fadeOut();
+			}			
+		}));
+		dialog.centerWindow();
+		stage.addActor(dialog);
+		Log.info("VISUI", "Displaying");
 	}
 	
 }

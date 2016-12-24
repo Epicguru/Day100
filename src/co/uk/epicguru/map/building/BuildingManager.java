@@ -116,6 +116,25 @@ public class BuildingManager {
 			// FLOOR
 			boolean foundEdge = false;
 			for(BuildingObject object : objects){
+				
+				// BEAM
+				if(object instanceof BuildingBeam){
+					// Right
+					rect.set(object.body.getPosition().x, object.body.getPosition().y, object.texture.getRegionWidth() / Constants.PPM * 2, object.texture.getRegionHeight() / Constants.PPM);
+					if(rect.contains(mousePos)){
+						snapValue.a.set(object.body.getPosition().x + placingObject.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2 - placingObject.texture.getRegionHeight() / Constants.PPM / 2);
+						snapValue.b = isValidPosForFloor(objects);
+						foundEdge = true;
+					}
+					// Left
+					rect.set(object.body.getPosition().x - object.texture.getRegionWidth() / Constants.PPM * 2, object.body.getPosition().y, object.texture.getRegionWidth() / Constants.PPM * 2, object.texture.getRegionHeight() / Constants.PPM);
+					if(rect.contains(mousePos)){
+						snapValue.a.set(object.body.getPosition().x - placingObject.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2 - placingObject.texture.getRegionHeight() / Constants.PPM / 2);
+						snapValue.b = isValidPosForFloor(objects);
+						foundEdge = true;
+					}
+				}
+				
 				// FLOOR
 				if(object instanceof BuildingFloor){
 					if(object != placingObject){					
@@ -130,7 +149,7 @@ public class BuildingManager {
 						if(mousePos.x < rightSide + placingWidth / 2 && mousePos.x >= rightSide - placingWidth / 2 && mousePos.y < object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM * 2 && mousePos.y > object.body.getPosition().y - object.texture.getRegionHeight() / Constants.PPM * 2){							
 							foundEdge = true;
 							snapValue.a.set(rightSide + placingWidth / 2, object.body.getPosition().y - placingObject.texture.getRegionHeight() / Constants.PPM / 2);
-							snapValue.b = isValidPos(objects);
+							snapValue.b = isValidPosForFloor(objects);
 							if(place){
 								if(snapValue.b){
 									//Log.info(TAG, "Set snap object to " + object.toString());
@@ -148,7 +167,7 @@ public class BuildingManager {
 							// Left side bounds
 							foundEdge = true;
 							snapValue.a.set(leftSide - placingWidth / 2, object.body.getPosition().y - placingObject.texture.getRegionHeight() / Constants.PPM / 2);
-							snapValue.b = isValidPos(objects);
+							snapValue.b = isValidPosForFloor(objects);
 							if(place){
 								if(snapValue.b){
 									//Log.info(TAG, "Set snap object to " + object.toString());
@@ -186,8 +205,8 @@ public class BuildingManager {
 							if(mousePos.y > floor.getBody().getPosition().y){
 								if(mousePos.y < floor.getBody().getPosition().y + placingObject.texture.getRegionHeight() / Constants.PPM){
 									// We are in bounds
-									snapValue.a.set(object.body.getPosition().x + object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2);
-									snapValue.b = isValidPos(objects);
+									snapValue.a.set(object.body.getPosition().x + object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2 - object.texture.getRegionHeight() / Constants.PPM / 2);
+									snapValue.b = isValidPosForBeam(objects);
 								}
 							}
 						}
@@ -197,8 +216,8 @@ public class BuildingManager {
 							if(mousePos.y > floor.getBody().getPosition().y){
 								if(mousePos.y < floor.getBody().getPosition().y + placingObject.texture.getRegionHeight() / Constants.PPM){
 									// We are in bounds
-									snapValue.a.set(object.body.getPosition().x - object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2);
-									snapValue.b = isValidPos(objects);
+									snapValue.a.set(object.body.getPosition().x - object.texture.getRegionWidth() / Constants.PPM / 2, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2 - object.texture.getRegionHeight() / Constants.PPM / 2);
+									snapValue.b = isValidPosForBeam(objects);
 								}
 							}
 						}
@@ -211,7 +230,7 @@ public class BuildingManager {
 					if(rect.contains(mousePos)){
 						// Good to go on top of beam.
 						snapValue.a.set(object.body.getPosition().x, object.body.getPosition().y + object.texture.getRegionHeight() / Constants.PPM / 2);
-						snapValue.b = isValidPos(objects);
+						snapValue.b = isValidPosForBeam(objects);
 					}
 				}
 			}
@@ -231,6 +250,48 @@ public class BuildingManager {
 				width = placingObject.texture.getRegionWidth() / Constants.PPM;
 				height = placingObject.texture.getRegionHeight() / Constants.PPM;
 				if(rect.overlaps(rect2.set(placingObject.body.getPosition().x - width / 2, placingObject.body.getPosition().y - height / 2, width, height))){
+					validPos = false;
+					break;
+				}
+
+			}					
+		}
+		return validPos;
+	}
+	
+	public static boolean isValidPosForBeam(ArrayList<BuildingObject> objects){
+		boolean validPos = true;
+		for(BuildingObject object : objects){
+			if(object != placingObject){
+				float width = object.texture.getRegionWidth() / Constants.PPM;
+				float height = object.texture.getRegionHeight() / Constants.PPM;
+				rect.set(object.body.getPosition().x - width / 2, object.body.getPosition().y - height / 2, width, height);
+				width = placingObject.texture.getRegionWidth() / Constants.PPM;
+				height = placingObject.texture.getRegionHeight() / Constants.PPM;
+				if(rect.overlaps(rect2.set(placingObject.body.getPosition().x - width / 2, placingObject.body.getPosition().y - height / 2, width, height))){
+					if(object instanceof BuildingFloor)
+						continue;
+					validPos = false;
+					break;
+				}
+
+			}					
+		}
+		return validPos;
+	}
+	
+	public static boolean isValidPosForFloor(ArrayList<BuildingObject> objects){
+		boolean validPos = true;
+		for(BuildingObject object : objects){
+			if(object != placingObject){
+				float width = object.texture.getRegionWidth() / Constants.PPM;
+				float height = object.texture.getRegionHeight() / Constants.PPM;
+				rect.set(object.body.getPosition().x - width / 2, object.body.getPosition().y - height / 2, width, height);
+				width = placingObject.texture.getRegionWidth() / Constants.PPM;
+				height = placingObject.texture.getRegionHeight() / Constants.PPM;
+				if(rect.overlaps(rect2.set(placingObject.body.getPosition().x - width / 2, placingObject.body.getPosition().y - height / 2, width, height))){
+					if(object instanceof BuildingBeam)
+						continue;
 					validPos = false;
 					break;
 				}

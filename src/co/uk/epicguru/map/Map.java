@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,6 +32,7 @@ import co.uk.epicguru.map.objects.MapObjectSupplier;
 import co.uk.epicguru.player.MapBlood;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
+import co.uk.epicguru.screens.instances.MapEditor;
 
 public final class Map {
 
@@ -83,6 +85,7 @@ public final class Map {
 			reader.dispose();
 			properties.dispose();
 			Log.error(TAG, "The placeables file was empty");
+			MapEditor.exportFailures.add("The export data file was empty!");
 			return;
 		}
 
@@ -97,6 +100,10 @@ public final class Map {
 		do{
 			if(!reader.isLineEmpty()){
 				String ID = reader.readString("ID", "ERROR");
+				if(ID.equals("ERROR")){
+					MapEditor.exportFailures.add("Unexpected ID error : Failed to find ID for an object!");
+					continue;
+				}
 				MapObjectSupplier supplier = MapObject.objects.get(reader.readString("Supplier", "Default"));
 				if(supplier == null)
 					supplier = MapObject.objects.get("Default");
@@ -134,6 +141,9 @@ public final class Map {
 	private void setupLighting(){
 		rayHandler = new RayHandler(world);
 		sun = new DirectionalLight(rayHandler, Constants.RAYS * 2, new Color(0.0f, 0.0f, 0.0f, 0.9f), -90);
+		Filter f = new Filter();
+		f.groupIndex = -123;
+		sun.setContactFilter(f);
 	}
 
 	public boolean loadProperties(){

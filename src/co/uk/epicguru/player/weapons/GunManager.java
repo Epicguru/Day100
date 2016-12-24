@@ -21,13 +21,14 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import box2dLight.PointLight;
 import co.uk.epicguru.IO.JLineReader;
-import co.uk.epicguru.input.DevCross;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.DamageData;
 import co.uk.epicguru.map.Entity;
+import co.uk.epicguru.map.building.BuildingObject;
+import co.uk.epicguru.particles.ParticleExplosion;
 
 public final class GunManager {
 
@@ -292,11 +293,26 @@ public final class GunManager {
 			
 			@Override
 			public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
-				DevCross.drawCentred(point.x, point.y);
+				//DevCross.drawCentred(point.x, point.y);
 				Object user = fixture.getBody().getUserData();
 				if(user != null && user instanceof Entity){
-					if(point.dst(bulletSpawn[0], bulletSpawn[1]) <= equipped.range)
-						((Entity)user).takeDamage(equipped.damage, new DamageData(Day100.player, angle, new Vector2(Day100.player.getBody().getPosition())));
+					if(point.dst(bulletSpawn[0], bulletSpawn[1]) <= equipped.range){
+						// HIT AN ENTITY
+						Entity e = ((Entity)user);
+						e.takeDamage(equipped.damage, new DamageData(Day100.player, angle, new Vector2(Day100.player.getBody().getPosition())));
+						if(e instanceof BuildingObject){
+							BuildingObject object = (BuildingObject)e;
+							int particleSize = 5; // In pixels
+							int x = object.texture.getRegionX();
+							int y = object.texture.getRegionY();
+							int width = object.texture.getRegionWidth();
+							int height = object.texture.getRegionHeight();
+							object.texture.setRegion(MathUtils.random(x, x + width), MathUtils.random(y, y + height), particleSize, particleSize);
+							new ParticleExplosion(point, angle + 180, angle + 180 + MathUtils.random(-50, 50), 5, 12, 2, 10, 1, 3, new TextureRegion(object.texture), MathUtils.random(987123897123L));
+							object.texture.setRegion(x, y, width, height);
+						}
+						
+					}
 				}
 				return colleateralCount++ + 1 < GunManager.equipped.collaterals ? 1 : 0;
 			}

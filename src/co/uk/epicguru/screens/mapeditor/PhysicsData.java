@@ -10,12 +10,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.main.Constants;
+import co.uk.epicguru.main.Log;
 import co.uk.epicguru.screens.instances.MapEditor;
 
 public final class PhysicsData {
@@ -180,23 +181,44 @@ public final class PhysicsData {
 	 * @return The Box2D Body object.
 	 */
 	public Body toBody(World world){
+		
+		if(points.length < 3){
+			final String message = "Body for '" + file.getName() + "' has less than three points!";
+			if(!MapEditor.exportFailures.contains(message))
+				MapEditor.exportFailures.add(message);
+			return null;
+		}
+		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.allowSleep = true;
 		bodyDef.type = this.type;
-		PolygonShape shape = new PolygonShape();
-		shape.set(points);
-		//shape.set(new Vector2[]{new Vector2(0, 0), new Vector2(0.05f, 0.75f), new Vector2(0.5f, 1), new Vector2(0.95f, 0.75f), new Vector2(1, 0),});
 		Body body = world.createBody(bodyDef);
-		FixtureDef fixture = new FixtureDef();
-		fixture.shape = shape;
-		body.createFixture(fixture);
-		shape.dispose();
+		FixtureDef fix = new FixtureDef();
+		
+		// Process and create
+		int result = ConvexSeparator.validate(new Array<Vector2>(points));
+		if(result == 0)
+			ConvexSeparator.separate(body, fix, new Array<Vector2>(points), Constants.PPM);
+		else{
+			Log.error("", "HELP!");
+			String[] errors = new String[]{
+					"No Error, ready to load.",
+					"There are overlapping lines in the shape.",
+					"The points are NOT in clockwise order. Ensure that they are.",
+					"There are overlapping lines AND the points are NOT in clockwise order."
+			};
+			final String message = "Body for " + file.getName() + "'s point data failed to compile. The reason is : '" + errors[result] + "'";
+			if(!MapEditor.exportFailures.contains(message))
+				MapEditor.exportFailures.add(message);
+			
+		}
+		
 		return body;
 	}
 	
 	/**
 	 * Refreshes the loaded data array. Only folders with a properties file will be added.
-	 * @param getTextures Should this get the textrues for the physics? Only should be true if in editor mode.
+	 * @param getTextures Should this get the textures for the physics? Only should be true if in editor mode.
 	 */
 	public static void refreshData(boolean getTextures){
 		File data = new File(Constants.MAP_EDITOR_FOLDER + MapEditor.selectedMap + "\\Physics\\");

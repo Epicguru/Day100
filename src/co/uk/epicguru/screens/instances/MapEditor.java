@@ -94,6 +94,7 @@ public final class MapEditor extends GameScreen {
 	public static Vector2 largeSelectionStart = new Vector2();
 	public static ArrayList<MapEditorPlaceable> largeSelectionObjects = new ArrayList<MapEditorPlaceable>();
 	public static Vector3 returnToFromPhysics = new Vector3();
+	public static ArrayList<String> exportFailures = new ArrayList<String>();
 
 	public static Map runMap = null;
 
@@ -784,6 +785,7 @@ public final class MapEditor extends GameScreen {
 		GunManager.reset();
 
 		loadedObjects.clear();
+		exportFailures.clear();
 
 		File[] images = getObjectFiles(".png");
 
@@ -970,6 +972,12 @@ public final class MapEditor extends GameScreen {
 
 				ScreenManager.setScreen(Screen.MAP_EDITOR);
 			}
+			
+			// Individual Properties
+			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
+				smallFont.setColor(Color.BLUE);
+				smallFont.draw(batch, "Individual Properties : \n" + selected.parent.name, width - 220, height - 60);
+			}			
 
 			// Render preview if open
 			renderPreview(batch);		
@@ -1027,6 +1035,8 @@ public final class MapEditor extends GameScreen {
 			// Title
 			font.setColor(Color.WHITE);
 			font.draw(batch, "Editing " + VisUIHandler.physicsFolders.getSelected(), 10, height - 10);
+			smallFont.setColor(Color.BLACK);
+			smallFont.draw(batch, "Draw points ANTI-CLOCKWISE. \nIf a body does not show up, try pressing refresh\nIf it still does not show up, something is wrong with the points.", 10, height - 50);
 
 			VisUIHandler.renderUI(batch);
 
@@ -1060,6 +1070,13 @@ public final class MapEditor extends GameScreen {
 
 		new Thread(new Runnable() {
 			public void run() {
+				
+				if(placedObjects.size() == 0){
+					VisUIHandler.openErrorDialog("You cannot compile this map, there are no placed objects!");
+				}
+				
+				exportFailures.clear();
+				
 				doneExporting = false;
 				state = State.EXPORTING;
 
@@ -1098,8 +1115,26 @@ public final class MapEditor extends GameScreen {
 
 				state = State.RUNNING;
 				doneExporting = true;
+				
+				displayErrors();
 			}
 		}).start();
+	}
+	
+	public void displayErrors(){
+		
+		if(exportFailures.size() == 0){
+			Log.info(TAG, "No errors to display.");
+			return;
+		}
+		
+		String message = "";
+		Log.error(TAG, "Exporting and compiling found the following issues:");
+		for(String string : exportFailures){
+			message += string + "\n";
+			Log.error(TAG, "    " + string);
+		}
+		VisUIHandler.openErrorDialog(message);
 	}
 
 	public void sleep(long time){
@@ -1178,6 +1213,7 @@ public final class MapEditor extends GameScreen {
 		for(MapEditorPlaceable object : placedObjects){
 			object.createBody();
 		}
+		displayErrors();
 	}
 
 	public void savePhysics(){

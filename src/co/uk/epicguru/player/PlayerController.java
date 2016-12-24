@@ -58,6 +58,7 @@ public final class PlayerController extends Entity{
 		fixtureDef.shape = shape;
 		fixtureDef.restitution = 0;
 		fixtureDef.friction = 1.5f;
+		fixtureDef.filter.groupIndex = -321;
 		body.createFixture(fixtureDef);
 		shape.dispose();
 		setBody(body);

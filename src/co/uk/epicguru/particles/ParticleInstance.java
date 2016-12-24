@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
@@ -13,6 +14,7 @@ import co.uk.epicguru.map.Entity;
 
 public class ParticleInstance extends Entity{
 
+	public static int particlesActive = 0;
 	private float timer;
 	public TextureRegion texture;
 	
@@ -21,20 +23,21 @@ public class ParticleInstance extends Entity{
 		this.timer = time;
 		createBody(velocity, position);
 		this.texture = region;
+		particlesActive++;
 	}
 	
 	public void createBody(Vector2 velocity, Vector2 position){
 		if(body != null)
 			return;
-		
 		BodyDef def = new BodyDef();
+		def.type = BodyType.DynamicBody;
 		def.position.set(position);
 		def.linearVelocity.set(velocity);
 		CircleShape shape = new CircleShape();
 		shape.setRadius(0.05f);
 		FixtureDef fixture = new FixtureDef();
 		fixture.shape = shape;
-		fixture.filter.groupIndex = -123;
+		fixture.filter.groupIndex = -321;
 		setBody(Day100.map.world.createBody(def));
 		getBody().createFixture(fixture);
 	}
@@ -51,6 +54,10 @@ public class ParticleInstance extends Entity{
 	
 	public boolean isDead(){
 		return timer <= 0;
+	}
+	
+	public void destroyed(){
+		particlesActive--;
 	}
 	
 }

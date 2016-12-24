@@ -11,6 +11,7 @@ public class Entity {
 
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	private static ArrayList<Entity> entitiesBin = new ArrayList<Entity>();
+	private static ArrayList<Entity> entitiesPending = new ArrayList<Entity>();
 	
 	private String name;
 	private float startHealth;
@@ -36,7 +37,7 @@ public class Entity {
 		this.health = startingHealth;
 		this.name = name;
 		setBody(body);
-		entities.add(this);
+		entitiesPending.add(this);
 	}
 	
 	/**
@@ -44,7 +45,7 @@ public class Entity {
 	 * It is just a name!
 	 * @return The name of this entity as expressed in the constructor.
 	 */
-	public String getName(){
+	public final String getName(){
 		return name;
 	}
 	
@@ -172,6 +173,7 @@ public class Entity {
 			e.destroyed();
 		}
 		entitiesBin.clear();
+		entitiesPending.clear();
 	}
 	
 	/**
@@ -184,6 +186,11 @@ public class Entity {
 				entitiesBin.add(e);
 			}
 		}
+		for(Entity e : entitiesPending){
+			entities.add(e);
+			e.update(delta);
+		}	
+		entitiesPending.clear();
 		for(Entity e : entitiesBin){
 			e.destroyed();
 			entities.remove(e);
@@ -199,6 +206,16 @@ public class Entity {
 		for(Entity e : entities){
 			e.render(batch);
 		}
+		for(Entity e : entitiesPending){
+			entities.add(e);
+			e.render(batch);
+		}	
+		entitiesPending.clear();
+		for(Entity e : entitiesBin){
+			e.destroyed();
+			entities.remove(e);
+		}		
+		entitiesBin.clear();
 	}
 	
 	/**
@@ -209,6 +226,16 @@ public class Entity {
 		for(Entity e : entities){
 			e.renderUI(batch);
 		}
+		for(Entity e : entitiesPending){
+			entities.add(e);
+			e.renderUI(batch);
+		}	
+		entitiesPending.clear();
+		for(Entity e : entitiesBin){
+			e.destroyed();
+			entities.remove(e);
+		}		
+		entitiesBin.clear();
 	}
 	
 }

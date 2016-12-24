@@ -59,6 +59,5 @@ public abstract class BuildingBeam extends BuildingObject {
 	
 	public void cancelPlace(){
 		slay();
-	}
-	
+	}	
 }
