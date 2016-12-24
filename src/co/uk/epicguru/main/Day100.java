@@ -3,6 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -77,7 +78,7 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Cache/UI.atlas", TextureAtlas.class);
 		assets.finishLoading();			
 		Log.info(TAG, "Done! It took " + ((float)(System.currentTimeMillis() - start) / 1000f) + " seconds.");
-
+		
 		// Other assets
 		assets.load("Fonts/Xolonium.fnt", BitmapFont.class);
 		assets.load("Fonts/Small.fnt", BitmapFont.class);
@@ -86,6 +87,9 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Audio/SFX/Guns/Cock1.mp3", Sound.class);
 		assets.load("Audio/SFX/Guns/Cock2.mp3", Sound.class);
 		assets.load("Audio/SFX/Guns/Ak47.mp3", Sound.class);
+		assets.load(Constants.MUSIC + "Chill.mp3", Music.class);
+		assets.load(Constants.MUSIC + "Sunrise Z.mp3", Music.class);
+		assets.load(Constants.MUSIC + "The Day After.mp3", Music.class);
 		assets.load("Cache/Guns.atlas", TextureAtlas.class);
 		assets.load("Cache/Building.atlas", TextureAtlas.class);
 	}

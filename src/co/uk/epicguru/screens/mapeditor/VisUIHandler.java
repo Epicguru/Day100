@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisList;
@@ -59,6 +60,9 @@ public final class VisUIHandler {
 	public static boolean changingImage;
 	public static VisWindow changeImageOption;
 	public static VisList<String> changeImageList;
+	public static VisCheckBox solid;
+	public static VisCheckBox castShadows;
+	
 	private VisUIHandler(){}
 	
 	public static void start(){
@@ -426,6 +430,10 @@ public final class VisUIHandler {
 		stage.getActors().removeValue(physicsOptions, true);
 		
 		physicsListOpen = false;
+		
+	}
+	
+	public static void openIndividualProperties(){
 		
 	}
 	

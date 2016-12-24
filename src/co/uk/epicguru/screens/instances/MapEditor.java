@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -95,6 +96,9 @@ public final class MapEditor extends GameScreen {
 	public static ArrayList<MapEditorPlaceable> largeSelectionObjects = new ArrayList<MapEditorPlaceable>();
 	public static Vector3 returnToFromPhysics = new Vector3();
 	public static ArrayList<String> exportFailures = new ArrayList<String>();
+	public static Music[] music;
+	public static int musicIndex;
+	public static float musicVolume = 0.5f;
 
 	public static Map runMap = null;
 
@@ -120,6 +124,8 @@ public final class MapEditor extends GameScreen {
 			stack.clear();
 			Day100.map = null;
 			Day100.player = null;
+			if(music != null)
+				music[musicIndex % music.length].stop();
 			return;
 		}
 		objectsRenderX = 160;
@@ -137,6 +143,13 @@ public final class MapEditor extends GameScreen {
 		draggingX = false;
 		draggingY = false;
 		largeSelection = false;
+
+		// Music - For the chills :D
+		music = new Music[]{
+				Day100.assets.get(Constants.MUSIC + "Chill.mp3"),
+				Day100.assets.get(Constants.MUSIC + "Sunrise Z.mp3"),
+				Day100.assets.get(Constants.MUSIC + "The Day After.mp3")
+		};
 	}
 
 	public void init(){
@@ -157,6 +170,13 @@ public final class MapEditor extends GameScreen {
 
 		input = new MapEditorInput();
 		Gdx.input.setInputProcessor(input);
+	}
+	
+	public void updateMusic(){
+		music[musicIndex % music.length].setVolume(musicVolume);
+		if(!music[musicIndex % music.length].isPlaying()){
+			music[++musicIndex % music.length].play();
+		}
 	}
 
 	public void createDir(){
@@ -300,6 +320,8 @@ public final class MapEditor extends GameScreen {
 	@Override
 	public void update(float delta) {
 
+		updateMusic();
+		
 		switch(state){
 		case SELECT_MAP:
 
@@ -323,7 +345,7 @@ public final class MapEditor extends GameScreen {
 
 			break;
 		case GUNS:
-			
+
 			// Camera and mouse movement
 			if(Day100.camera.zoom != input.zoom)
 				Day100.camera.zoom += (input.zoom - Day100.camera.zoom) * 0.2f;
@@ -333,9 +355,9 @@ public final class MapEditor extends GameScreen {
 			if(Gdx.input.isButtonPressed(Buttons.MIDDLE)){
 				Day100.camera.position.add(-Gdx.input.getDeltaX() / Constants.PPM * Day100.camera.zoom, Gdx.input.getDeltaY() / Constants.PPM * Day100.camera.zoom, 0);
 			}
-			
+
 			GunEditor.update(delta);
-			
+
 			break;
 		case CREATION:
 
@@ -673,7 +695,7 @@ public final class MapEditor extends GameScreen {
 				batch.setColor(1, 1, 1, 1);
 			}
 		}
-		
+
 		if(state == State.GUNS){
 			GunEditor.render(batch);
 		}
@@ -972,7 +994,7 @@ public final class MapEditor extends GameScreen {
 
 				ScreenManager.setScreen(Screen.MAP_EDITOR);
 			}
-			
+
 			// Individual Properties
 			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
 				smallFont.setColor(Color.BLUE);
@@ -1055,7 +1077,7 @@ public final class MapEditor extends GameScreen {
 				Day100.camera.position.set(returnToFromPhysics);
 				input.zoom = returnToFromPhysics.z;
 			}
-			
+
 			VisUIHandler.renderUI(batch);
 
 			break;
@@ -1070,13 +1092,13 @@ public final class MapEditor extends GameScreen {
 
 		new Thread(new Runnable() {
 			public void run() {
-				
+
 				if(placedObjects.size() == 0){
 					VisUIHandler.openErrorDialog("You cannot compile this map, there are no placed objects!");
 				}
-				
+
 				exportFailures.clear();
-				
+
 				doneExporting = false;
 				state = State.EXPORTING;
 
@@ -1115,19 +1137,19 @@ public final class MapEditor extends GameScreen {
 
 				state = State.RUNNING;
 				doneExporting = true;
-				
+
 				displayErrors();
 			}
 		}).start();
 	}
-	
+
 	public void displayErrors(){
-		
+
 		if(exportFailures.size() == 0){
 			Log.info(TAG, "No errors to display.");
 			return;
 		}
-		
+
 		String message = "";
 		Log.error(TAG, "Exporting and compiling found the following issues:");
 		for(String string : exportFailures){
