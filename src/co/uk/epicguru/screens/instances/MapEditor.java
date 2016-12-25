@@ -173,6 +173,7 @@ public final class MapEditor extends GameScreen {
 	}
 	
 	public void updateMusic(){
+		musicVolume = 0.02f;
 		music[musicIndex % music.length].setVolume(musicVolume);
 		if(!music[musicIndex % music.length].isPlaying()){
 			music[++musicIndex % music.length].play();
@@ -1144,7 +1145,7 @@ public final class MapEditor extends GameScreen {
 		}).start();
 	}
 
-	public void displayErrors(){
+	public static void displayErrors(){
 
 		if(exportFailures.size() == 0){
 			Log.info(TAG, "No errors to display.");
@@ -1261,11 +1262,11 @@ public final class MapEditor extends GameScreen {
 	}
 
 	public void load(){
+		VisUIHandler.start();
 		refreshObjects();
 		loadMap();
 		loadState();
 		loadPhysics();
-		VisUIHandler.start();
 		PhysicsData.refreshData(true);
 	}
 

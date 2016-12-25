@@ -3,12 +3,16 @@ package co.uk.epicguru.player.weapons;
 import java.lang.reflect.Field;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.main.Log;
+import co.uk.epicguru.map.Entity;
+import co.uk.epicguru.screens.mapeditor.GunEditor;
 
 public abstract class GunDefinition {
 
@@ -28,6 +32,11 @@ public abstract class GunDefinition {
 	public TextureRegion texture;
 
 	/**
+	 * The sounds that are played when shooting. A random element is picked.
+	 */
+	public Sound[] shotSounds = new Sound[]{ GunManager.getGunSound("Silenced.mp3") };
+	
+	/**
 	 * The modes in which the gun can fire.
 	 **/
 	public FiringMode[] firingModes = new FiringMode[]{ FiringMode.SEMI };
@@ -46,12 +55,6 @@ public abstract class GunDefinition {
 	 * The minimum amount of time between bursts, in seconds. Only applies in burst mode.
 	 */
 	public float shotBurstInterval = 0.05f;
-
-	/**
-	 * The sounds that are played when shooting. A random element is picked.
-	 */
-	@Exclude
-	public Sound[] shotSounds = new Sound[]{ GunManager.getGunSound("Silenced.mp3") };
 
 	/**
 	 * the minimum volume at which the gun sound will be played at.
@@ -134,6 +137,8 @@ public abstract class GunDefinition {
 	public GunDefinition(String name){
 		this.name = name;
 		this.texture = Day100.gunsAtlas.findRegion(name);
+		if(GunManager.find(name) == null)
+			GunManager.guns.add(this);
 	}
 	
 	/**
@@ -230,7 +235,36 @@ public abstract class GunDefinition {
 						e.printStackTrace();
 					}
 				}else{
-					// Some other string
+					// Test for SYS_SOUND
+					if(((String) value).startsWith("SYS_SOUND")){
+						String[] split = ((String) value).split(":");
+						String soundPath = split[1];
+						Log.info(TAG, "Sound path 1 is " + soundPath);
+						soundPath = GunEditor.getSoundAssetFromEnding(soundPath);
+						Log.info(TAG, "Sound path 2 is " + soundPath);
+						Log.info(TAG, "Value is : " + Day100.assets.get(soundPath, Sound.class));
+						if(soundPath.equals("Null")){
+							try {
+								this.getClass().getField(key).set(this, null);
+							} catch (Exception e){
+								e.printStackTrace();
+							}
+						}else{
+							try {
+								this.getClass().getField(key).set(this, Day100.assets.get(soundPath, Sound.class));
+							} catch (Exception e){
+								e.printStackTrace();
+							}						
+						}
+							
+					}else{
+						// Normal String
+						try {
+							this.getClass().getField(key).set(this, (String)value);
+						} catch (Exception e){
+							e.printStackTrace();
+						}
+					}
 				}
 			}else{
 				// UNKNOWN				
@@ -263,7 +297,12 @@ public abstract class GunDefinition {
 						for(FiringMode mode : this.firingModes){
 							firingModes += mode + ",";
 						}
-						writer.write(f2.getName(), firingModes);						
+						writer.write(f2.getName(), firingModes);
+					}else if(f2.getType().getSimpleName().equals("Sound")){
+						String name = GunEditor.getSelectedSound(f2.get(this));
+						writer.write(f2.getName(), "SYS_SOUND:" + name);
+					}else if(f2.getType().getSimpleName().equals("String")){
+						writer.write(f2.getName(), (String)f2.get(this));
 					}else{
 						// UNKNOWN
 					}
@@ -289,6 +328,43 @@ public abstract class GunDefinition {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Indicates that this gun has been equipped by this entity, using this GunManager. By default does nothing.
+	 */
+	public void equipped(GunManager gunManager, Entity e){
+		
+	}
+	
+	/**
+	 * This gun was shot by this entity, using this GunManager. By default does nothing.
+	 */
+	public void shot(GunManager gunManager, Entity e){
+		
+	}
+	
+	/**
+	 * Called when equipped. Passes the equipper (The entity) and the gun manager.
+	 */
+	public void update(Entity e, GunManager gunManager, float delta){
+		
+	}
+	
+	/**
+	 * Called when equipped. DOES NOT RENDER GUN, BY DEFAULT DOES NOTHING.
+	 * Passes the equipper (The entity) and the gun manager.
+	 */
+	public void render(Entity e, GunManager gunManager, Batch batch){
+		
+	}
+	
+	/**
+	 * Called when equipped.
+	 * Passes the equipper (The entity) and the gun manager.
+	 */
+	public void renderUI(Entity e, GunManager gunManager, Batch batch){
+		
 	}
 	
 }

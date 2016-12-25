@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -74,8 +75,7 @@ public final class GunManager {
 			for(int i = 0; i < gun.getConstructors().length; i++){
 				try {
 					GunDefinition newGun = (GunDefinition) gun.getConstructors()[i].newInstance();
-					// Add to list
-					guns.add(newGun);
+					// Adds itself to list automatically
 					Log.info(TAG, "Found gun '" + newGun.name + "' of class '" + gun.getSimpleName() + "' using constructor #" + i);
 					break; // Because we found an adequate constructor.
 				} catch (Exception e){
@@ -178,6 +178,7 @@ public final class GunManager {
 		burstShotsFired = 0;
 		shoot = false;
 		requestingShoot = false;
+		if(equipped != null && player != null) equipped.equipped(this, player);
 	}
 
 	/**
@@ -256,6 +257,9 @@ public final class GunManager {
 		}
 		
 		requestingShoot = false;
+		
+		if(equipped != null)
+			equipped.update(player, this, delta);
 	}
 
 	public void shootEquiped(float angle, float[] bulletSpawn) {
@@ -306,8 +310,23 @@ public final class GunManager {
 			}
 		}, new Vector2(bulletSpawn[0], bulletSpawn[1]), end);
 		
+		if(equipped != null && player != null) equipped.shot(this, player);
+		
 	}
 
+	public static TextureRegion[] getAnim(GunDefinition gun, String animName, int frames){
+		TextureRegion[] textures = new TextureRegion[frames];
+		for(int i = 0; i < frames; i++){
+			textures[i] = Day100.gunsAtlas.findRegion(gun.name + animName + i);
+			Log.info(TAG, "Getting frame '" + gun.name + animName + i + "'");
+		}
+		return textures;
+	}
+	
+	public static TextureRegion[] getAnim(String gun, String animName, int frames){
+		return getAnim(find(gun), animName, frames);
+	}
+	
 	/**
 	 * Is the gun to the right side of the player?
 	 */
@@ -404,6 +423,9 @@ public final class GunManager {
 		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), interpolationFinal);
 		
 		shoot = false;
+		
+		if(equipped != null)
+			equipped.render(player, this, batch);
 	}
 
 	public void renderUI(Batch batch){
@@ -414,6 +436,9 @@ public final class GunManager {
 		batch.draw(equipped.texture, 5, 5);
 		Day100.smallFont.setColor(1, 1, 1, 1);
 		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equipped.firingModeSelected].toString().toLowerCase(), equipped.texture.getRegionWidth(), 30);
+	
+		if(equipped != null)
+			equipped.renderUI(player, this, batch);
 	}
 	
 	public static Sound getGunSound(final String name) {

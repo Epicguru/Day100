@@ -1,47 +1,131 @@
 
 Guns.png
-size: 1024,128
+size: 2048,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 AK-47
   rotate: false
-  xy: 2, 2
+  xy: 2, 48
   size: 245, 74
   orig: 245, 74
   offset: 0, 0
   index: -1
 Flash
   rotate: false
-  xy: 2, 78
+  xy: 249, 67
   size: 320, 9
   orig: 320, 9
   offset: 0, 0
   index: -1
 Glock
   rotate: false
-  xy: 752, 35
+  xy: 1631, 24
   size: 112, 52
   orig: 112, 52
   offset: 0, 0
   index: -1
 P90
   rotate: false
-  xy: 589, 30
+  xy: 1839, 65
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 Revolver
   rotate: false
-  xy: 866, 34
+  xy: 1745, 23
   size: 77, 53
   orig: 77, 53
   offset: 0, 0
   index: -1
 Scout
   rotate: false
-  xy: 324, 43
+  xy: 2, 2
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt0
+  rotate: false
+  xy: 1824, 26
+  size: 222, 37
+  orig: 222, 37
+  offset: 0, 0
+  index: -1
+ScoutBolt1
+  rotate: false
+  xy: 249, 78
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt10
+  rotate: false
+  xy: 1366, 32
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt11
+  rotate: false
+  xy: 1574, 78
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt2
+  rotate: false
+  xy: 514, 78
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt3
+  rotate: false
+  xy: 571, 32
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt4
+  rotate: false
+  xy: 267, 21
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt5
+  rotate: false
+  xy: 779, 78
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt6
+  rotate: false
+  xy: 836, 32
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt7
+  rotate: false
+  xy: 1044, 78
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt8
+  rotate: false
+  xy: 1101, 32
+  size: 263, 44
+  orig: 263, 44
+  offset: 0, 0
+  index: -1
+ScoutBolt9
+  rotate: false
+  xy: 1309, 78
   size: 263, 44
   orig: 263, 44
   offset: 0, 0

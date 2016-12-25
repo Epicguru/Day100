@@ -229,7 +229,7 @@ public final class Map {
 		BuildingManager.update(delta);
 		
 		// TEST
-		if(MathUtils.randomBoolean(0.5f * delta)){
+		if(MathUtils.randomBoolean(0.2f * delta)){
 			if(!Day100.player.isDead())
 				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
 		}	
