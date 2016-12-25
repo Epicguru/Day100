@@ -8,7 +8,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.player.weapons.GunDefinition;
 
 public class SoundReflectionActor extends ReflectionActor {
-
+	
 	public SoundReflectionActor(String name, String type, Actor[] actors) {
 		super(name, type, actors);
 		// 0 = Text
@@ -16,7 +16,6 @@ public class SoundReflectionActor extends ReflectionActor {
 
 	@Override
 	public void apply(GunDefinition gun) throws Exception {
-		
 		if(((VisLabel)actors[0]).getText().toString().equals("Null")){
 			gun.getClass().getField(this.fieldName).set(gun, null);
 			return;

@@ -187,7 +187,9 @@ public abstract class GunDefinition {
 		String name = f.getName();
 		String type = f.getType().getSimpleName();
 		try {
-			reader.getValue(name, type, f.get(this), total);
+			Object o = f.get(this);
+			if(o == null) Log.error(TAG, "Field " + name + " is null!");
+			reader.getValue(name, type, o, total);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -239,10 +241,7 @@ public abstract class GunDefinition {
 					if(((String) value).startsWith("SYS_SOUND")){
 						String[] split = ((String) value).split(":");
 						String soundPath = split[1];
-						Log.info(TAG, "Sound path 1 is " + soundPath);
 						soundPath = GunEditor.getSoundAssetFromEnding(soundPath);
-						Log.info(TAG, "Sound path 2 is " + soundPath);
-						Log.info(TAG, "Value is : " + Day100.assets.get(soundPath, Sound.class));
 						if(soundPath.equals("Null")){
 							try {
 								this.getClass().getField(key).set(this, null);

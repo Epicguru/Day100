@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.map.DamageData;
 
 public abstract class BuildingFloor extends BuildingObject {
 
@@ -89,5 +90,10 @@ public abstract class BuildingFloor extends BuildingObject {
 	
 	public void cancelPlace(){
 		slay();
+	}
+
+	public void takeDamage(float damage, DamageData data) {
+		if(placed)
+			super.takeDamage(damage, data);
 	}
 }

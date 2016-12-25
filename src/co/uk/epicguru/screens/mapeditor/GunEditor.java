@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -184,42 +185,18 @@ public final class GunEditor {
 					}
 					reflection.add(new FiringModeReflectionActor(name, type, boxes));
 				}else if(type.equals("Sound")){
-					
-					VisList<String> soundNames = new VisList<String>();
-					soundNames.setItems(sounds);
-					VisLabel label;
-					label = new VisLabel(getSelectedSound(value));
-					if(label.getText().toString().equals("Null"))
-						label.setColor(Color.RED);
-					else
-						label.setColor(Color.GREEN);
-					
-					VisTextButton button = new VisTextButton("Change sound", new ChangeListener(){
-						public void changed(ChangeEvent arg0, Actor arg1) {
-							VisWindow newSound = VisUIHandler.newWindow("Select a new Sound");
-							newSound.add(soundNames);
-							newSound.row();
-							newSound.add(new VisTextButton("Confirm new Sound", new ChangeListener(){
-								public void changed(ChangeEvent arg0, Actor arg1) {
-									newSound.fadeOut();
-									// Apply
-									label.setText(soundNames.getSelected());
-									if(label.getText().toString().equals("Null"))
-										label.setColor(Color.RED);
-									else
-										label.setColor(Color.GREEN);
-								}								
-							}));
-							newSound.pack();
-							newSound.center();
-						}						
-					});					
-					
-					properties.add(label);
-					properties.add(button);
-					reflection.add(new SoundReflectionActor(name, type, new Actor[]{label}));
+					// Compact!
+					newSound(name, type, value);
 				}else if(type.equals("Sound[]")){
-					
+					// Sound array
+					Sound[] array = (Sound[])value;
+					int length = array.length;
+					properties.row();
+					for(int i = 0; i < length; i++){
+						Log.info("Gun Editor", array[i] + " is " + i + " array is " + value);
+						newSound(name, type, array, i);
+						properties.row();
+					}
 				}else{
 					// UNKNOWN
 					VisLabel label = new VisLabel("UNKNOWN TYPE - " + type);
@@ -227,7 +204,7 @@ public final class GunEditor {
 					properties.add(label);
 					
 					
-					Log.error("Gun Editor", "Unknow type : " + type);
+					Log.error("Gun Editor", "Unknown type : " + type);
 				}
 				properties.row();
 			}
@@ -238,6 +215,78 @@ public final class GunEditor {
 		// Resize
 		if(renamer != null)
 			renamer.setPosition(Gdx.graphics.getWidth() - 240, properties.getHeight());
+	}
+	
+	private static void newSound(String name, String type, Object value){
+		VisList<String> soundNames = new VisList<String>();
+		soundNames.setItems(sounds);
+		VisLabel label;
+		label = new VisLabel(getSelectedSound(value));
+		if(label.getText().toString().equals("Null"))
+			label.setColor(Color.RED);
+		else
+			label.setColor(Color.GREEN);
+		
+		VisTextButton button = new VisTextButton("Change sound", new ChangeListener(){
+			public void changed(ChangeEvent arg0, Actor arg1) {
+				VisWindow newSound = VisUIHandler.newWindow("Select a new Sound");
+				newSound.add(soundNames);
+				newSound.row();
+				newSound.add(new VisTextButton("Confirm new Sound", new ChangeListener(){
+					public void changed(ChangeEvent arg0, Actor arg1) {
+						newSound.fadeOut();
+						// Apply
+						label.setText(soundNames.getSelected());
+						if(label.getText().toString().equals("Null"))
+							label.setColor(Color.RED);
+						else
+							label.setColor(Color.GREEN);
+					}								
+				}));
+				newSound.pack();
+				newSound.center();
+			}						
+		});					
+		
+		properties.add(label);
+		properties.add(button);
+		reflection.add(new SoundReflectionActor(name, type, new Actor[]{label}));
+	}
+	
+	private static void newSound(String name, String type, Object value, int index){
+		VisList<String> soundNames = new VisList<String>();
+		soundNames.setItems(sounds);
+		VisLabel label;
+		label = new VisLabel(getSelectedSound(value));
+		if(label.getText().toString().equals("Null"))
+			label.setColor(Color.RED);
+		else
+			label.setColor(Color.GREEN);
+		
+		VisTextButton button = new VisTextButton("Change sound", new ChangeListener(){
+			public void changed(ChangeEvent arg0, Actor arg1) {
+				VisWindow newSound = VisUIHandler.newWindow("Select a new Sound");
+				newSound.add(soundNames);
+				newSound.row();
+				newSound.add(new VisTextButton("Confirm new Sound", new ChangeListener(){
+					public void changed(ChangeEvent arg0, Actor arg1) {
+						newSound.fadeOut();
+						// Apply
+						label.setText(soundNames.getSelected());
+						if(label.getText().toString().equals("Null"))
+							label.setColor(Color.RED);
+						else
+							label.setColor(Color.GREEN);
+					}								
+				}));
+				newSound.pack();
+				newSound.center();
+			}						
+		});					
+		
+		properties.add(label);
+		properties.add(button);
+		reflection.add(new SoundArrayItemReflectionActor(name, type, new Actor[]{label}, index));
 	}
 	
 	public static String getSoundAssetFromEnding(final String ending){
@@ -259,16 +308,22 @@ public final class GunEditor {
 			selected = "Null";
 		}else{
 			for(String sound : sounds){
+				if(sound.equals("Null"))
+					continue;
 				String assetName = null;
+				boolean found = false;
 				for(String asset : Day100.assets.getAssetNames()){
 					if(asset.endsWith(sound)){
 						String temp = new String(asset);
 						if(!temp.replace(sound, "").endsWith("/"))
 							continue;
 						assetName = asset;
+						found = true;
 						break;
 					}
 				}
+				if(!found)
+					Log.error("Gun Editor", "Failed to find sound data for asset " + sound);
 				Object loadedAsset = Day100.assets.get(assetName);
 				if(loadedAsset instanceof Music){
 					continue;

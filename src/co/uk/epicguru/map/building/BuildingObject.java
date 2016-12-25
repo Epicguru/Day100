@@ -27,7 +27,7 @@ public abstract class BuildingObject extends Entity {
 	}
 	
 	@Override
-	public void takeDamage(float damage, DamageData data) {
+	public void takeDamage(float damage, DamageData data) {		
 		super.takeDamage(damage, data);
 		int particleSize = 5; // In pixels
 		int x = this.texture.getRegionX();

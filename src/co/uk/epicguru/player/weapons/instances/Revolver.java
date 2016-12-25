@@ -9,7 +9,7 @@ public final class Revolver extends GunDefinition {
 
 	public Revolver() {
 		super("Revolver");
-		shotSounds = new Sound[]{GunManager.getGunSound("Ak47.mp3")};
+		shotSounds = new Sound[]{GunManager.getGunSound("Ak47.mp3"), GunManager.getGunSound("Cock2.mp3")};
 	}
 
 }
