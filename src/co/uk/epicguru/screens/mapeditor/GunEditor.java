@@ -51,11 +51,11 @@ public final class GunEditor {
 	private static VisTextArea renamerPath;
 	private static VisTextArea renamerStart;
 	private static Array<String> sounds = new Array<String>();
-	
+
 	public static void open(){
 		if(open)
 			return;
-		
+
 		if(GunManager.guns.isEmpty()){
 			MapEditor.state = State.CREATION;
 			return;
@@ -78,22 +78,22 @@ public final class GunEditor {
 
 		VisScrollPane scroll = new VisScrollPane(gunsList);
 		gun.add(scroll);
-		
+
 		// Get sounds
 		sounds.clear();
 		Array<String> allAssets = Day100.assets.getAssetNames();
 		for(String string : allAssets){
-			
+
 			if(!string.endsWith(".mp3"))
 				continue;			
 			if(Day100.assets.get(string) instanceof Music)
 				continue;
-			
+
 			String[] split = string.split("/");
 			String name = split[split.length - 1];
 			sounds.add(name);
 		}
-		
+
 		sounds.add("Null");
 		loadGunProperties(GunManager.guns.get(0).name);
 		renamer();
@@ -101,7 +101,7 @@ public final class GunEditor {
 	}
 
 	private static void loadGunProperties(String gun){
-		
+
 		// Build properties window
 		properties = VisUIHandler.newWindow(gun);
 		properties.setWidth(560);
@@ -110,15 +110,15 @@ public final class GunEditor {
 
 		// Reset count
 		count = 0;
-		
+
 		// Clear reflection data
 		reflection.clear();		
-		
+
 		GunManager.find(gun).getFields(new FieldReader() {
 			public void getValue(String name, String type, Object value, int total) {
-				
+
 				count++;
-				
+
 				// Get value
 				properties.add(new VisLabel(name + " : "));
 				if(type.equals("float")){
@@ -227,8 +227,8 @@ public final class GunEditor {
 					VisLabel label = new VisLabel("UNKNOWN TYPE - " + type);
 					label.setColor(Color.RED);
 					properties.add(label);
-					
-					
+
+
 					Log.error("Gun Editor", "Unknown type : " + type);
 				}
 				properties.row();
@@ -236,12 +236,12 @@ public final class GunEditor {
 		});
 		properties.setHeight(30 * count);
 		Log.info("Gun Editor", "Created new window.");
-		
+
 		// Resize
 		if(renamer != null)
 			renamer.setPosition(Gdx.graphics.getWidth() - 240, properties.getHeight());
 	}
-	
+
 	private static void newSound(String name, String type, Object value){
 		VisList<String> soundNames = new VisList<String>();
 		soundNames.setItems(sounds);
@@ -251,7 +251,7 @@ public final class GunEditor {
 			label.setColor(Color.RED);
 		else
 			label.setColor(Color.GREEN);
-		
+
 		VisTextButton button = new VisTextButton("Change sound", new ChangeListener(){
 			public void changed(ChangeEvent arg0, Actor arg1) {
 				VisWindow newSound = VisUIHandler.newWindow("Select a new Sound");
@@ -272,12 +272,12 @@ public final class GunEditor {
 				newSound.center();
 			}						
 		});					
-		
+
 		properties.add(label);
 		properties.add(button);
 		reflection.add(new SoundReflectionActor(name, type, new Actor[]{label}));
 	}
-	
+
 	private static void newSound(String name, String type, Object value, int index){
 		VisList<String> soundNames = new VisList<String>();
 		soundNames.setItems(sounds);
@@ -287,7 +287,7 @@ public final class GunEditor {
 			label.setColor(Color.RED);
 		else
 			label.setColor(Color.GREEN);
-		
+
 		VisTextButton button = new VisTextButton("Change sound", new ChangeListener(){
 			public void changed(ChangeEvent arg0, Actor arg1) {
 				VisWindow newSound = VisUIHandler.newWindow("Select a new Sound");
@@ -335,13 +335,13 @@ public final class GunEditor {
 				loadGunProperties(properties.getTitleLabel().getText().toString());
 			}			
 		});
-		
+
 		properties.add(label);
 		properties.add(button);
 		properties.add(delete);
 		reflection.add(myActor);
 	}
-	
+
 	public static String getSoundAssetFromEnding(final String ending){
 		for(String asset : Day100.assets.getAssetNames()){
 			if(asset.endsWith(ending)){
@@ -353,7 +353,7 @@ public final class GunEditor {
 		}
 		return "Null";
 	}
-	
+
 	public static String getSelectedSound(Object value){
 		String selected = "Null";
 		// Get selected
@@ -397,35 +397,43 @@ public final class GunEditor {
 	}
 
 	private static void saveGun(JLineWriter writer, String name){
-		GunManager.find(name).save(writer);
-		writer.endLine();
+		if(Day100.DEVELOPER_MODE){
+			GunManager.find(name).save(writer);
+			writer.endLine();			
+		}
 	}
 
 	private static void saveAll(){
-		
+
 		// Save gun data
-		JLineWriter writer = new JLineWriter(new File(Gdx.files.getLocalStoragePath().replace("\\desktop", "/core/assets/Cache/Guns.txt")));
-		try {
-			writer.open();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
+		JLineWriter writer = null;
+		if(Day100.DEVELOPER_MODE){
+			writer = new JLineWriter(new File(Gdx.files.getLocalStoragePath().replace("\\desktop", "/core/assets/Cache/Guns.txt")));
+			Log.info("Gun Editor", "Saving all data to " + writer.getFile().getAbsolutePath());
+			try {
+				writer.open();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return;
+			}
 		}
 
-		Log.info("Gun Editor", "Saving all data to " + writer.getFile().getAbsolutePath());
-		
+
 		for(GunDefinition gun : GunManager.guns){
 			Log.info("Guns Editor", "Saving data for '" + gun.name + "' ...");
 			// Apply gun data to gun that is being edited
 			if(properties.getTitleLabel().getText().toString().equals(gun.name))
 				apply(gun.name);
 			// Save data
-			saveGun(writer, gun.name);
+			if(Day100.DEVELOPER_MODE)
+				saveGun(writer, gun.name);
 		}
-		writer.dispose();
-		
+		if(writer != null)
+			writer.dispose();
+
 		try {
-			FileUtils.copyFile(writer.getFile(), new File(Gdx.files.getLocalStoragePath() + "bin\\cache\\Guns.txt"));
+			if(Day100.DEVELOPER_MODE)
+				FileUtils.copyFile(writer.getFile(), new File(Gdx.files.getLocalStoragePath() + "bin\\cache\\Guns.txt"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -434,8 +442,8 @@ public final class GunEditor {
 	public static void update(float delta){
 
 		if(gun == null)
-			 return;
-		
+			return;
+
 		if(oldSelected != null && !oldSelected.equals(gunsList.getSelected()))
 			selectedChange(gunsList.getSelected());
 
@@ -455,13 +463,13 @@ public final class GunEditor {
 		}
 		if(x == null || y == null)
 			return;
-		
+
 		float xPos = x.isInputValid() ? Float.parseFloat(x.getText().trim()) : 0;
 		float yPos = y.isInputValid() ? Float.parseFloat(y.getText().trim()) : 0;
-		
+
 		DevCross.drawCentred(gun.texture.getRegionWidth() / Constants.PPM * xPos, gun.texture.getRegionHeight() / Constants.PPM * yPos, 0.5f * Day100.camera.zoom);
 	}
-	
+
 	public static void renamer(){
 		if(renamer != null){
 			renamer.fadeOut();
@@ -474,7 +482,7 @@ public final class GunEditor {
 			renamer.row();
 			renamer.add(new VisLabel("New Start : "), renamerStart = new VisTextArea("GunName"));
 			renamer.row();
-			
+
 			renamer.add(new VisTextButton("Go!", new ChangeListener() {
 				public void changed(ChangeEvent arg0, Actor arg1) {
 					// Go!
@@ -485,7 +493,7 @@ public final class GunEditor {
 						MapEditor.displayErrors();
 						return;
 					}
-					
+
 					File[] files = root.listFiles();
 					if(files.length == 0){
 						MapEditor.exportFailures.clear();
@@ -493,7 +501,7 @@ public final class GunEditor {
 						MapEditor.displayErrors();
 						return;
 					}
-					
+
 					boolean done = false;
 					for(File file : files){
 						while(!done){
@@ -516,7 +524,7 @@ public final class GunEditor {
 			}));
 		}
 	}
-	
+
 	public static void selectedChange(String selected){
 		saveAll();
 		disposePropertiesWindow();

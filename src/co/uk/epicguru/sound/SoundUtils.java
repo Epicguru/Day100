@@ -15,7 +15,7 @@ public final class SoundUtils {
 	private static float DEFAULT = 0.5f;
 	private static float MIN_PAN = 0.2f;
 	private static float MAX_PITCH_DST = 50;
-	private static float MIN_PITCH = 0.6f;
+	private static float MIN_PITCH = 0.95f;
 	
 	public static float getVolume(Vector2 position, float maxDst){
 		if(Day100.player == null || Day100.player.getBody() == null)

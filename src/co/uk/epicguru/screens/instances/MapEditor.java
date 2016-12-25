@@ -173,6 +173,8 @@ public final class MapEditor extends GameScreen {
 	}
 	
 	public void updateMusic(){
+		if(!Day100.DEVELOPER_MODE)
+			return;
 		musicVolume = 0.02f;
 		music[musicIndex % music.length].setVolume(musicVolume);
 		if(!music[musicIndex % music.length].isPlaying()){

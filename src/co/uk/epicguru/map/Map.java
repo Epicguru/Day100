@@ -28,6 +28,7 @@ import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
+import co.uk.epicguru.player.BotController;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
 
@@ -228,9 +229,9 @@ public final class Map {
 		BuildingManager.update(delta);
 		
 		// TEST
-		if(MathUtils.randomBoolean(3f * delta)){
-			//if(!Day100.player.isDead())
-				//new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
+		if(MathUtils.randomBoolean(0.5f * delta)){
+			if(!Day100.player.isDead())
+				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
 		}	
 		
 		Entity.updateAll(delta);

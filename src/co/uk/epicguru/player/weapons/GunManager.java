@@ -273,7 +273,7 @@ public final class GunManager {
 			Sound sound = equipped.shotSounds[MathUtils.random(equipped.shotSounds.length - 1)];
 			float volume = MathUtils.random(equipped.minVolume, equipped.maxVolume);
 			float pitch = MathUtils.random(equipped.minPitch, equipped.maxPitch);
-			SoundUtils.playSound(new Vector2(), sound, volume, pitch, equipped.shotSoundDistance);
+			SoundUtils.playSound(player, sound, volume, pitch, equipped.shotSoundDistance);
 			
 		}
 

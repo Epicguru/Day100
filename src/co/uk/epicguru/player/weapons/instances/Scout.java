@@ -9,6 +9,7 @@ import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.player.weapons.Exclude;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunManager;
+import co.uk.epicguru.sound.SoundUtils;
 
 public class Scout extends GunDefinition {
 
@@ -34,8 +35,8 @@ public class Scout extends GunDefinition {
 	
 	@Override
 	public void equipped(GunManager gunManager, Entity e) {
-		frameNumber = 0;
-		timer = 0;
+		//frameNumber = 0;
+		//timer = 0;
 	}
 
 	public void update(Entity e, GunManager gun, float delta){
@@ -62,7 +63,7 @@ public class Scout extends GunDefinition {
 	}
 	
 	public void shot(GunManager gun, Entity shooter){
-		bolt.play(0.7f);
+		SoundUtils.playSound(gun.player, bolt, 0.7f, 1, 20);
 		timer = 0;
 		frameNumber = 0;
 	}

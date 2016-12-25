@@ -48,9 +48,9 @@ Scout
   index: -1
 ScoutBolt0
   rotate: false
-  xy: 1824, 26
-  size: 222, 37
-  orig: 222, 37
+  xy: 2, 2
+  size: 263, 44
+  orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt1
