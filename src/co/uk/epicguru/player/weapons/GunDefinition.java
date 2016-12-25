@@ -37,6 +37,11 @@ public abstract class GunDefinition {
 	public Sound[] shotSounds = new Sound[]{ GunManager.getGunSound("Silenced.mp3") };
 	
 	/**
+	 * The max distance that the shot from this gun can be heard from.
+	 */
+	public float shotSoundDistance = 35;
+	
+	/**
 	 * The modes in which the gun can fire.
 	 **/
 	public FiringMode[] firingModes = new FiringMode[]{ FiringMode.SEMI };
@@ -108,8 +113,7 @@ public abstract class GunDefinition {
 	 * The amount of bullets in one burst in burst fire mode.
 	 */
 	public int burstBullets = 3;
-	
-	
+
 	/**
 	 * The range of the weapon in meters. The visual flash may be longer than this amount but it will not hit any targets beyond this range.
 	 */
@@ -188,7 +192,9 @@ public abstract class GunDefinition {
 		String type = f.getType().getSimpleName();
 		try {
 			Object o = f.get(this);
+			
 			if(o == null) Log.error(TAG, "Field " + name + " is null!");
+			
 			reader.getValue(name, type, o, total);
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
@@ -237,8 +243,8 @@ public abstract class GunDefinition {
 						e.printStackTrace();
 					}
 				}else{
-					// Test for SYS_SOUND
-					if(((String) value).startsWith("SYS_SOUND")){
+					// Test for SYS_SOUND and not SYS_SOUND_ARRAY
+					if(((String) value).startsWith("SYS_SOUND") && !((String) value).startsWith("SYS_SOUND_ARRAY")){
 						String[] split = ((String) value).split(":");
 						String soundPath = split[1];
 						soundPath = GunEditor.getSoundAssetFromEnding(soundPath);
@@ -255,7 +261,31 @@ public abstract class GunDefinition {
 								e.printStackTrace();
 							}						
 						}
-							
+					}else if(((String) value).startsWith("SYS_SOUND_ARRAY")){
+						String[] split = ((String) value).split(":");
+						if(split.length > 1 && split.length > 0){
+							String parts = split[1];
+							String[] sounds = parts.split(",");
+							try {
+								this.getClass().getField(key).set(this, new Sound[sounds.length]);
+							} catch (Exception e){
+								e.printStackTrace();
+							}
+							Sound[] array = null;
+							try {
+								array = (Sound[]) this.getClass().getField(key).get(this);
+							} catch (Exception e){
+								e.printStackTrace();
+							}
+							for(int i = 0; i < sounds.length; i++){ // -1 because the last item is empty.
+								String soundPath = GunEditor.getSoundAssetFromEnding(sounds[i]);
+								if(soundPath.equals("Null")){
+									array[i] = null;								
+								}else{
+									array[i] = Day100.assets.get(soundPath, Sound.class);						
+								}
+							}
+						}						
 					}else{
 						// Normal String
 						try {
@@ -300,6 +330,14 @@ public abstract class GunDefinition {
 					}else if(f2.getType().getSimpleName().equals("Sound")){
 						String name = GunEditor.getSelectedSound(f2.get(this));
 						writer.write(f2.getName(), "SYS_SOUND:" + name);
+					}else if(f2.getType().getSimpleName().equals("Sound[]")){
+						Sound[] array = (Sound[])f2.get(this);
+						String result = "";
+						for(Sound s : array){
+							String name = GunEditor.getSelectedSound(s);
+							result += name + ",";
+						}
+						writer.write(f2.getName(), "SYS_SOUND_ARRAY:" + result);
 					}else if(f2.getType().getSimpleName().equals("String")){
 						writer.write(f2.getName(), (String)f2.get(this));
 					}else{
@@ -353,9 +391,10 @@ public abstract class GunDefinition {
 	/**
 	 * Called when equipped. DOES NOT RENDER GUN, BY DEFAULT DOES NOTHING.
 	 * Passes the equipper (The entity) and the gun manager.
+	 * This method is called AFTER the gun has been rendered so you can use this method to reset animation textures.
 	 */
 	public void render(Entity e, GunManager gunManager, Batch batch){
-		
+
 	}
 	
 	/**

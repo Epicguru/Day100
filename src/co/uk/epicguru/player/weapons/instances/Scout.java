@@ -1,6 +1,7 @@
 package co.uk.epicguru.player.weapons.instances;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.main.Day100;
@@ -54,6 +55,10 @@ public class Scout extends GunDefinition {
 				frameNumber = -1;
 			}
 		}
+	}
+	
+	public void render(Entity e, GunManager g, Batch batch){
+		texture = defaultTexture;
 	}
 	
 	public void shot(GunManager gun, Entity shooter){

@@ -2,7 +2,10 @@ package co.uk.epicguru.screens.mapeditor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -75,10 +78,6 @@ public final class GunEditor {
 
 		VisScrollPane scroll = new VisScrollPane(gunsList);
 		gun.add(scroll);
-
-		loadGunProperties(GunManager.guns.get(0).name);
-		renamer();
-		open = true;
 		
 		// Get sounds
 		sounds.clear();
@@ -94,7 +93,11 @@ public final class GunEditor {
 			String name = split[split.length - 1];
 			sounds.add(name);
 		}
+		
 		sounds.add("Null");
+		loadGunProperties(GunManager.guns.get(0).name);
+		renamer();
+		open = true;
 	}
 
 	private static void loadGunProperties(String gun){
@@ -191,11 +194,33 @@ public final class GunEditor {
 					// Sound array
 					Sound[] array = (Sound[])value;
 					int length = array.length;
+					properties.add(new VisTextButton("New sound...", new ChangeListener(){
+						public void changed(ChangeEvent arg0, Actor arg1) {
+							// New sound.
+							saveAll();
+							properties.fadeOut(0);
+							GunDefinition gun = GunManager.find(properties.getTitleLabel().getText().toString());
+							Sound[] oldArray = null;
+							try {
+								oldArray = (Sound[]) gun.getClass().getField(name).get(gun);
+							} catch (Exception e){
+								e.printStackTrace();
+							}
+							Sound[] newArray = new Sound[oldArray.length + 1];
+							System.arraycopy(oldArray, 0, newArray, 0, oldArray.length);
+							try {
+								gun.getClass().getField(name).set(gun, newArray);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							loadGunProperties(gun.name);
+						}						
+					}));
 					properties.row();
 					for(int i = 0; i < length; i++){
-						Log.info("Gun Editor", array[i] + " is " + i + " array is " + value);
-						newSound(name, type, array, i);
+						newSound(name, type, array[i], i);
 						properties.row();
+						count++;
 					}
 				}else{
 					// UNKNOWN
@@ -282,11 +307,39 @@ public final class GunEditor {
 				newSound.pack();
 				newSound.center();
 			}						
-		});					
+		});	
+		SoundArrayItemReflectionActor myActor = new SoundArrayItemReflectionActor(name, type, new Actor[]{label}, index);
+		VisTextButton delete = new VisTextButton("Remove", new ChangeListener(){
+			public void changed(ChangeEvent arg0, Actor arg1) {
+				int count = 0;
+				for(ReflectionActor actor : reflection){
+					if(actor.fieldName.equals(name)){
+						count++;
+						SoundArrayItemReflectionActor actor2 = (SoundArrayItemReflectionActor)actor;
+						if(actor2 != myActor){
+							if(actor2.index > index){
+								actor2.index--;
+							}
+						}						
+					}
+				}
+				GunDefinition gun = GunManager.find(properties.getTitleLabel().getText().toString());
+				try {
+					gun.getClass().getField(name).set(gun, new Sound[--count]);
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				myActor.removed = true;
+				saveAll();
+				properties.fadeOut(0);
+				loadGunProperties(properties.getTitleLabel().getText().toString());
+			}			
+		});
 		
 		properties.add(label);
 		properties.add(button);
-		reflection.add(new SoundArrayItemReflectionActor(name, type, new Actor[]{label}, index));
+		properties.add(delete);
+		reflection.add(myActor);
 	}
 	
 	public static String getSoundAssetFromEnding(final String ending){
@@ -351,7 +404,7 @@ public final class GunEditor {
 	private static void saveAll(){
 		
 		// Save gun data
-		JLineWriter writer = new JLineWriter(new File(Constants.DAY_100_FOLDER + "Gun Data\\Data TEMP.txt"));
+		JLineWriter writer = new JLineWriter(new File(Gdx.files.getLocalStoragePath().replace("\\desktop", "/core/assets/Cache/Guns.txt")));
 		try {
 			writer.open();
 		} catch (FileNotFoundException e) {
@@ -359,7 +412,7 @@ public final class GunEditor {
 			return;
 		}
 
-		Log.info("Gun Editor", "Saving all data.");
+		Log.info("Gun Editor", "Saving all data to " + writer.getFile().getAbsolutePath());
 		
 		for(GunDefinition gun : GunManager.guns){
 			Log.info("Guns Editor", "Saving data for '" + gun.name + "' ...");
@@ -370,6 +423,12 @@ public final class GunEditor {
 			saveGun(writer, gun.name);
 		}
 		writer.dispose();
+		
+		try {
+			FileUtils.copyFile(writer.getFile(), new File(Gdx.files.getLocalStoragePath() + "bin\\cache\\Guns.txt"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void update(float delta){

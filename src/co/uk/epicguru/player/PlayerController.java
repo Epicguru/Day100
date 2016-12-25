@@ -86,13 +86,13 @@ public final class PlayerController extends Entity{
 		if(Input.isKeyJustDown(Keys.E)){
 			gunManager.equipped = gunManager.next();
 			gunManager.gunChanged();
-			Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
+			//Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.Q)){
 			gunManager.equipped = gunManager.previous();
 			gunManager.gunChanged();
-			Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
+			//Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.F) && !BuildingManager.placing){

@@ -10,6 +10,7 @@ import co.uk.epicguru.player.weapons.GunDefinition;
 public class SoundArrayItemReflectionActor extends ReflectionActor {
 	
 	public int index;
+	public boolean removed = false;
 	
 	public SoundArrayItemReflectionActor(String name, String type, Actor[] actors, int index) {
 		super(name, type, actors);
@@ -19,6 +20,10 @@ public class SoundArrayItemReflectionActor extends ReflectionActor {
 
 	@Override
 	public void apply(GunDefinition gun) throws Exception {
+		
+		if(removed)
+			return;
+		
 		if(((VisLabel)actors[0]).getText().toString().equals("Null")){
 			Sound[] array = (Sound[])gun.getClass().getField(this.fieldName).get(gun);
 			array[index] = null;

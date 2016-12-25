@@ -1,12 +1,11 @@
 package co.uk.epicguru.player.weapons;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Set;
 
 import org.reflections.Reflections;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -26,6 +25,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.DamageData;
 import co.uk.epicguru.map.Entity;
+import co.uk.epicguru.sound.SoundUtils;
 
 public final class GunManager {
 
@@ -93,14 +93,11 @@ public final class GunManager {
 		// Load gun data from file - TODO use internal path in cache or similar
 		// to load from internal
 		// to avoid changing gun data as a user.
-		JLineReader reader = new JLineReader(new File(Constants.DAY_100_FOLDER + "Gun Data\\Data TEMP.txt"));
-		try {
-			reader.open();
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-			return;
-		}
-		do {
+		String data = Gdx.files.internal("Cache/Guns.txt").readString();
+		String[] lines = data.split("\n");
+		JLineReader reader = new JLineReader(lines[0]);
+		int index = 0;
+		do {	
 			final String ERROR = "ERROR_WTF_EMPTY?";
 			String name = reader.readString("name", ERROR);
 			if (name.equals(ERROR)) {
@@ -110,8 +107,10 @@ public final class GunManager {
 			// Find that gun and load it.
 			Log.info(TAG, "Loading data for '" + name + "' ...");
 			find(name).load(reader);
-
-		} while (!reader.nextLine());
+			index++;
+			if(index < lines.length)
+				reader.setLine(lines[index]);
+		} while (index < lines.length);
 
 		reader.dispose();
 	}
@@ -270,9 +269,13 @@ public final class GunManager {
 		angleVelocity = equipped.recoil;
 
 		// Play sound.
-		equipped.shotSounds[MathUtils.random(equipped.shotSounds.length - 1)].play(
-				MathUtils.random(equipped.minVolume, equipped.maxVolume),
-				MathUtils.random(equipped.minPitch, equipped.maxPitch) * Day100.timeScale, MathUtils.random(-0.1f, 0.1f));
+		if(equipped.shotSounds.length > 0){
+			Sound sound = equipped.shotSounds[MathUtils.random(equipped.shotSounds.length - 1)];
+			float volume = MathUtils.random(equipped.minVolume, equipped.maxVolume);
+			float pitch = MathUtils.random(equipped.minPitch, equipped.maxPitch);
+			SoundUtils.playSound(new Vector2(), sound, volume, pitch, equipped.shotSoundDistance);
+			
+		}
 
 		// TESTING
 
