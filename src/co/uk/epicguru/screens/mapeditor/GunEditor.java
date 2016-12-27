@@ -336,6 +336,9 @@ public final class GunEditor {
 			}			
 		});
 
+		VisLabel item = new VisLabel("Item " + index + " - ");
+		item.setColor(new Color(0.3f, 0.8f, 1, 1));
+		properties.add(item);
 		properties.add(label);
 		properties.add(button);
 		properties.add(delete);

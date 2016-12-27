@@ -1,6 +1,7 @@
 package co.uk.epicguru.player.weapons;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -9,6 +10,7 @@ import co.uk.epicguru.map.Entity;
 public class AnimatedInstance extends GunInstance {
 
 	public ArrayList<GunAnimation> loadedAnimations = new ArrayList<GunAnimation>();
+	private HashMap<Integer, Runnable> callbacks = new HashMap<Integer, Runnable>();
 	public TextureRegion defaultTexture;
 	public GunAnimation currentAnimation;
 	private int currentFrame;
@@ -29,6 +31,13 @@ public class AnimatedInstance extends GunInstance {
 	 */
 	public float getFPS(){
 		return FPS;
+	}
+	
+	/**
+	 * Removes all added callbacks.
+	 */
+	public void clearCallbacks(){
+		callbacks.clear();
 	}
 	
 	/**
@@ -116,6 +125,17 @@ public class AnimatedInstance extends GunInstance {
 		return currentAnimation.frames[currentFrame];
 	}
 	
+	/**
+	 * Adds an animation callback to the current playing animation. 
+	 * An animation callback must be added again if the animation is is played again, animation
+	 * callbacks to NOT persist.
+	 * IMPORTANT : If more that one callback is added per frame number, only the first will be executed. One callback per frame.
+	 */
+	public void addCallback(Runnable callback, int frame){
+		if(!this.callbacks.containsKey(frame))
+			this.callbacks.put(frame, callback);
+	}
+	
 	public void update(float delta){
 		if(getCurrentAnimation() == null)
 			return;
@@ -127,6 +147,12 @@ public class AnimatedInstance extends GunInstance {
 				currentAnimation = null;
 				currentFrame = 0;
 				break;
+			}else{
+				//Log.info("CAllback", "Yes " + getCurrentFrame() + callbacks);
+				if(callbacks.containsKey(getCurrentFrame())){
+					callbacks.get(getCurrentFrame()).run();
+					callbacks.remove(getCurrentFrame());
+				}
 			}
 		}
 	}

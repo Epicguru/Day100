@@ -1,6 +1,7 @@
 package co.uk.epicguru.player.weapons.instances;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
@@ -9,8 +10,12 @@ import co.uk.epicguru.player.weapons.AnimatedInstance;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunInstance;
 import co.uk.epicguru.player.weapons.GunManager;
+import co.uk.epicguru.sound.SoundUtils;
 
 public final class Glock extends GunDefinition {
+	
+	public static Sound reloadOut;
+	public static Sound reloadIn;
 	
 	public Glock() {
 		super("Glock");
@@ -30,6 +35,14 @@ public final class Glock extends GunDefinition {
 			AnimatedInstance animator = (AnimatedInstance) instance;
 			animator.setFPS(30);
 			animator.setAnimation("Reload");
+			animator.addCallback(() -> {
+				// Play clip in sound.
+				SoundUtils.playSound(e, reloadOut, 0.5f, 1.4f, 50);
+			}, 5);
+			animator.addCallback(() -> {
+				// Play clip out sound.
+				SoundUtils.playSound(e, reloadIn, 0.5f, 1.4f, 50);
+			}, 17);	
 		}			
 	}
 

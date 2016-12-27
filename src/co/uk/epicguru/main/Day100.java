@@ -96,6 +96,12 @@ public class Day100 extends ApplicationAdapter {
 		assets.load(Constants.GUNS + "ScoutSilenced.mp3", Sound.class);
 		assets.load(Constants.GUNS + "Revolver.mp3", Sound.class);
 		assets.load(Constants.GUNS + "Glock.mp3", Sound.class);
+		assets.load(Constants.GUNS + "ReloadOut.mp3", Sound.class);
+		assets.load(Constants.GUNS + "ReloadIn.mp3", Sound.class);
+		assets.load(Constants.GUNS + "P90.mp3", Sound.class);
+		assets.load(Constants.GUNS + "P902.mp3", Sound.class);
+		assets.load(Constants.GUNS + "GlockIn.mp3", Sound.class);
+		assets.load(Constants.GUNS + "GlockOut.mp3", Sound.class);
 		
 		// Music
 		assets.load(Constants.MUSIC + "Chill.mp3", Music.class);
@@ -140,7 +146,6 @@ public class Day100 extends ApplicationAdapter {
 			float dst = targetTimeScale - timeScale;
 			timeScale += dst * 0.05f;
 		}
-		
 		deltaTime = Gdx.graphics.getDeltaTime() * timeScale;
 		camera.update();
 		UIcamera.update();
