@@ -1,8 +1,8 @@
 package co.uk.epicguru.player.weapons;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.Entity;
 
 public class GunInstance {
@@ -72,7 +72,7 @@ public class GunInstance {
 
 	public void setSelectedFireMode(int selectedFireMode) {
 		this.selectedFireMode = selectedFireMode;
-		Log.info(gun.name, "Setting firing mode to " + selectedFireMode + " for owner " + entity.toString());
+		//Log.info(gun.name, "Setting firing mode to " + selectedFireMode + " for owner " + entity.toString());
 	}
 	
 	/**
@@ -90,6 +90,14 @@ public class GunInstance {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Used when rendering this gun. Gets the absolute and final texture for all built in rendering methods.
+	 * @return
+	 */
+	public TextureRegion getTexture(){
+		return gun.texture;
 	}
 	
 }

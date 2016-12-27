@@ -1,12 +1,10 @@
 package co.uk.epicguru.player.weapons.instances;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
-import co.uk.epicguru.player.weapons.Exclude;
+import co.uk.epicguru.player.weapons.AnimatedInstance;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunInstance;
 import co.uk.epicguru.player.weapons.GunManager;
@@ -15,57 +13,30 @@ import co.uk.epicguru.sound.SoundUtils;
 public class Scout extends GunDefinition {
 
 	public static Sound bolt = GunManager.getGunSound("ScoutBolt.mp3");
-	@Exclude
-	public static TextureRegion[] boltAnim;
-	@Exclude
-	public static TextureRegion defaultTexture = Day100.gunsAtlas.findRegion("Scout");
-	@Exclude
-	public float timer;
-	@Exclude
-	public int frameNumber;
 	
 	public Scout() {
-		super("Scout");
-		shotSounds = new Sound[]{
-				GunManager.getGunSound("Scout.mp3")
-		};
-		if(boltAnim == null)
-			boltAnim = GunManager.getAnim("Scout", "Bolt", 12);
-		frameNumber = -1;
+		super("Scout");		
 	}
 	
-	@Override
-	public void equipped(GunInstance instance, GunManager gunManager, Entity e) {
+	public void shot(GunInstance instance, GunManager gun, Entity shooter){
+		AnimatedInstance animator = (AnimatedInstance)instance;
 		
-	}
-
-	public void update(Entity e, GunManager gun, float delta){
+		// Play animation
+		animator.setAnimation("Bolt");
 		
-		if(frameNumber == -1){
-			texture = defaultTexture;
-			return;
-		}
-		texture = boltAnim[frameNumber];
-		
-		timer += delta;
-		float interval = 0.07f;
-		while(timer >= interval){
-			timer -= interval;
-			frameNumber++;
-			if(frameNumber > boltAnim.length - 1){
-				frameNumber = -1;
-			}
-		}
-	}
-	
-	public void render(Entity e, GunManager g, Batch batch){
-		texture = defaultTexture;
-	}
-	
-	public void shot(GunManager gun, Entity shooter){
+		// Play bolt sound
 		SoundUtils.playSound(gun.player, bolt, 0.7f, 1, 20);
-		timer = 0;
-		frameNumber = 0;
 	}
 
+	public GunInstance getInstance(GunManager gunManager, Entity entity) {
+		AnimatedInstance animator = new AnimatedInstance(gunManager, entity, Day100.gunsAtlas.findRegion("Scout"));
+		
+		// Add bolt animation
+		animator.addAnimation("Bolt", 12);
+		
+		// Set FPS
+		animator.setFPS(14);
+		
+		return animator;
+	}
 }

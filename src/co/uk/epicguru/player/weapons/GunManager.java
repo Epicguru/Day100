@@ -362,7 +362,6 @@ public final class GunManager {
 		TextureRegion[] textures = new TextureRegion[frames];
 		for(int i = 0; i < frames; i++){
 			textures[i] = Day100.gunsAtlas.findRegion(gun.name + animName + i);
-			Log.info(TAG, "Getting frame '" + gun.name + animName + i + "'");
 		}
 		return textures;
 	}
@@ -383,8 +382,8 @@ public final class GunManager {
 	private float getAngle(){
 		if(equipped == null)
 			return 0;
-		float originX = equipped.texture.getRegionWidth() / Constants.PPM * equipped.holdPoint.x / 2;
-		float originY = equipped.texture.getRegionHeight() / Constants.PPM * equipped.holdPoint.y / 2;
+		float originX = equippedInstance.getTexture().getRegionWidth() / Constants.PPM * equipped.holdPoint.x / 2;
+		float originY = equippedInstance.getTexture().getRegionHeight() / Constants.PPM * equipped.holdPoint.y / 2;
 		Vector2 playerPosition = this.player.body.getPosition();
 		float angle = MathUtils.atan2(crosshair.y - (playerPosition.y - originX), crosshair.x - (playerPosition.x - originY)) * MathUtils.radiansToDegrees;
 		return angle;
@@ -395,15 +394,19 @@ public final class GunManager {
 		if (equipped == null)
 			return;
 		
+		equipped.render(getEquippedInstance(), player, this, batch);
+		
+		if(equippedInstance != null) equippedInstance.render(batch);
+		
 		Vector2 playerPosition = this.player.body.getPosition();
 		float offset = (toRight()) ? equipped.distanceFromPlayer : -equipped.distanceFromPlayer;
 		
 		// RENDER WEAPON
-		gun.setRegion(equipped.texture);
-		gun.setSize(equipped.texture.getRegionWidth() / Constants.PPM / 2, equipped.texture.getRegionHeight() / Constants.PPM / 2);
+		gun.setRegion(equippedInstance.getTexture());
+		gun.setSize(equippedInstance.getTexture().getRegionWidth() / Constants.PPM / 2, equippedInstance.getTexture().getRegionHeight() / Constants.PPM / 2);
 		gun.setFlip(false, (!toRight()));
-		float originX = equipped.texture.getRegionWidth() / Constants.PPM * equipped.holdPoint.x / 2;
-		float originY = equipped.texture.getRegionHeight() / Constants.PPM * equipped.holdPoint.y / 2;
+		float originX = equippedInstance.getTexture().getRegionWidth() / Constants.PPM * equipped.holdPoint.x / 2;
+		float originY = equippedInstance.getTexture().getRegionHeight() / Constants.PPM * equipped.holdPoint.y / 2;
 		gun.setOrigin(originX, originY);
 		gun.setPosition(playerPosition.x + offset - originX, playerPosition.y - originY);
 		gun.setRotation(getAngle() + angleOffset * (toRight() ? 1 : -1));
@@ -467,20 +470,16 @@ public final class GunManager {
 		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), interpolationFinal);
 		
 		shoot = false;
-		
-		if(equipped != null)
-			equipped.render(getEquippedInstance(), player, this, batch);
-		if(equippedInstance != null) equippedInstance.render(batch);
 	}
 
 	public void renderUI(Batch batch){
 		if(equipped == null)
 			return;
-		if(equipped.texture.isFlipY())
-			equipped.texture.flip(false, true);
-		batch.draw(equipped.texture, 5, 5);
+		if(equippedInstance.getTexture().isFlipY())
+			equippedInstance.getTexture().flip(false, true);
+		batch.draw(equippedInstance.getTexture(), 5, 5);
 		Day100.smallFont.setColor(1, 1, 1, 1);
-		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equippedInstance.getSelectedFireMode()].toString().toLowerCase(), equipped.texture.getRegionWidth(), 30);
+		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equippedInstance.getSelectedFireMode()].toString().toLowerCase(), equippedInstance.getTexture().getRegionWidth(), 30);
 	
 		if(equipped != null) equipped.renderUI(getEquippedInstance(), player, this, batch);
 		if(equippedInstance != null) equippedInstance.renderUI(batch);

@@ -80,6 +80,7 @@ public class AnimatedInstance extends GunInstance {
 	 * Sets the animation given a name. The animation must be in the loaded pool using the method {@link #addAnimation(String, int)}.
 	 */
 	public GunAnimation setAnimation(String animation){
+		
 		return setAnimation(animation, 0);
 	}
 	
@@ -128,5 +129,9 @@ public class AnimatedInstance extends GunInstance {
 				break;
 			}
 		}
+	}
+	
+	public TextureRegion getTexture(){
+		return getCurrentFrameTexture();
 	}
 }

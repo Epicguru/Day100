@@ -387,6 +387,5 @@ public abstract class GunDefinition {
 	 */
 	public GunInstance getInstance(GunManager gunManager, Entity entity){
 		return new GunInstance(gunManager, entity);
-	}
-	
+	}	
 }

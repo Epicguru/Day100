@@ -12,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -31,7 +30,6 @@ import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
-import co.uk.epicguru.player.BotController;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
 
@@ -272,10 +270,10 @@ public final class Map {
 		BuildingManager.update(delta);
 		
 		// TEST
-		if(MathUtils.randomBoolean(0.4f * delta)){
-			if(!Day100.player.isDead())
-				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
-		}	
+//		if(MathUtils.randomBoolean(0.4f * delta)){
+//			if(!Day100.player.isDead())
+//				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
+//		}	
 		
 		Entity.updateAll(delta);
 	}
