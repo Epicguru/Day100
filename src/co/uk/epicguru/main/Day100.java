@@ -83,6 +83,8 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Fonts/Xolonium.fnt", BitmapFont.class);
 		assets.load("Fonts/Small.fnt", BitmapFont.class);
 		assets.load("Cache/Player.atlas", TextureAtlas.class);
+		
+		// Gun sounds
 		assets.load(Constants.GUNS + "Silenced.mp3", Sound.class);
 		assets.load(Constants.GUNS + "Cock1.mp3", Sound.class);
 		assets.load(Constants.GUNS + "Cock2.mp3", Sound.class);
@@ -92,9 +94,15 @@ public class Day100 extends ApplicationAdapter {
 		assets.load(Constants.GUNS + "Scout.mp3", Sound.class);
 		assets.load(Constants.GUNS + "ScoutBolt.mp3", Sound.class);
 		assets.load(Constants.GUNS + "ScoutSilenced.mp3", Sound.class);
+		assets.load(Constants.GUNS + "Revolver.mp3", Sound.class);
+		assets.load(Constants.GUNS + "Glock.mp3", Sound.class);
+		
+		// Music
 		assets.load(Constants.MUSIC + "Chill.mp3", Music.class);
 		assets.load(Constants.MUSIC + "Sunrise Z.mp3", Music.class);
 		assets.load(Constants.MUSIC + "The Day After.mp3", Music.class);
+		
+		// Atlas
 		assets.load("Cache/Guns.atlas", TextureAtlas.class);
 		assets.load("Cache/Building.atlas", TextureAtlas.class);
 	}

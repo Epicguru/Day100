@@ -30,8 +30,7 @@ public class BotController extends Entity{
 		setup(spawn);
 		if(gunner){
 			gun = new GunManager(this);
-			gun.equipped = GunManager.guns.get(MathUtils.random(GunManager.guns.size() - 1));
-			gun.gunChanged();
+			gun.setEquipped(MathUtils.random(GunManager.guns.size() - 1));
 		}
 	}
 	/**
@@ -87,7 +86,7 @@ public class BotController extends Entity{
 				gun.shoot();
 		}
 		
-		gun.equipped.setFiringMode(FiringMode.FULL);
+		gun.getEquippedInstance().setFiringMode(FiringMode.FULL);
 		
 		if(gun != null) gun.update(delta);
 	}

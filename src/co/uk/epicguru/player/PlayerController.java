@@ -84,23 +84,20 @@ public final class PlayerController extends Entity{
 		}
 		
 		if(Input.isKeyJustDown(Keys.E)){
-			gunManager.equipped = gunManager.next();
-			gunManager.gunChanged();
-			//Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
+			gunManager.setEquipped(gunManager.next());
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.Q)){
-			gunManager.equipped = gunManager.previous();
-			gunManager.gunChanged();
-			//Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
+			gunManager.setEquipped(gunManager.previous());
 			BuildingManager.stopPlacing();
 		}
 		if(Input.isKeyJustDown(Keys.F) && !BuildingManager.placing){
 			gunManager.nextFiringMode();
 		}
 		
-		if(gunManager.equipped != null){
-			switch (gunManager.equipped.firingModes[gunManager.equipped.firingModeSelected]) {
+		// CHANGE TODO
+		if(gunManager.getEquipped() != null){
+			switch (gunManager.getEquipped().firingModes[gunManager.getEquippedInstance().getSelectedFireMode()]) {
 			case BURST:
 				if(Input.clickLeft())
 					gunManager.shoot();
@@ -123,14 +120,14 @@ public final class PlayerController extends Entity{
 			BuildingManager.placing = !BuildingManager.placing;
 			
 			if(!BuildingManager.placing){
-				gunManager.equipped = GunManager.guns.get(0);
+				gunManager.setEquipped(0);
 				Day100.assets.get("Audio/SFX/Guns/Cock" + MathUtils.random(1, 2) + ".mp3", Sound.class).play(0.3f, Day100.timeScale, 0);
 				gunManager.gunChanged();
 			}
 		}
 		
 		if(BuildingManager.placing){
-			gunManager.equipped = null;
+			gunManager.setEquipped(null);
 		}
 	}
 	

@@ -6,16 +6,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import co.uk.epicguru.main.Day100;
-import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.Entity;
 
 public final class SoundUtils {
 
-	public static Interpolation interpolation = Interpolation.linear;
+	public static Interpolation interpolation = Interpolation.pow3In;
 	private static float DEFAULT = 0.5f;
 	private static float MIN_PAN = 0.2f;
-	private static float MAX_PITCH_DST = 50;
-	private static float MIN_PITCH = 0.95f;
+	private static float MIN_PITCH = 0.6f;
 	
 	public static float getVolume(Vector2 position, float maxDst){
 		if(Day100.player == null || Day100.player.getBody() == null)
@@ -61,29 +59,26 @@ public final class SoundUtils {
 		return getPan(e.getBody().getPosition(), maxDst);
 	}
 
-	public static float getPitch(Vector2 position){
+	public static float getPitch(Vector2 position, float maxDst){
 		if(Day100.player == null || Day100.player.getBody() == null)
 			return DEFAULT;
 		
-		MIN_PITCH = 0.5f;
-		
 		float d = Day100.player.getBody().getPosition().dst(position);
-		float p = 1 - interpolation.apply(d / MAX_PITCH_DST);
+		float p = 1 - interpolation.apply(d / maxDst);
 		float pitch = p;
 		if(pitch < MIN_PITCH)
 			pitch = MIN_PITCH;
-		Log.info("Pitch", pitch + ""); 
 		return pitch * Day100.timeScale;
 	}
 	
-	public static float getPitch(Entity e){
+	public static float getPitch(Entity e, float maxDst){
 		if(e.getBody() == null)
 			return DEFAULT;
-		return getPitch(e.getBody().getPosition());
+		return getPitch(e.getBody().getPosition(), maxDst);
 	}
 
 	public static void playSound(Vector2 position, Sound sound, float baseVolume, float basePitch, float maxDst){
-		sound.play(getVolume(position, maxDst) * baseVolume, getPitch(position) * basePitch, getPan(position, maxDst));
+		sound.play(getVolume(position, maxDst) * baseVolume, getPitch(position, maxDst) * basePitch, getPan(position, maxDst));
 	}
 	
 	public static void playSound(Entity e, Sound sound, float baseVolume, float basePitch, float maxDst){

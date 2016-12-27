@@ -8,6 +8,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.player.weapons.Exclude;
 import co.uk.epicguru.player.weapons.GunDefinition;
+import co.uk.epicguru.player.weapons.GunInstance;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.sound.SoundUtils;
 
@@ -34,9 +35,8 @@ public class Scout extends GunDefinition {
 	}
 	
 	@Override
-	public void equipped(GunManager gunManager, Entity e) {
-		//frameNumber = 0;
-		//timer = 0;
+	public void equipped(GunInstance instance, GunManager gunManager, Entity e) {
+		
 	}
 
 	public void update(Entity e, GunManager gun, float delta){
@@ -48,7 +48,7 @@ public class Scout extends GunDefinition {
 		texture = boltAnim[frameNumber];
 		
 		timer += delta;
-		float interval = 0.05f;
+		float interval = 0.07f;
 		while(timer >= interval){
 			timer -= interval;
 			frameNumber++;

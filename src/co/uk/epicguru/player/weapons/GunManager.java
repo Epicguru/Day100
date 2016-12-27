@@ -36,7 +36,8 @@ public final class GunManager {
 	/**
 	 * NULL WARNING! CHECK
 	 */
-	public GunDefinition equipped;
+	private GunDefinition equipped;
+	private GunInstance equippedInstance;
 	private int index = 0;
 	private float timer = 0;
 	private boolean canShoot = false;
@@ -60,6 +61,47 @@ public final class GunManager {
 	 */
 	public float getOffset(){
 		return angleOffset;
+	}
+	
+	/**
+	 * Gets the equipped weapon. May be null.
+	 */
+	public GunDefinition getEquipped(){
+		return equipped;
+	}
+	
+	/**
+	 * Gets the equipped weapon's instance. May be null if weapon is null/
+	 */
+	public GunInstance getEquippedInstance(){
+		return equippedInstance;
+	}
+	
+	/**
+	 * Sets the equipped weapon to the gun specified and returns new new gun.
+	 */
+	public GunDefinition setEquipped(GunDefinition gun){
+		this.equipped = gun;
+		if(gun == null){
+			if(this.equippedInstance != null) this.equippedInstance.dequipped();
+			this.equippedInstance = null;
+		}else{
+			this.equippedInstance = gun.getInstance(this, player);			
+		}
+		gunChanged();
+		return gun;
+	}
+	
+	/**
+	 * Sets the equipped weapon to the gun at the specified index in the {@link #guns} array and returns new new gun.
+	 */
+	public GunDefinition setEquipped(int gunIndex){
+		if(gunIndex < 0 || gunIndex > guns.size() - 1){
+			setEquipped(null);
+			return null;
+		}
+		setEquipped(guns.get(gunIndex));
+		return this.equipped;
 	}
 	
 	public static void reset() {
@@ -155,14 +197,13 @@ public final class GunManager {
 	}
 
 	/**
-	 * Gets the next firing mode for the equipped weapon.
+	 * Gets the next firing mode for the equipped weapon. Utilises the Gun Instance.
 	 */
 	public void nextFiringMode(){
 		if(equipped == null || inBurst)
 			return;
 		
-		equipped.firingModeSelected++;
-		equipped.firingModeSelected %= equipped.firingModes.length;
+		equippedInstance.setSelectedFireMode((equippedInstance.getSelectedFireMode() + 1) % equipped.firingModes.length);
 	}
 	
 	/**
@@ -177,7 +218,7 @@ public final class GunManager {
 		burstShotsFired = 0;
 		shoot = false;
 		requestingShoot = false;
-		if(equipped != null && player != null) equipped.equipped(this, player);
+		if(equipped != null && player != null) equipped.equipped(getEquippedInstance(), this, player);
 	}
 
 	/**
@@ -210,7 +251,7 @@ public final class GunManager {
 		}
 		flash = null;
 
-		switch (equipped.firingModes[equipped.firingModeSelected]) {
+		switch (equipped.firingModes[equippedInstance.getSelectedFireMode()]) {
 		case BURST:
 
 			canShoot = timer >= equipped.shotInterval && !inBurst;
@@ -257,8 +298,8 @@ public final class GunManager {
 		
 		requestingShoot = false;
 		
-		if(equipped != null)
-			equipped.update(player, this, delta);
+		equipped.update(getEquippedInstance(), player, this, delta);
+		if(equippedInstance != null) equippedInstance.update(delta);
 	}
 
 	public void shootEquiped(float angle, float[] bulletSpawn) {
@@ -313,7 +354,7 @@ public final class GunManager {
 			}
 		}, new Vector2(bulletSpawn[0], bulletSpawn[1]), end);
 		
-		if(equipped != null && player != null) equipped.shot(this, player);
+		if(equipped != null && player != null) equipped.shot(getEquippedInstance(), this, player);
 		
 	}
 
@@ -428,7 +469,8 @@ public final class GunManager {
 		shoot = false;
 		
 		if(equipped != null)
-			equipped.render(player, this, batch);
+			equipped.render(getEquippedInstance(), player, this, batch);
+		if(equippedInstance != null) equippedInstance.render(batch);
 	}
 
 	public void renderUI(Batch batch){
@@ -438,10 +480,10 @@ public final class GunManager {
 			equipped.texture.flip(false, true);
 		batch.draw(equipped.texture, 5, 5);
 		Day100.smallFont.setColor(1, 1, 1, 1);
-		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equipped.firingModeSelected].toString().toLowerCase(), equipped.texture.getRegionWidth(), 30);
+		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equippedInstance.getSelectedFireMode()].toString().toLowerCase(), equipped.texture.getRegionWidth(), 30);
 	
-		if(equipped != null)
-			equipped.renderUI(player, this, batch);
+		if(equipped != null) equipped.renderUI(getEquippedInstance(), player, this, batch);
+		if(equippedInstance != null) equippedInstance.renderUI(batch);
 	}
 	
 	public static Sound getGunSound(final String name) {

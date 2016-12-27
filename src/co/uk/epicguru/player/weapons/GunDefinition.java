@@ -82,12 +82,6 @@ public abstract class GunDefinition {
 	public float maxPitch = 1.07f;
 
 	/**
-	 * Do not set.
-	 */
-	@Exclude
-	public int firingModeSelected = 0;
-
-	/**
 	 * The recoil in degrees that each shot applies. The actual value will be more because this is applied over various frames whilst
 	 * getting smaller. The gun offset velocity is gets 1.0 - {@link #recovery}% smaller every frame, so the final offset can be calculated given seconds.
 	 */
@@ -349,42 +343,25 @@ public abstract class GunDefinition {
 			}
 		}
 	}
-
-	/**
-	 * Sets the firing mode to the new one IF this gun supports that firing mode.
-	 * @param mode The new firing mode.
-	 * @return Weather the operation was successful.
-	 */
-	public boolean setFiringMode(FiringMode mode){
-		if(!isFiringModeAll(mode))
-			return false;
-		
-		for(int i = 0; i < firingModes.length; i++){
-			if(firingModes[i] == mode)
-				firingModeSelected = i;
-		}
-		
-		return true;
-	}
 	
 	/**
 	 * Indicates that this gun has been equipped by this entity, using this GunManager. By default does nothing.
 	 */
-	public void equipped(GunManager gunManager, Entity e){
+	public void equipped(GunInstance instance, GunManager gunManager, Entity e){
 		
 	}
 	
 	/**
 	 * This gun was shot by this entity, using this GunManager. By default does nothing.
 	 */
-	public void shot(GunManager gunManager, Entity e){
+	public void shot(GunInstance instance, GunManager gunManager, Entity e){
 		
 	}
 	
 	/**
 	 * Called when equipped. Passes the equipper (The entity) and the gun manager.
 	 */
-	public void update(Entity e, GunManager gunManager, float delta){
+	public void update(GunInstance instance, Entity e, GunManager gunManager, float delta){
 		
 	}
 	
@@ -393,7 +370,7 @@ public abstract class GunDefinition {
 	 * Passes the equipper (The entity) and the gun manager.
 	 * This method is called AFTER the gun has been rendered so you can use this method to reset animation textures.
 	 */
-	public void render(Entity e, GunManager gunManager, Batch batch){
+	public void render(GunInstance instance, Entity e, GunManager gunManager, Batch batch){
 
 	}
 	
@@ -401,8 +378,15 @@ public abstract class GunDefinition {
 	 * Called when equipped.
 	 * Passes the equipper (The entity) and the gun manager.
 	 */
-	public void renderUI(Entity e, GunManager gunManager, Batch batch){
+	public void renderUI(GunInstance instance, Entity e, GunManager gunManager, Batch batch){
 		
+	}
+	
+	/**
+	 * Gets a virtual instance of this gun.
+	 */
+	public GunInstance getInstance(GunManager gunManager, Entity entity){
+		return new GunInstance(gunManager, entity);
 	}
 	
 }
