@@ -140,6 +140,11 @@ public final class GunManager {
 			names[index++] = gun.name;
 		}
 		AlphabeticalHelper.sort(names);
+		ArrayList<GunDefinition> newGuns = new ArrayList<GunDefinition>();
+		for(String s : names){
+			newGuns.add(find(s));
+		}
+		guns = newGuns;
 
 		// Load gun data from file - TODO use internal path in cache or similar
 		// to load from internal
