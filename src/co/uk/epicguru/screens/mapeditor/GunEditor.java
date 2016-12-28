@@ -34,6 +34,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.player.weapons.FieldReader;
 import co.uk.epicguru.player.weapons.FiringMode;
+import co.uk.epicguru.player.weapons.GunCoordinate;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.instances.MapEditor;
@@ -127,7 +128,8 @@ public final class GunEditor {
 				count++;
 
 				// Get value
-				properties.add(new VisLabel(name + " : "));
+				VisLabel fieldLabel = new VisLabel(name + " : ");
+				properties.add(fieldLabel);
 				if(type.equals("float")){
 					VisValidatableTextField text = new VisValidatableTextField(new InputValidator() {
 						public boolean validateInput(String string) {
@@ -143,7 +145,37 @@ public final class GunEditor {
 					properties.add(text);
 					reflection.add(new FloatReflectionActor(name, type, text));
 				}else if(type.equals("Vector2")){
+					
+					// Colour, if virtual gun point
+					try {
+						if(GunManager.find(gun).getClass().getField(name).isAnnotationPresent(GunCoordinate.class)){
+							Color color = null;
+							String colorName = null;
+							try {
+								colorName = GunManager.find(gun).getClass().getField(name).getAnnotation(GunCoordinate.class).value();
+							} catch (Exception e){
+								
+							}
+							
+							try{					
+								color = (Color) Color.class.getField(colorName).get(null);
+							}catch(Exception e){
+								
+							}
+							
+							if(color == null)
+								color = Color.WHITE;
+							
+							fieldLabel.setColor(color);
+						}
+					} catch (Exception e){
+						
+					}
+					
+					
 					Vector2 vector = (Vector2)value;
+					if(vector == null)
+						vector = new Vector2();
 					VisValidatableTextField text = new VisValidatableTextField(new InputValidator() {
 						public boolean validateInput(String string) {
 							try{
@@ -463,21 +495,45 @@ public final class GunEditor {
 	public static void render(Batch batch){
 		GunDefinition gun = GunManager.find(gunsList.getSelected());
 		batch.draw(gun.texture, 0, 0, gun.texture.getRegionWidth() / Constants.PPM, gun.texture.getRegionHeight() / Constants.PPM); 
-		VisValidatableTextField x = null;
-		VisValidatableTextField y = null;
+		
+		
 		for(ReflectionActor actor : reflection){
-			if(actor.fieldName.equals("bulletSpawn")){
-				x = (VisValidatableTextField) actor.actors[0];
-				y = (VisValidatableTextField) actor.actors[1];
+			VisValidatableTextField x = null;
+			VisValidatableTextField y = null;
+			try {
+				if(gun.getClass().getField(actor.fieldName).isAnnotationPresent(GunCoordinate.class)){
+					x = (VisValidatableTextField) actor.actors[0];
+					y = (VisValidatableTextField) actor.actors[1];
+				}
+			} catch (Exception e){
+				
 			}
+			if(x == null || y == null)
+				continue;
+
+			float xPos = x.isInputValid() ? Float.parseFloat(x.getText().trim()) : 0;
+			float yPos = y.isInputValid() ? Float.parseFloat(y.getText().trim()) : 0;
+
+			Color color = null;
+			
+			String colorName = null;
+			try {
+				colorName = gun.getClass().getField(actor.fieldName).getAnnotation(GunCoordinate.class).value();
+			} catch (Exception e){
+				
+			}
+			
+			try{					
+				color = (Color) Color.class.getField(colorName).get(null);
+			}catch(Exception e){
+				
+			}
+			
+			if(color == null)
+				color = Color.BLACK;
+			
+			DevCross.drawCentred(gun.texture.getRegionWidth() / Constants.PPM * xPos, gun.texture.getRegionHeight() / Constants.PPM * yPos, 0.5f * Day100.camera.zoom, color);
 		}
-		if(x == null || y == null)
-			return;
-
-		float xPos = x.isInputValid() ? Float.parseFloat(x.getText().trim()) : 0;
-		float yPos = y.isInputValid() ? Float.parseFloat(y.getText().trim()) : 0;
-
-		DevCross.drawCentred(gun.texture.getRegionWidth() / Constants.PPM * xPos, gun.texture.getRegionHeight() / Constants.PPM * yPos, 0.5f * Day100.camera.zoom);
 	}
 
 	public static void renamer(){

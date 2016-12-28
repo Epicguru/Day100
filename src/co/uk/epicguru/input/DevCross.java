@@ -61,6 +61,19 @@ public final class DevCross {
 	}
 	
 	/**
+	 * Draws the cross, with the default width and height IN METERS.
+	 * Centres the cross on the coords.
+	 */
+	public static void drawCentred(float x, float y, float scale, Color color){
+		if(texture == null){
+			texture = Day100.UIAtlas.findRegion("DevCross");
+		}
+		float width = (float)texture.getRegionWidth() / Constants.PPM / 2f * scale;
+		float height = (float)texture.getRegionHeight() / Constants.PPM / 2f * scale;
+		draw(x - width / 2, y - height / 2, width, height, color);
+	}
+	
+	/**
 	 * Draws the cross, for use when rendering UI.
 	 */
 	public static void drawUI(float x, float y){

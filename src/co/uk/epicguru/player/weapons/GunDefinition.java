@@ -96,11 +96,13 @@ public abstract class GunDefinition {
 	 * The point at which the weapon is held relative to the player (THE ORIGIN). This is a vector with values between 0 and 1.
 	 * Each x and y value represents a percentage of the width or height. (0.5, 0.5) would mean that the gun is held and rotated around the centre of the texture. 
 	 */
+	@GunCoordinate("MAGENTA")
 	public Vector2 holdPoint = new Vector2(0, 0.5f);
 
 	/**
 	 * The point of this gun that shoots (spawns) the bullets from. It has the same format as {@link #holdPoint}. 
 	 */
+	@GunCoordinate("ORANGE")
 	public Vector2 bulletSpawn = new Vector2(1f, 0.5f);
 
 	/**

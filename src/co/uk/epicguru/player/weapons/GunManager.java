@@ -316,7 +316,7 @@ public final class GunManager {
 		if(equippedInstance != null) equippedInstance.update(delta);
 	}
 
-	public void shootEquiped(float angle, float[] bulletSpawn) {
+	public void shootEquiped(float angle, Vector2 bulletSpawn) {
 		if (equipped == null)
 			return;
 
@@ -342,13 +342,13 @@ public final class GunManager {
 		flash.setActive(true);
 		
 		// Visual flash
-		new FlashFade(new Vector2(bulletSpawn[0], bulletSpawn[1]),  angle, equipped.range);
+		new FlashFade(new Vector2(bulletSpawn.x, bulletSpawn.y),  angle, equipped.range);
 		
 		// RAY
 		Vector2 end = new Vector2();
 		float MAX = 200; // If range is very high, this will limit. It is the end point of the ray.
-		end.x = MathUtils.cosDeg(angle) * MAX + bulletSpawn[0];
-		end.y = MathUtils.sinDeg(angle) * MAX + bulletSpawn[1];
+		end.x = MathUtils.cosDeg(angle) * MAX + bulletSpawn.x;
+		end.y = MathUtils.sinDeg(angle) * MAX + bulletSpawn.y;
 		colleateralCount = 0;
 		GunManager.flashInstance = this;
 		Day100.map.world.rayCast(new RayCastCallback() {
@@ -358,7 +358,7 @@ public final class GunManager {
 				//DevCross.drawCentred(point.x, point.y);
 				Object user = fixture.getBody().getUserData();
 				if(user != null && user instanceof Entity){
-					if(point.dst(bulletSpawn[0], bulletSpawn[1]) <= equipped.range){
+					if(point.dst(bulletSpawn) <= equipped.range){
 						// HIT AN ENTITY
 						Entity e = ((Entity)user);
 						e.takeDamage(equipped.damage, new DamageData(GunManager.flashInstance.player, angle + 180, new Vector2(GunManager.flashInstance.player.getBody().getPosition()), point));		
@@ -366,7 +366,7 @@ public final class GunManager {
 				}
 				return colleateralCount++ + 1 < equipped.collaterals ? 1 : 0;
 			}
-		}, new Vector2(bulletSpawn[0], bulletSpawn[1]), end);
+		}, bulletSpawn, end);
 		
 		if(equipped != null && player != null) equipped.shot(getEquippedInstance(), this, player);
 		
@@ -431,14 +431,24 @@ public final class GunManager {
 			return;
 		
 		// TIP
+		
+		// Fire!
+		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), getGunVectorPosition(equipped.bulletSpawn));
+		
+		shoot = false;
+	}
+	
+	private static Vector2 tempReturn = new Vector2();
+	private static float[] topRight = new float[2];
+	private static float[] bottomRight = new float[2];
+	private static float[] topLeft = new float[2];
+	private static float[] bottomLeft = new float[2];
+	private static float[] interpolationLeft = new float[2];
+	private static float[] interpolationRight = new float[2];
+	private static float[] interpolationFinal = new float[2];
+
+	public Vector2 getGunVectorPosition(Vector2 localCoordinates){
 		float[] verts = gun.getVertices();
-		float[] topRight = new float[2];
-		float[] bottomRight = new float[2];
-		float[] topLeft = new float[2];
-		float[] bottomLeft = new float[2];
-		float[] interpolationLeft = new float[2];
-		float[] interpolationRight = new float[2];
-		float[] interpolationFinal = new float[2];
 		
 		Interpolation interpolation = Interpolation.linear;
 		
@@ -464,26 +474,15 @@ public final class GunManager {
 			bottomLeft[1] = verts[SpriteBatch.Y2];	
 		}
 		
-		interpolationLeft[0] = interpolation.apply(topLeft[0], bottomLeft[0], 1 - equipped.bulletSpawn.y);
-		interpolationLeft[1] = interpolation.apply(topLeft[1], bottomLeft[1], 1 - equipped.bulletSpawn.y);
-		interpolationRight[0] = interpolation.apply(topRight[0], bottomRight[0], 1 - equipped.bulletSpawn.y);
-		interpolationRight[1] = interpolation.apply(topRight[1], bottomRight[1], 1 - equipped.bulletSpawn.y);
-		interpolationFinal[0] = interpolation.apply(interpolationRight[0], interpolationLeft[0], 1 - equipped.bulletSpawn.x);
-		interpolationFinal[1] = interpolation.apply(interpolationRight[1], interpolationLeft[1], 1 - equipped.bulletSpawn.x);
-		
-		// DEBUG
-//		DevCross.drawCentred(topRight[0], topRight[1], 0.3f);			
-//		DevCross.drawCentred(bottomLeft[0], bottomLeft[1], 0.3f);				
-//		DevCross.drawCentred(bottomRight[0], bottomRight[1], 0.3f);				
-//		DevCross.drawCentred(topLeft[0], topLeft[1], 0.3f);				
-//		DevCross.drawCentred(interpolationLeft[0], interpolationLeft[1], 0.3f);				
-//		DevCross.drawCentred(interpolationRight[0], interpolationRight[1], 0.3f);				
-//		DevCross.drawCentred(interpolationFinal[0], interpolationFinal[1], 0.3f);
-		
-		// Fire!
-		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), interpolationFinal);
-		
-		shoot = false;
+		interpolationLeft[0] = interpolation.apply(topLeft[0], bottomLeft[0], 1 - localCoordinates.y);
+		interpolationLeft[1] = interpolation.apply(topLeft[1], bottomLeft[1], 1 - localCoordinates.y);
+		interpolationRight[0] = interpolation.apply(topRight[0], bottomRight[0], 1 - localCoordinates.y);
+		interpolationRight[1] = interpolation.apply(topRight[1], bottomRight[1], 1 - localCoordinates.y);
+		interpolationFinal[0] = interpolation.apply(interpolationRight[0], interpolationLeft[0], 1 - localCoordinates.x);
+		interpolationFinal[1] = interpolation.apply(interpolationRight[1], interpolationLeft[1], 1 - localCoordinates.x);
+	
+		tempReturn.set(interpolationFinal[0], interpolationFinal[1]);
+		return tempReturn;
 	}
 
 	public void renderUI(Batch batch){
