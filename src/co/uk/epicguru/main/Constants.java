@@ -9,6 +9,7 @@ public final class Constants {
 	public static final String DAY_100_FOLDER = MY_GAMES_FOLDER + "Day 100\\";
 	public static final String MAP_EDITOR_FOLDER = DAY_100_FOLDER + "Map Editor\\";
 	public static final String MUSIC = "Audio/Music/";
+	public static final String MUSIC_TAG = "[MUSIC]";
 	public static final String GUNS = "Audio/SFX/Guns/";
 	public static final float PPM = 32f;
 	public static final int RAYS = 200;

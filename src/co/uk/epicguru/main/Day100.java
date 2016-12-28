@@ -3,8 +3,6 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +18,7 @@ import co.uk.epicguru.screens.Screen;
 import co.uk.epicguru.screens.ScreenManager;
 import co.uk.epicguru.screens.instances.Loading;
 import co.uk.epicguru.screens.instances.MapEditor;
+import co.uk.epicguru.sound.SoundUtils;
 
 public class Day100 extends ApplicationAdapter {
 
@@ -84,29 +83,8 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Fonts/Small.fnt", BitmapFont.class);
 		assets.load("Cache/Player.atlas", TextureAtlas.class);
 		
-		// Gun sounds
-		assets.load(Constants.GUNS + "Silenced.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Cock1.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Cock2.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Ak47.mp3", Sound.class);
-		assets.load(Constants.GUNS + "LeeEnfield.mp3", Sound.class);
-		assets.load(Constants.GUNS + "LeeEnfield2.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Scout.mp3", Sound.class);
-		assets.load(Constants.GUNS + "ScoutBolt.mp3", Sound.class);
-		assets.load(Constants.GUNS + "ScoutSilenced.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Revolver.mp3", Sound.class);
-		assets.load(Constants.GUNS + "Glock.mp3", Sound.class);
-		assets.load(Constants.GUNS + "ReloadOut.mp3", Sound.class);
-		assets.load(Constants.GUNS + "ReloadIn.mp3", Sound.class);
-		assets.load(Constants.GUNS + "P90.mp3", Sound.class);
-		assets.load(Constants.GUNS + "P902.mp3", Sound.class);
-		assets.load(Constants.GUNS + "GlockIn.mp3", Sound.class);
-		assets.load(Constants.GUNS + "GlockOut.mp3", Sound.class);
-		
-		// Music
-		assets.load(Constants.MUSIC + "Chill.mp3", Music.class);
-		assets.load(Constants.MUSIC + "Sunrise Z.mp3", Music.class);
-		assets.load(Constants.MUSIC + "The Day After.mp3", Music.class);
+		// Loads all sounds
+		SoundUtils.loadAllSounds();
 		
 		// Atlas
 		assets.load("Cache/Guns.atlas", TextureAtlas.class);

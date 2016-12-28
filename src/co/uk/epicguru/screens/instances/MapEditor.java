@@ -146,9 +146,9 @@ public final class MapEditor extends GameScreen {
 
 		// Music - For the chills :D
 		music = new Music[]{
-				Day100.assets.get(Constants.MUSIC + "Chill.mp3"),
-				Day100.assets.get(Constants.MUSIC + "Sunrise Z.mp3"),
-				Day100.assets.get(Constants.MUSIC + "The Day After.mp3")
+				Day100.assets.get(Constants.MUSIC + Constants.MUSIC_TAG + " Chill.mp3"),
+				Day100.assets.get(Constants.MUSIC + Constants.MUSIC_TAG + " Sunrise Z.mp3"),
+				Day100.assets.get(Constants.MUSIC + Constants.MUSIC_TAG + " The Day After.mp3")
 		};
 	}
 

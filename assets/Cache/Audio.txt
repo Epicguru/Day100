@@ -1,0 +1,22 @@
+Audio/Music/[MUSIC] Chill.mp3
+Audio/Music/[MUSIC] Sunrise Z.mp3
+Audio/Music/[MUSIC] The Day After.mp3
+Audio/SFX/Guns/Ak47.mp3
+Audio/SFX/Guns/Cock1.mp3
+Audio/SFX/Guns/Cock2.mp3
+Audio/SFX/Guns/Glock.mp3
+Audio/SFX/Guns/GlockIn.mp3
+Audio/SFX/Guns/GlockOut.mp3
+Audio/SFX/Guns/LeeEnfield.mp3
+Audio/SFX/Guns/LeeEnfield2.mp3
+Audio/SFX/Guns/P90.mp3
+Audio/SFX/Guns/P902.mp3
+Audio/SFX/Guns/ReloadIn.mp3
+Audio/SFX/Guns/ReloadOut.mp3
+Audio/SFX/Guns/Revolver.mp3
+Audio/SFX/Guns/Scout.mp3
+Audio/SFX/Guns/ScoutBolt.mp3
+Audio/SFX/Guns/ScoutBolt1.mp3
+Audio/SFX/Guns/ScoutBolt2.mp3
+Audio/SFX/Guns/ScoutSilenced.mp3
+Audio/SFX/Guns/Silenced.mp3

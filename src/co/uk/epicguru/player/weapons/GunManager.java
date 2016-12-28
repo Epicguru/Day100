@@ -20,6 +20,7 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
 import box2dLight.PointLight;
 import co.uk.epicguru.IO.JLineReader;
+import co.uk.epicguru.helpers.AlphabeticalHelper;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
@@ -131,6 +132,14 @@ public final class GunManager {
 			}
 			
 		}
+		
+		// Sort them
+		String[] names = new String[guns.size()];
+		int index = 0;
+		for(GunDefinition gun : guns){
+			names[index++] = gun.name;
+		}
+		AlphabeticalHelper.sort(names);
 
 		// Load gun data from file - TODO use internal path in cache or similar
 		// to load from internal
@@ -138,7 +147,7 @@ public final class GunManager {
 		String data = Gdx.files.internal("Cache/Guns.txt").readString();
 		String[] lines = data.split("\n");
 		JLineReader reader = new JLineReader(lines[0]);
-		int index = 0;
+		index = 0;
 		do {	
 			final String ERROR = "ERROR_WTF_EMPTY?";
 			String name = reader.readString("name", ERROR);

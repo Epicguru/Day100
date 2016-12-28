@@ -27,6 +27,7 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 import co.uk.epicguru.IO.JLineWriter;
+import co.uk.epicguru.helpers.AlphabeticalHelper;
 import co.uk.epicguru.input.DevCross;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
@@ -73,7 +74,7 @@ public final class GunEditor {
 		String[] names = new String[GunManager.guns.size()];
 		for(int i = 0; i < names.length; i++){
 			names[i] = GunManager.guns.get(i).name;
-		}
+		}		
 		gunsList.setItems(names);
 
 		VisScrollPane scroll = new VisScrollPane(gunsList);
@@ -93,10 +94,16 @@ public final class GunEditor {
 			String name = split[split.length - 1];
 			sounds.add(name);
 		}
-
 		sounds.add("Null");
+		String[] unsorted = sounds.toArray(String.class);
+		AlphabeticalHelper.sort(unsorted);
+		sounds.clear();
+		sounds.addAll(unsorted); // Unsorted, despite its name, is now sorted.
+		
 		loadGunProperties(GunManager.guns.get(0).name);
+		
 		renamer();
+		
 		open = true;
 	}
 

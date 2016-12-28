@@ -1,7 +1,9 @@
 package co.uk.epicguru.player.weapons.instances;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.player.weapons.AnimatedInstance;
@@ -12,7 +14,11 @@ import co.uk.epicguru.sound.SoundUtils;
 
 public class Scout extends GunDefinition {
 
-	public static Sound bolt = GunManager.getGunSound("ScoutBolt.mp3");
+	public static Sound bolt;
+	public static Sound bolt1;
+	public static Sound bolt2;
+	public static Sound reloadOut;
+	public static Sound reloadIn;
 	
 	public Scout() {
 		super("Scout");		
@@ -22,10 +28,36 @@ public class Scout extends GunDefinition {
 		AnimatedInstance animator = (AnimatedInstance)instance;
 		
 		// Play animation
+		animator.setFPS(14);
 		animator.setAnimation("Bolt");
 		
 		// Play bolt sound
 		SoundUtils.playSound(gun.player, bolt, 0.7f, 1, 20);
+	}
+
+	public void update(GunInstance instance, Entity e, GunManager gunManager, float delta) {
+		AnimatedInstance animator = (AnimatedInstance)instance;
+		
+		if(Input.isKeyJustDown(Keys.R)){
+			animator.setFPS(15);
+			animator.setAnimation("Reload");	
+			animator.addCallback(() -> {
+				// Play clip in sound.
+				SoundUtils.playSound(e, bolt1, 0.5f, 1.4f, 50);
+			}, 1);
+			animator.addCallback(() -> {
+				// Play clip out sound.
+				SoundUtils.playSound(e, bolt2, 0.5f, 1.4f, 50);
+			}, 25);		
+			animator.addCallback(() -> {
+				// Play clip in sound.
+				SoundUtils.playSound(e, reloadOut, 0.5f, 1.4f, 50);
+			}, 7);
+			animator.addCallback(() -> {
+				// Play clip out sound.
+				SoundUtils.playSound(e, reloadIn, 0.5f, 1.4f, 50);
+			}, 21);	
+		}
 	}
 
 	public GunInstance getInstance(GunManager gunManager, Entity entity) {
@@ -33,9 +65,7 @@ public class Scout extends GunDefinition {
 		
 		// Add bolt animation
 		animator.addAnimation("Bolt", 12);
-		
-		// Set FPS
-		animator.setFPS(14);
+		animator.addAnimation("Reload", 30);
 		
 		return animator;
 	}
