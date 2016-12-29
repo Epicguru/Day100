@@ -20,10 +20,10 @@ public final class SoundUtils {
 
 	private static final String TAG = "Sound Utils";
 	public static Interpolation interpolation = Interpolation.pow3In;
-	private static float DEFAULT = 0.5f;
 	private static float MIN_PAN = 0.2f;
 	private static float MIN_PITCH = 0.6f;
-
+	private static Vector2 TEMP = new Vector2();
+	
 	private static float getAdditionalDst(){
 		float add = 10 * Day100.camera.zoom;
 		if(add < 0)
@@ -31,27 +31,23 @@ public final class SoundUtils {
 		return add;
 	}
 
+	
 	public static float getVolume(Vector2 position, float maxDst){
-		if(Day100.player == null || Day100.player.getBody() == null)
-			return DEFAULT;
-
-		float dst = Day100.player.getBody().getPosition().dst(position) + getAdditionalDst();
+		TEMP.set(Day100.camera.position.x, Day100.camera.position.y);
+		
+		float dst = TEMP.dst(position) + getAdditionalDst();
 		return MathUtils.clamp(1 - interpolation.apply(dst / maxDst), 0, 1);
 	}
 
 	public float getVolume(Entity e, float maxDst){
-		if(e.getBody() == null)
-			return DEFAULT;
 		return getVolume(e.getBody().getPosition(), maxDst);
 	}
 
 	public static float getPan(float x, float maxDst){
-
-		if(Day100.player == null || Day100.player.getBody() == null)
-			return DEFAULT;
-
-		float dst = Day100.player.getBody().getPosition().x - x + getAdditionalDst();
-		boolean toRight = Day100.player.getBody().getPosition().x < x;
+		TEMP.set(Day100.camera.position.x, Day100.camera.position.y);
+		
+		float dst = TEMP.x - x + getAdditionalDst();
+		boolean toRight = TEMP.x < x;
 		if(toRight){
 			float pan = Math.abs(dst) / maxDst;
 			if(pan > 1 - MIN_PAN)
@@ -70,16 +66,12 @@ public final class SoundUtils {
 	}
 
 	public static float getPan(Entity e, float maxDst){
-		if(e.getBody() == null)
-			return DEFAULT;
 		return getPan(e.getBody().getPosition(), maxDst);
 	}
 
 	public static float getPitch(Vector2 position, float maxDst){
-		if(Day100.player == null || Day100.player.getBody() == null)
-			return DEFAULT;
-
-		float d = Day100.player.getBody().getPosition().dst(position) + getAdditionalDst();
+		TEMP.set(Day100.camera.position.x, Day100.camera.position.y);
+		float d = TEMP.dst(position) + getAdditionalDst();
 		float p = 1 - interpolation.apply(d / maxDst);
 		float pitch = p;
 		if(pitch < MIN_PITCH)
@@ -88,12 +80,12 @@ public final class SoundUtils {
 	}
 
 	public static float getPitch(Entity e, float maxDst){
-		if(e.getBody() == null)
-			return DEFAULT;
 		return getPitch(e.getBody().getPosition(), maxDst);
 	}
 
 	public static void playSound(Vector2 position, Sound sound, float baseVolume, float basePitch, float maxDst){
+		if(sound == null)
+			return;
 		sound.play(getVolume(position, maxDst) * baseVolume, getPitch(position, maxDst) * basePitch, getPan(position, maxDst));
 	}
 

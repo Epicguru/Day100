@@ -6,63 +6,63 @@ filter: Nearest,Nearest
 repeat: none
 Wood_BG
   rotate: false
-  xy: 2, 2
+  xy: 4, 4
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 Wood_BG_Half
   rotate: false
-  xy: 104, 76
+  xy: 24, 12
   size: 16, 8
   orig: 16, 8
   offset: 0, 0
   index: -1
 Wood_Base
   rotate: false
-  xy: 38, 74
+  xy: 44, 78
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected
   rotate: false
-  xy: 38, 62
+  xy: 44, 64
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected_Left
   rotate: false
-  xy: 38, 50
+  xy: 44, 50
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Connected_Right
   rotate: false
-  xy: 38, 38
+  xy: 44, 36
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Base_Disconnected
   rotate: false
-  xy: 38, 26
+  xy: 44, 22
   size: 64, 10
   orig: 64, 10
   offset: 0, 0
   index: -1
 Wood_Beam
   rotate: false
-  xy: 2, 20
+  xy: 4, 24
   size: 16, 64
   orig: 16, 64
   offset: 0, 0
   index: -1
 Wood_Beam-2
   rotate: false
-  xy: 20, 20
+  xy: 24, 24
   size: 16, 64
   orig: 16, 64
   offset: 0, 0

@@ -1,0 +1,335 @@
+
+Vehicles.png
+size: 4096,128
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Helicopter/Back0
+  rotate: false
+  xy: 1103, 34
+  size: 45, 47
+  orig: 45, 47
+  offset: 0, 0
+  index: -1
+Helicopter/Back1
+  rotate: false
+  xy: 1152, 39
+  size: 41, 42
+  orig: 41, 42
+  offset: 0, 0
+  index: -1
+Helicopter/Back2
+  rotate: false
+  xy: 1053, 36
+  size: 46, 45
+  orig: 46, 45
+  offset: 0, 0
+  index: -1
+Helicopter/Back3
+  rotate: false
+  xy: 1002, 39
+  size: 47, 45
+  orig: 47, 45
+  offset: 0, 0
+  index: -1
+Helicopter/Helicopter
+  rotate: false
+  xy: 4, 4
+  size: 306, 120
+  orig: 306, 120
+  offset: 0, 0
+  index: -1
+Helicopter/Spin0
+  rotate: false
+  xy: 1064, 85
+  size: 360, 39
+  orig: 360, 39
+  offset: 0, 0
+  index: -1
+Helicopter/Spin1
+  rotate: false
+  xy: 3189, 81
+  size: 203, 31
+  orig: 203, 31
+  offset: 0, 0
+  index: -1
+Helicopter/Spin5
+  rotate: false
+  xy: 3189, 81
+  size: 203, 31
+  orig: 203, 31
+  offset: 0, 0
+  index: -1
+Helicopter/Spin2
+  rotate: false
+  xy: 4024, 104
+  size: 59, 20
+  orig: 59, 20
+  offset: 0, 0
+  index: -1
+Helicopter/Spin4
+  rotate: false
+  xy: 4024, 104
+  size: 59, 20
+  orig: 59, 20
+  offset: 0, 0
+  index: -1
+Helicopter/Spin3
+  rotate: false
+  xy: 913, 59
+  size: 12, 13
+  orig: 12, 13
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp0
+  rotate: false
+  xy: 1754, 116
+  size: 330, 8
+  orig: 330, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp1
+  rotate: false
+  xy: 1754, 104
+  size: 317, 8
+  orig: 317, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp10
+  rotate: false
+  xy: 1754, 80
+  size: 169, 8
+  orig: 169, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp11
+  rotate: false
+  xy: 1927, 80
+  size: 146, 8
+  orig: 146, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp12
+  rotate: false
+  xy: 1628, 77
+  size: 121, 8
+  orig: 121, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp13
+  rotate: false
+  xy: 838, 76
+  size: 87, 8
+  orig: 87, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp14
+  rotate: false
+  xy: 1197, 73
+  size: 59, 8
+  orig: 59, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp15
+  rotate: false
+  xy: 3396, 102
+  size: 25, 10
+  orig: 25, 10
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp16
+  rotate: false
+  xy: 2299, 72
+  size: 14, 16
+  orig: 14, 16
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp17
+  rotate: false
+  xy: 838, 52
+  size: 71, 20
+  orig: 71, 20
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp18
+  rotate: false
+  xy: 2077, 63
+  size: 137, 25
+  orig: 137, 25
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp19
+  rotate: false
+  xy: 2948, 71
+  size: 210, 29
+  orig: 210, 29
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp2
+  rotate: false
+  xy: 2088, 116
+  size: 305, 8
+  orig: 305, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp20
+  rotate: false
+  xy: 314, 7
+  size: 322, 35
+  orig: 322, 35
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp21
+  rotate: false
+  xy: 698, 88
+  size: 362, 36
+  orig: 362, 36
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp22
+  rotate: false
+  xy: 2397, 91
+  size: 275, 33
+  orig: 275, 33
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp23
+  rotate: false
+  xy: 3826, 96
+  size: 194, 28
+  orig: 194, 28
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp24
+  rotate: false
+  xy: 929, 64
+  size: 69, 20
+  orig: 69, 20
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp25
+  rotate: false
+  xy: 3162, 86
+  size: 22, 14
+  orig: 22, 14
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp26
+  rotate: false
+  xy: 698, 59
+  size: 136, 25
+  orig: 136, 25
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp27
+  rotate: false
+  xy: 2676, 92
+  size: 268, 32
+  orig: 268, 32
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp28
+  rotate: false
+  xy: 314, 87
+  size: 380, 37
+  orig: 380, 37
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp29
+  rotate: false
+  xy: 3627, 95
+  size: 195, 29
+  orig: 195, 29
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp3
+  rotate: false
+  xy: 1754, 92
+  size: 295, 8
+  orig: 295, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp30
+  rotate: false
+  xy: 640, 26
+  size: 33, 16
+  orig: 33, 16
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp31
+  rotate: false
+  xy: 3425, 95
+  size: 198, 29
+  orig: 198, 29
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp32
+  rotate: false
+  xy: 314, 46
+  size: 375, 37
+  orig: 375, 37
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp33
+  rotate: false
+  xy: 2218, 67
+  size: 77, 21
+  orig: 77, 21
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp34
+  rotate: false
+  xy: 1197, 53
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp35
+  rotate: false
+  xy: 1428, 89
+  size: 322, 35
+  orig: 322, 35
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp4
+  rotate: false
+  xy: 2075, 104
+  size: 283, 8
+  orig: 283, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp5
+  rotate: false
+  xy: 2053, 92
+  size: 267, 8
+  orig: 267, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp6
+  rotate: false
+  xy: 2948, 116
+  size: 253, 8
+  orig: 253, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp7
+  rotate: false
+  xy: 2948, 104
+  size: 237, 8
+  orig: 237, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp8
+  rotate: false
+  xy: 3205, 116
+  size: 216, 8
+  orig: 216, 8
+  offset: 0, 0
+  index: -1
+Helicopter/SpinUp9
+  rotate: false
+  xy: 1428, 77
+  size: 196, 8
+  orig: 196, 8
+  offset: 0, 0
+  index: -1

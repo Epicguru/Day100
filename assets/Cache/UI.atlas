@@ -1,12 +1,12 @@
 
 UI.png
-size: 1024,512
+size: 2048,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Box
   rotate: false
-  xy: 973, 474
+  xy: 761, 95
   size: 34, 34
   split: 10, 10, 10, 10
   orig: 34, 34
@@ -14,49 +14,49 @@ Box
   index: -1
 Confirm
   rotate: false
-  xy: 757, 169
+  xy: 915, 308
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Cover
   rotate: false
-  xy: 757, 308
+  xy: 761, 206
   size: 150, 200
   orig: 150, 200
   offset: 0, 0
   index: -1
 DevCross
   rotate: false
-  xy: 909, 446
+  xy: 915, 344
   size: 62, 62
   orig: 62, 62
   offset: 0, 0
   index: -1
 Exit
   rotate: false
-  xy: 828, 240
+  xy: 981, 374
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Ground
   rotate: false
-  xy: 909, 346
+  xy: 291, 42
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Gun
   rotate: false
-  xy: 757, 135
+  xy: 1361, 464
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 InnerBox
   rotate: false
-  xy: 943, 418
+  xy: 223, 12
   size: 26, 26
   split: 6, 6, 6, 6
   orig: 26, 26
@@ -64,14 +64,14 @@ InnerBox
   index: -1
 Loading
   rotate: false
-  xy: 2, 2
+  xy: 761, 410
   size: 309, 86
   orig: 309, 86
   offset: 0, 0
   index: -1
 LoadingBarGreen
   rotate: false
-  xy: 313, 23
+  xy: 4, 9
   size: 215, 65
   split: 37, 36, 32, 32
   orig: 215, 65
@@ -79,7 +79,7 @@ LoadingBarGreen
   index: -1
 LoadingBarRed
   rotate: false
-  xy: 530, 23
+  xy: 1074, 431
   size: 215, 65
   split: 37, 36, 32, 32
   orig: 215, 65
@@ -87,64 +87,71 @@ LoadingBarRed
   index: -1
 New
   rotate: false
-  xy: 757, 203
+  xy: 223, 42
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 ObjectBox
   rotate: false
-  xy: 757, 237
+  xy: 761, 133
   size: 69, 69
   orig: 69, 69
   offset: 0, 0
   index: -1
 Physics
   rotate: false
-  xy: 909, 312
+  xy: 870, 170
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Pixel
   rotate: false
-  xy: 313, 20
+  xy: 4, 4
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 Refresh
   rotate: false
-  xy: 757, 101
+  xy: 915, 272
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Right
   rotate: false
-  xy: 828, 274
+  xy: 1293, 464
   size: 64, 32
   orig: 64, 32
   offset: 0, 0
   index: -1
 Run
   rotate: false
-  xy: 791, 169
+  xy: 1017, 374
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Title
   rotate: false
-  xy: 2, 90
+  xy: 4, 78
   size: 753, 418
   orig: 753, 418
   offset: 0, 0
   index: -1
 Up
   rotate: false
-  xy: 909, 380
+  xy: 834, 138
   size: 32, 64
   orig: 32, 64
+  offset: 0, 0
+  index: -1
+Vehicle
+  rotate: false
+  xy: 327, 42
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1

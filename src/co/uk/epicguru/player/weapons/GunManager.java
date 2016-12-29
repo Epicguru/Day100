@@ -9,9 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -21,6 +19,7 @@ import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.helpers.AlphabeticalHelper;
+import co.uk.epicguru.helpers.SpriteProjecter;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
@@ -126,6 +125,13 @@ public final class GunManager {
 		return this.equipped;
 	}
 	
+	/**
+	 * Gets the sprite that is used to render.
+	 */
+	public Sprite getSprite(){
+		return gun;
+	}
+	
 	public static void reset() {
 		guns.clear();
 
@@ -143,12 +149,11 @@ public final class GunManager {
 					Log.info(TAG, "Found gun '" + newGun.name + "' of class '" + gun.getSimpleName() + "' using constructor #" + i);
 					break; // Because we found an adequate constructor.
 				} catch (Exception e){
-					if(i != gun.getConstructors().length - 1)
-						return;
+					Log.error("TRY #" + i, "Failed Constructor");
 					Log.error(TAG, "ERROR LOADING GUN '" + gun.getSimpleName() + "'. Constructor with 0 arguments failed.");
 					Log.error(TAG, "Ensure that the class has at least one constructor with 0 args.");
 					Log.error(TAG, "The stack trace for the LAST constructor tried follows:");
-					Log.error(TAG, "Error in constructor call for gun class '" + gun.getName() + "'", e);
+					//Log.error(TAG, "Error in constructor call for gun class '" + gun.getName() + "'", e);
 				}
 			}
 			
@@ -167,7 +172,7 @@ public final class GunManager {
 		}
 		guns = newGuns;
 
-		// Load gun data from file - TODO use internal path in cache or similar
+		// Load gun data from file
 		// to load from internal
 		// to avoid changing gun data as a user.
 		String data = Gdx.files.internal("Cache/Guns.txt").readString();
@@ -365,14 +370,16 @@ public final class GunManager {
 			flashCone.setActive(true);
 		}
 		
+		float innacuracy = MathUtils.random(-equipped.inaccuracy, equipped.inaccuracy);
+		
 		// Visual flash
-		new FlashFade(new Vector2(bulletSpawn.x, bulletSpawn.y),  angle, equipped.range);
+		new FlashFade(new Vector2(bulletSpawn.x, bulletSpawn.y), angle + innacuracy, equipped.range);
 		
 		// RAY
 		Vector2 end = new Vector2();
 		float MAX = 200; // If range is very high, this will limit. It is the end point of the ray.
-		end.x = MathUtils.cosDeg(angle) * MAX + bulletSpawn.x;
-		end.y = MathUtils.sinDeg(angle) * MAX + bulletSpawn.y;
+		end.x = MathUtils.cosDeg(angle + innacuracy) * MAX + bulletSpawn.x;
+		end.y = MathUtils.sinDeg(angle + innacuracy) * MAX + bulletSpawn.y;
 		colleateralCount = 0;
 		GunManager.flashInstance = this;
 		Day100.map.world.rayCast(new RayCastCallback() {
@@ -457,56 +464,9 @@ public final class GunManager {
 		// TIP
 		
 		// Fire!
-		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), getGunVectorPosition(equipped.bulletSpawn));
+		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), SpriteProjecter.unprojectPosition(gun, equipped.bulletSpawn));
 		
 		shoot = false;
-	}
-	
-	private static Vector2 tempReturn = new Vector2();
-	private static float[] topRight = new float[2];
-	private static float[] bottomRight = new float[2];
-	private static float[] topLeft = new float[2];
-	private static float[] bottomLeft = new float[2];
-	private static float[] interpolationLeft = new float[2];
-	private static float[] interpolationRight = new float[2];
-	private static float[] interpolationFinal = new float[2];
-
-	public Vector2 getGunVectorPosition(Vector2 localCoordinates){
-		float[] verts = gun.getVertices();
-		
-		Interpolation interpolation = Interpolation.linear;
-		
-		if(toRight()){
-			topRight[0] = verts[SpriteBatch.X3];
-			topRight[1] = verts[SpriteBatch.Y3];
-			bottomRight[0] = verts[SpriteBatch.X4];
-			bottomRight[1] = verts[SpriteBatch.Y4];
-			
-			topLeft[0] = verts[SpriteBatch.X2];
-			topLeft[1] = verts[SpriteBatch.Y2];	
-			bottomLeft[0] = verts[SpriteBatch.X1];
-			bottomLeft[1] = verts[SpriteBatch.Y1];	
-		}else{
-			topRight[0] = verts[SpriteBatch.X4];
-			topRight[1] = verts[SpriteBatch.Y4];
-			bottomRight[0] = verts[SpriteBatch.X3];
-			bottomRight[1] = verts[SpriteBatch.Y3];
-			
-			topLeft[0] = verts[SpriteBatch.X1];
-			topLeft[1] = verts[SpriteBatch.Y1];	
-			bottomLeft[0] = verts[SpriteBatch.X2];
-			bottomLeft[1] = verts[SpriteBatch.Y2];	
-		}
-		
-		interpolationLeft[0] = interpolation.apply(topLeft[0], bottomLeft[0], 1 - localCoordinates.y);
-		interpolationLeft[1] = interpolation.apply(topLeft[1], bottomLeft[1], 1 - localCoordinates.y);
-		interpolationRight[0] = interpolation.apply(topRight[0], bottomRight[0], 1 - localCoordinates.y);
-		interpolationRight[1] = interpolation.apply(topRight[1], bottomRight[1], 1 - localCoordinates.y);
-		interpolationFinal[0] = interpolation.apply(interpolationRight[0], interpolationLeft[0], 1 - localCoordinates.x);
-		interpolationFinal[1] = interpolation.apply(interpolationRight[1], interpolationLeft[1], 1 - localCoordinates.x);
-	
-		tempReturn.set(interpolationFinal[0], interpolationFinal[1]);
-		return tempReturn;
 	}
 
 	public void renderUI(Batch batch){

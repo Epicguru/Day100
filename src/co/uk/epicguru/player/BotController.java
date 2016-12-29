@@ -58,6 +58,7 @@ public class BotController extends Entity{
 		fixtureDef.shape = shape;
 		fixtureDef.restitution = 0;
 		fixtureDef.friction = 1.5f;
+		fixtureDef.filter.groupIndex = -123;
 		body.createFixture(fixtureDef);
 		shape.dispose();
 		setBody(body);

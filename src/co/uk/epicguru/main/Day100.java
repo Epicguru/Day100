@@ -38,6 +38,7 @@ public class Day100 extends ApplicationAdapter {
 	public static TextureAtlas playerAtlas;
 	public static TextureAtlas gunsAtlas;
 	public static TextureAtlas buildingAtlas;
+	public static TextureAtlas vehiclesAtlas;
 	public static Map map;
 	public static PlayerController player;
 
@@ -89,19 +90,21 @@ public class Day100 extends ApplicationAdapter {
 		// Atlas
 		assets.load("Cache/Guns.atlas", TextureAtlas.class);
 		assets.load("Cache/Building.atlas", TextureAtlas.class);
+		assets.load("Cache/Vehicles.atlas", TextureAtlas.class);
 	}
 
 	public void packTextures(){
 		Settings settings = new Settings();
 		settings.fast = false; // Set up other settings here
-		settings.paddingX = 2;
-		settings.paddingY = 2;
+		settings.paddingX = 4;
+		settings.paddingY = 4;
 		settings.maxWidth = 4096; // POW!
 		settings.maxHeight = 4096;
 		TexturePacker.process(settings, "bin/Textures/UI", "bin/Cache", "UI");	
 		TexturePacker.process(settings, "bin/Textures/Player", "bin/Cache", "Player");	
 		TexturePacker.process(settings, "bin/Textures/Guns", "bin/Cache", "Guns");	
 		TexturePacker.process(settings, "bin/Textures/Building", "bin/Cache", "Building");	
+		TexturePacker.process(settings, "bin/Textures/Vehicles", "bin/Cache", "Vehicles");	
 	}
 
 	public static void init(){
@@ -113,6 +116,7 @@ public class Day100 extends ApplicationAdapter {
 		playerAtlas = assets.get("Cache/Player.atlas", TextureAtlas.class);
 		gunsAtlas = assets.get("Cache/Guns.atlas", TextureAtlas.class);
 		buildingAtlas = assets.get("Cache/Building.atlas", TextureAtlas.class);
+		vehiclesAtlas = assets.get("Cache/Vehicles.atlas", TextureAtlas.class);
 
 		ScreenManager.init();
 	}

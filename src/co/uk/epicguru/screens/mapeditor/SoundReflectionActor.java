@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 import co.uk.epicguru.main.Day100;
-import co.uk.epicguru.player.weapons.GunDefinition;
 
 public class SoundReflectionActor extends ReflectionActor {
 	
@@ -15,7 +14,7 @@ public class SoundReflectionActor extends ReflectionActor {
 	}
 
 	@Override
-	public void apply(GunDefinition gun) throws Exception {
+	public void apply(Object gun) throws Exception {
 		if(((VisLabel)actors[0]).getText().toString().equals("Null")){
 			gun.getClass().getField(this.fieldName).set(gun, null);
 			return;

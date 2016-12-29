@@ -9,13 +9,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -31,8 +30,11 @@ import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
+import co.uk.epicguru.player.BotController;
+import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
+import co.uk.epicguru.vehicles.VehiclesManager;
 
 public final class Map {
 
@@ -49,7 +51,8 @@ public final class Map {
 	public RayHandler rayHandler;
 	public DirectionalLight sun;
 	public float timer;
-	public static ShapeRenderer shapes;
+	public Box2DDebugRenderer debugRenderer;
+	
 
 	public ArrayList<MapObject> objects = new ArrayList<MapObject>();
 
@@ -65,6 +68,8 @@ public final class Map {
 		this.name = source.getName();
 		this.floorTile = Day100.UIAtlas.findRegion("Ground");
 		Entity.clearAllEntities();
+		GunManager.reset();
+		VehiclesManager.reset();
 	}
 
 	public void loadFromFile(){
@@ -122,6 +127,7 @@ public final class Map {
 	private void setupWorld(){
 		// World creation
 		world = new World(new Vector2(0, -9.803f), true);
+		debugRenderer = new Box2DDebugRenderer();
 		
 		world.setContactListener(new ContactManager());
 		
@@ -192,11 +198,6 @@ public final class Map {
 	}
 
 	public void render(Batch batch) {
-
-		batch.end();
-		batch.setShader(null);	
-		batch.enableBlending();
-		batch.begin();
 		
 		for(MapObject object : objects){
 			object.render(batch);
@@ -212,55 +213,21 @@ public final class Map {
 		
 		Entity.renderAll(batch);
 		
-		BuildingManager.render(batch);
+		BuildingManager.render(batch);	
 		
-		
-		
-		// TESTING!
-		
-		if(shapes == null)
-			shapes = new ShapeRenderer();
-		
-		batch.end();
-		shapes.begin(ShapeType.Line);
-		float c = 0;
-		if(c > 0.9f)
-			c = 0.9f;
-		int w = 100;
-		int h = 40;
-		shapes.setColor(c, c, c, 1);
-		shapes.setProjectionMatrix(Day100.camera.combined);
-//		for(int x = 0; x < w + 1; x++){
-//			shapes.line(x, 0, x, h);
-//		}
-//		for(int y = 0; y < h + 1; y++){
-//			shapes.line(0, y, w, y);
-//		}
-		// Now the points that are editing.
-		shapes.setColor(Color.RED);
-		for(int x = 0; x < w; x++){
-			Interpolation interpolation = Interpolation.pow3In;
-			float nextY = (float)h * interpolation.apply(((float)++x) / (float)w);
-			x--;
-			float y = (float)h * interpolation.apply((float)x / (float)w);
-			shapes.line(x, y, x + 1, nextY);
-		}
-
-
-		//shapes.line(0, 0, 10, 10);			
-
-		shapes.end();
-		batch.begin();
+//		batch.end();
+//		debugRenderer.render(world, Day100.camera.combined);
+//		batch.begin();
 		
 	}
 	
 	public void renderLighting(Batch batch){
-		batch.end();
-		// Lighting
-		rayHandler.setCombinedMatrix(Day100.camera);
-		rayHandler.updateAndRender();			
-
-		batch.begin();
+//		batch.end();
+//		// Lighting
+//		rayHandler.setCombinedMatrix(Day100.camera);
+//		rayHandler.updateAndRender();			
+//
+//		batch.begin();
 	}
 	
 	public void update(float delta) {
@@ -276,10 +243,10 @@ public final class Map {
 		BuildingManager.update(delta);
 		
 		// TEST
-//		if(MathUtils.randomBoolean(0.4f * delta)){
-//			if(!Day100.player.isDead())
-//				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
-//		}	
+		if(MathUtils.randomBoolean(0.4f * delta)){
+			if(!Day100.player.isDead())
+				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
+		}	
 		
 		Entity.updateAll(delta);
 	}

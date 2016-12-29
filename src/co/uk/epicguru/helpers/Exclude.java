@@ -1,4 +1,4 @@
-package co.uk.epicguru.player.weapons;
+package co.uk.epicguru.helpers;
 
 import static java.lang.annotation.ElementType.FIELD;
 

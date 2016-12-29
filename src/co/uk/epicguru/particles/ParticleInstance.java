@@ -53,10 +53,11 @@ public class ParticleInstance extends Entity{
 	}
 	
 	public boolean isDead(){
-		return timer <= 0;
+		return timer <= 0 || getHealth() < 0;
 	}
 	
 	public void destroyed(){
+		super.destroyed();
 		particlesActive--;
 	}
 	

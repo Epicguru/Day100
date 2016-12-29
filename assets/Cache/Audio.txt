@@ -21,3 +21,4 @@ Audio/SFX/Guns/ScoutBolt2.mp3
 Audio/SFX/Guns/ScoutSilenced.mp3
 Audio/SFX/Guns/Silenced.mp3
 Audio/SFX/Misc/Shell.mp3
+Audio/SFX/Misc/Thud.mp3

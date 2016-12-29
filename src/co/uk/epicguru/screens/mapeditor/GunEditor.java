@@ -28,13 +28,13 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.helpers.AlphabeticalHelper;
+import co.uk.epicguru.helpers.VirtualCoordinate;
 import co.uk.epicguru.input.DevCross;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.player.weapons.FieldReader;
 import co.uk.epicguru.player.weapons.FiringMode;
-import co.uk.epicguru.player.weapons.GunCoordinate;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.instances.MapEditor;
@@ -148,11 +148,11 @@ public final class GunEditor {
 					
 					// Colour, if virtual gun point
 					try {
-						if(GunManager.find(gun).getClass().getField(name).isAnnotationPresent(GunCoordinate.class)){
+						if(GunManager.find(gun).getClass().getField(name).isAnnotationPresent(VirtualCoordinate.class)){
 							Color color = null;
 							String colorName = null;
 							try {
-								colorName = GunManager.find(gun).getClass().getField(name).getAnnotation(GunCoordinate.class).value();
+								colorName = GunManager.find(gun).getClass().getField(name).getAnnotation(VirtualCoordinate.class).value();
 							} catch (Exception e){
 								
 							}
@@ -501,7 +501,7 @@ public final class GunEditor {
 			VisValidatableTextField x = null;
 			VisValidatableTextField y = null;
 			try {
-				if(gun.getClass().getField(actor.fieldName).isAnnotationPresent(GunCoordinate.class)){
+				if(gun.getClass().getField(actor.fieldName).isAnnotationPresent(VirtualCoordinate.class)){
 					x = (VisValidatableTextField) actor.actors[0];
 					y = (VisValidatableTextField) actor.actors[1];
 				}
@@ -518,7 +518,7 @@ public final class GunEditor {
 			
 			String colorName = null;
 			try {
-				colorName = gun.getClass().getField(actor.fieldName).getAnnotation(GunCoordinate.class).value();
+				colorName = gun.getClass().getField(actor.fieldName).getAnnotation(VirtualCoordinate.class).value();
 			} catch (Exception e){
 				
 			}

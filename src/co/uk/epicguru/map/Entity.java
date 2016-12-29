@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 
 import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.vehicles.VehicleInstance;
 
 public class Entity {
 
@@ -21,6 +22,7 @@ public class Entity {
 	 */
 	public Body body;
 	float health;
+	public VehicleInstance mount;
 	
 	/**
 	 * Creates a new entity for a Day100 world. An entity auto updates and renders until the {@link #isDead()} condition is met.
@@ -38,6 +40,23 @@ public class Entity {
 		this.name = name;
 		setBody(body);
 		entitiesPending.add(this);
+	}
+	
+	/**
+	 * Is the entity mounting?
+	 */
+	public boolean isMounting(){
+		return mount != null;
+	}
+	
+	/**
+	 * Stops mounting any entity it was... mounting.
+	 *   ...  
+	 * It still sounds wrong. 
+	 */
+	public void dismount(){
+		if(this.mount != null)
+			this.mount.removeRider(this);
 	}
 	
 	/**

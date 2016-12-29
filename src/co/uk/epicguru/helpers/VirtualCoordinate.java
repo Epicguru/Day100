@@ -1,4 +1,4 @@
-package co.uk.epicguru.player.weapons;
+package co.uk.epicguru.helpers;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -8,6 +8,6 @@ import java.lang.annotation.Target;
 
 @Retention(RUNTIME)
 @Target(FIELD)
-public @interface GunCoordinate {
+public @interface VirtualCoordinate {
 	String value();
 }

@@ -1,26 +1,26 @@
 
 Player.png
-size: 128,64
+size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Blood
   rotate: false
-  xy: 2, 22
+  xy: 4, 17
   size: 64, 37
   orig: 64, 37
   offset: 0, 0
   index: -1
 Eyes
   rotate: false
-  xy: 2, 2
+  xy: 121, 36
   size: 31, 18
   orig: 31, 18
   offset: 0, 0
   index: -1
 TEMP
   rotate: false
-  xy: 68, 9
+  xy: 72, 4
   size: 45, 50
   orig: 45, 50
   offset: 0, 0

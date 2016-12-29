@@ -15,6 +15,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.player.weapons.GunManager;
+import co.uk.epicguru.vehicles.VehiclesManager;
 
 public final class PlayerController extends Entity{
 
@@ -95,6 +96,12 @@ public final class PlayerController extends Entity{
 			gunManager.nextFiringMode();
 		}
 		
+		if(Input.isKeyJustDown(Keys.L) && !BuildingManager.placing && !isMounting()){
+			VehiclesManager.find("Helicopter").getInstance(Input.getMouseWorldPos()).addRider(this);
+		}
+		if(Input.isKeyJustDown(Keys.ESCAPE))
+			dismount();
+		
 		// CHANGE TODO
 		if(gunManager.getEquipped() != null){
 			switch (gunManager.getEquipped().firingModes[gunManager.getEquippedInstance().getSelectedFireMode()]) {
@@ -135,6 +142,7 @@ public final class PlayerController extends Entity{
 
 		this.renderer.position.set(body.getPosition().sub(45f / 32f / 2, 50f / 32f / 2));
 		this.renderer.eyeOffset.set(MathUtils.clamp(.22f + body.getLinearVelocity().x / 20, 0, 0.4f), MathUtils.clamp(.6f + body.getLinearVelocity().y / 20, .1f, .8f));
+		this.renderer.angle = getBody().getAngle() * MathUtils.radiansToDegrees;
 		renderer.render(batch);
 		
 		// Guns

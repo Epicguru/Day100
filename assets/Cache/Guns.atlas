@@ -6,840 +6,854 @@ filter: Nearest,Nearest
 repeat: none
 AK-47
   rotate: false
-  xy: 2, 424
+  xy: 4, 277
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 AK-47Fire0
   rotate: false
-  xy: 2, 424
+  xy: 4, 277
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 AK-47Fire1
   rotate: false
-  xy: 2, 424
+  xy: 4, 277
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 AK-47Fire2
   rotate: false
-  xy: 2, 347
+  xy: 273, 420
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 AK-47Fire3
   rotate: false
-  xy: 2, 270
+  xy: 4, 198
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 AK-47Fire4
   rotate: false
-  xy: 2, 193
+  xy: 4, 119
   size: 247, 75
   orig: 247, 75
   offset: 0, 0
   index: -1
 Flash
   rotate: false
-  xy: 2, 501
+  xy: 273, 499
   size: 320, 9
   orig: 320, 9
   offset: 0, 0
   index: -1
 Glock
   rotate: false
-  xy: 684, 6
+  xy: 3089, 272
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
   index: -1
 GlockFire0
   rotate: false
-  xy: 1425, 220
+  xy: 3729, 209
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
   index: -1
 GlockReload0
   rotate: false
-  xy: 1425, 220
+  xy: 3729, 209
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
   index: -1
 GlockFire1
   rotate: false
-  xy: 1397, 101
+  xy: 1217, 252
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
   index: -1
 GlockFire5
   rotate: false
-  xy: 1397, 101
+  xy: 1217, 252
   size: 68, 47
   orig: 68, 47
   offset: 0, 0
   index: -1
 GlockFire2
   rotate: false
-  xy: 1354, 220
+  xy: 3016, 272
   size: 69, 47
   orig: 69, 47
   offset: 0, 0
   index: -1
 GlockFire4
   rotate: false
-  xy: 1354, 220
+  xy: 3016, 272
   size: 69, 47
   orig: 69, 47
   offset: 0, 0
   index: -1
 GlockFire3
   rotate: false
-  xy: 1282, 220
+  xy: 2942, 272
   size: 70, 47
   orig: 70, 47
   offset: 0, 0
   index: -1
 GlockReload1
   rotate: false
-  xy: 617, 2
+  xy: 852, 177
   size: 65, 51
   orig: 65, 51
   offset: 0, 0
   index: -1
 GlockReload10
   rotate: false
-  xy: 1900, 298
+  xy: 703, 4
   size: 71, 102
   orig: 71, 102
   offset: 0, 0
   index: -1
 GlockReload11
   rotate: false
-  xy: 1973, 295
+  xy: 778, 4
   size: 71, 102
   orig: 71, 102
   offset: 0, 0
   index: -1
 GlockReload12
   rotate: false
-  xy: 2046, 295
+  xy: 853, 4
   size: 71, 102
   orig: 71, 102
   offset: 0, 0
   index: -1
 GlockReload13
   rotate: false
-  xy: 1032, 119
+  xy: 3579, 258
   size: 71, 102
   orig: 71, 102
   offset: 0, 0
   index: -1
 GlockReload14
   rotate: false
-  xy: 1105, 116
+  xy: 3654, 255
   size: 71, 105
   orig: 71, 105
   offset: 0, 0
   index: -1
 GlockReload15
   rotate: false
-  xy: 1178, 118
+  xy: 3729, 260
   size: 71, 100
   orig: 71, 100
   offset: 0, 0
   index: -1
 GlockReload16
   rotate: false
-  xy: 1251, 120
+  xy: 3804, 262
   size: 71, 98
   orig: 71, 98
   offset: 0, 0
   index: -1
 GlockReload17
   rotate: false
-  xy: 1324, 125
+  xy: 3879, 267
   size: 71, 93
   orig: 71, 93
   offset: 0, 0
   index: -1
 GlockReload18
   rotate: false
-  xy: 955, 61
+  xy: 3954, 270
   size: 71, 90
   orig: 71, 90
   offset: 0, 0
   index: -1
 GlockReload19
   rotate: false
-  xy: 1028, 34
+  xy: 3954, 183
   size: 71, 83
   orig: 71, 83
   offset: 0, 0
   index: -1
 GlockReload2
   rotate: false
-  xy: 1495, 213
+  xy: 936, 115
   size: 64, 58
   orig: 64, 58
   offset: 0, 0
   index: -1
 GlockReload20
   rotate: false
-  xy: 1101, 38
+  xy: 440, 4
   size: 71, 76
   orig: 71, 76
   offset: 0, 0
   index: -1
 GlockReload21
   rotate: false
-  xy: 1397, 150
+  xy: 3879, 195
   size: 71, 68
   orig: 71, 68
   offset: 0, 0
   index: -1
 GlockReload22
   rotate: false
-  xy: 1470, 151
+  xy: 3804, 198
   size: 71, 60
   orig: 71, 60
   offset: 0, 0
   index: -1
 GlockReload23
   rotate: false
-  xy: 3297, 342
+  xy: 868, 111
   size: 64, 62
   orig: 64, 62
   offset: 0, 0
   index: -1
 GlockReload24
   rotate: false
-  xy: 3363, 343
+  xy: 4029, 298
   size: 62, 62
   orig: 62, 62
   offset: 0, 0
   index: -1
 GlockReload25
   rotate: false
-  xy: 3427, 349
+  xy: 4029, 238
   size: 62, 56
   orig: 62, 56
   offset: 0, 0
   index: -1
 GlockReload26
   rotate: false
-  xy: 954, 12
+  xy: 1289, 252
   size: 67, 47
   orig: 67, 47
   offset: 0, 0
   index: -1
 GlockReload3
   rotate: false
-  xy: 3966, 404
+  xy: 921, 177
   size: 67, 60
   orig: 67, 60
   offset: 0, 0
   index: -1
 GlockReload4
   rotate: false
-  xy: 1209, 220
+  xy: 2867, 304
   size: 71, 60
   orig: 71, 60
   offset: 0, 0
   index: -1
 GlockReload5
   rotate: false
-  xy: 3151, 339
+  xy: 3279, 295
   size: 71, 65
   orig: 71, 65
   offset: 0, 0
   index: -1
 GlockReload6
   rotate: false
-  xy: 3224, 335
+  xy: 3354, 291
   size: 71, 69
   orig: 71, 69
   offset: 0, 0
   index: -1
 GlockReload7
   rotate: false
-  xy: 1827, 326
+  xy: 3429, 286
   size: 71, 74
   orig: 71, 74
   offset: 0, 0
   index: -1
 GlockReload8
   rotate: false
-  xy: 959, 153
+  xy: 3504, 279
   size: 71, 81
   orig: 71, 81
   offset: 0, 0
   index: -1
 GlockReload9
   rotate: false
-  xy: 1754, 329
+  xy: 3123, 323
   size: 71, 89
   orig: 71, 89
   offset: 0, 0
   index: -1
+Minigun
+  rotate: false
+  xy: 4, 434
+  size: 265, 74
+  orig: 265, 74
+  offset: 0, 0
+  index: -1
+MinigunFire0
+  rotate: false
+  xy: 4, 356
+  size: 265, 74
+  orig: 265, 74
+  offset: 0, 0
+  index: -1
 P90
   rotate: false
-  xy: 3314, 407
+  xy: 2207, 307
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload0
   rotate: false
-  xy: 3477, 407
+  xy: 2372, 307
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload1
   rotate: false
-  xy: 3640, 407
+  xy: 2537, 307
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload10
   rotate: false
-  xy: 617, 55
+  xy: 540, 283
   size: 172, 81
   orig: 172, 81
   offset: 0, 0
   index: -1
 P90Reload11
   rotate: false
-  xy: 617, 55
+  xy: 540, 283
   size: 172, 81
   orig: 172, 81
   offset: 0, 0
   index: -1
 P90Reload12
   rotate: false
-  xy: 1576, 329
+  xy: 2943, 323
   size: 176, 89
   orig: 176, 89
   offset: 0, 0
   index: -1
 P90Reload13
   rotate: false
-  xy: 267, 138
+  xy: 3210, 364
   size: 173, 96
   orig: 173, 96
   offset: 0, 0
   index: -1
 P90Reload14
   rotate: false
-  xy: 267, 40
+  xy: 3387, 364
   size: 173, 96
   orig: 173, 96
   offset: 0, 0
   index: -1
 P90Reload15
   rotate: false
-  xy: 442, 138
+  xy: 3564, 364
   size: 173, 96
   orig: 173, 96
   offset: 0, 0
   index: -1
 P90Reload16
   rotate: false
-  xy: 442, 40
+  xy: 3741, 364
   size: 173, 96
   orig: 173, 96
   offset: 0, 0
   index: -1
 P90Reload17
   rotate: false
-  xy: 617, 138
+  xy: 3918, 364
   size: 173, 96
   orig: 173, 96
   offset: 0, 0
   index: -1
 P90Reload18
   rotate: false
-  xy: 1841, 402
+  xy: 881, 302
   size: 167, 62
   orig: 167, 62
   offset: 0, 0
   index: -1
 P90Reload19
   rotate: false
-  xy: 2499, 403
+  xy: 1382, 303
   size: 161, 61
   orig: 161, 61
   offset: 0, 0
   index: -1
 P90Reload2
   rotate: false
-  xy: 3803, 407
+  xy: 2702, 307
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload20
   rotate: false
-  xy: 2662, 404
+  xy: 1547, 304
   size: 161, 60
   orig: 161, 60
   offset: 0, 0
   index: -1
 P90Reload21
   rotate: false
-  xy: 2825, 405
+  xy: 1712, 305
   size: 161, 59
   orig: 161, 59
   offset: 0, 0
   index: -1
 P90Reload22
   rotate: false
-  xy: 3151, 406
+  xy: 2042, 306
   size: 161, 58
   orig: 161, 58
   offset: 0, 0
   index: -1
 P90Reload23
   rotate: false
-  xy: 792, 99
+  xy: 538, 100
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload24
   rotate: false
-  xy: 791, 40
+  xy: 538, 39
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload25
   rotate: false
-  xy: 2336, 344
+  xy: 716, 232
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload26
   rotate: false
-  xy: 2499, 344
+  xy: 881, 241
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload27
   rotate: false
-  xy: 2662, 345
+  xy: 1046, 238
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload28
   rotate: false
-  xy: 2825, 346
+  xy: 687, 171
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload29
   rotate: false
-  xy: 2988, 347
+  xy: 703, 110
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload3
   rotate: false
-  xy: 1046, 223
+  xy: 522, 222
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload4
   rotate: false
-  xy: 1311, 269
+  xy: 522, 161
   size: 161, 57
   orig: 161, 57
   offset: 0, 0
   index: -1
 P90Reload5
   rotate: false
-  xy: 2988, 406
+  xy: 1877, 306
   size: 161, 58
   orig: 161, 58
   offset: 0, 0
   index: -1
 P90Reload6
   rotate: false
-  xy: 2336, 403
+  xy: 1217, 303
   size: 161, 61
   orig: 161, 61
   offset: 0, 0
   index: -1
 P90Reload7
   rotate: false
-  xy: 2010, 399
+  xy: 1052, 299
   size: 161, 65
   orig: 161, 65
   offset: 0, 0
   index: -1
 P90Reload8
   rotate: false
-  xy: 2173, 393
+  xy: 716, 293
   size: 161, 71
   orig: 161, 71
   offset: 0, 0
   index: -1
 P90Reload9
   rotate: false
-  xy: 792, 158
+  xy: 271, 4
   size: 165, 76
   orig: 165, 76
   offset: 0, 0
   index: -1
 Revolver
   rotate: false
-  xy: 1474, 273
+  xy: 3198, 307
   size: 77, 53
   orig: 77, 53
   offset: 0, 0
   index: -1
 Scout
   rotate: false
-  xy: 2, 147
+  xy: 273, 372
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt0
   rotate: false
-  xy: 2, 147
+  xy: 273, 372
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload0
   rotate: false
-  xy: 2, 147
+  xy: 273, 372
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt1
   rotate: false
-  xy: 2, 101
+  xy: 4, 71
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt10
   rotate: false
-  xy: 1914, 466
+  xy: 864, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt11
   rotate: false
-  xy: 2179, 466
+  xy: 1131, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt2
   rotate: false
-  xy: 2, 55
+  xy: 4, 23
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt3
   rotate: false
-  xy: 2, 9
+  xy: 273, 324
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt4
   rotate: false
-  xy: 324, 466
+  xy: 255, 276
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt5
   rotate: false
-  xy: 589, 466
+  xy: 255, 228
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt6
   rotate: false
-  xy: 854, 466
+  xy: 255, 180
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt7
   rotate: false
-  xy: 1119, 466
+  xy: 255, 132
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt8
   rotate: false
-  xy: 1384, 466
+  xy: 271, 84
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutBolt9
   rotate: false
-  xy: 1649, 466
+  xy: 597, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload1
   rotate: false
-  xy: 2444, 466
+  xy: 1398, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload10
   rotate: false
-  xy: 251, 328
+  xy: 3801, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload11
   rotate: false
-  xy: 516, 374
+  xy: 540, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload12
   rotate: false
-  xy: 781, 420
+  xy: 540, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload13
   rotate: false
-  xy: 251, 282
+  xy: 807, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload14
   rotate: false
-  xy: 516, 328
+  xy: 807, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload15
   rotate: false
-  xy: 781, 374
+  xy: 1074, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload16
   rotate: false
-  xy: 1046, 420
+  xy: 1074, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload17
   rotate: false
-  xy: 251, 236
+  xy: 1341, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload18
   rotate: false
-  xy: 251, 236
+  xy: 1341, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload19
   rotate: false
-  xy: 516, 282
+  xy: 1341, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload2
   rotate: false
-  xy: 2709, 466
+  xy: 1665, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload20
   rotate: false
-  xy: 781, 328
+  xy: 1608, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload21
   rotate: false
-  xy: 1046, 374
+  xy: 1608, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload22
   rotate: false
-  xy: 1311, 420
+  xy: 1875, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload23
   rotate: false
-  xy: 516, 236
+  xy: 1875, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload24
   rotate: false
-  xy: 781, 282
+  xy: 2142, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload25
   rotate: false
-  xy: 1046, 328
+  xy: 2142, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload26
   rotate: false
-  xy: 1311, 374
+  xy: 2409, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload27
   rotate: false
-  xy: 1576, 420
+  xy: 2409, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload28
   rotate: false
-  xy: 781, 236
+  xy: 2676, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload29
   rotate: false
-  xy: 1046, 282
+  xy: 2676, 368
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload3
   rotate: false
-  xy: 2974, 466
+  xy: 1932, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload30
   rotate: false
-  xy: 1311, 328
+  xy: 2943, 416
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload4
   rotate: false
-  xy: 3239, 466
+  xy: 2199, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload5
   rotate: false
-  xy: 3504, 466
+  xy: 2466, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload6
   rotate: false
-  xy: 3769, 466
+  xy: 2733, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload7
   rotate: false
-  xy: 251, 420
+  xy: 3000, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload8
   rotate: false
-  xy: 251, 374
+  xy: 3267, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 ScoutReload9
   rotate: false
-  xy: 516, 420
+  xy: 3534, 464
   size: 263, 44
   orig: 263, 44
   offset: 0, 0
   index: -1
 Shell
   rotate: false
-  xy: 251, 231
+  xy: 255, 349
   size: 14, 3
   orig: 14, 3
   offset: 0, 0
   index: -1
 StandardParticle
   rotate: false
-  xy: 2, 2
+  xy: 881, 232
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
   index: -1
 StandardParticle2
   rotate: false
-  xy: 1470, 213
+  xy: 890, 232
   size: 5, 5
   orig: 5, 5
   offset: 0, 0

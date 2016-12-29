@@ -28,8 +28,8 @@ public class ParticleExplosion {
 	public ParticleExplosion(Vector2 position, float minAngle, float maxAngle, float minVelocity, float maxVelocity, int min, int max, float minTime, float maxTime, TextureRegion texture, long seed){
 		// Cause a rain of particles
 		
-		if(Gdx.graphics.getFramesPerSecond() <= 30 || ParticleInstance.particlesActive >= 400){
-			Log.error("ERROR", ParticleInstance.particlesActive + " >= 400 !");
+		if(Gdx.graphics.getFramesPerSecond() <= 30 || ParticleInstance.particlesActive >= 1000){
+			Log.error("ERROR", ParticleInstance.particlesActive + " >= 1000 !");
 			return;
 		}
 		

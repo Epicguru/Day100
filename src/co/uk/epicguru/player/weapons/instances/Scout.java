@@ -4,12 +4,13 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.helpers.VirtualCoordinate;
 import co.uk.epicguru.helpers.GunShell;
+import co.uk.epicguru.helpers.SpriteProjecter;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.player.weapons.AnimatedInstance;
-import co.uk.epicguru.player.weapons.GunCoordinate;
 import co.uk.epicguru.player.weapons.GunDefinition;
 import co.uk.epicguru.player.weapons.GunInstance;
 import co.uk.epicguru.player.weapons.GunManager;
@@ -17,7 +18,7 @@ import co.uk.epicguru.sound.SoundUtils;
 
 public class Scout extends GunDefinition {
 
-	@GunCoordinate("GREEN")
+	@VirtualCoordinate("GREEN")
 	public static Vector2 shellSpawn;
 	public static Sound bolt;
 	public static Sound bolt1;
@@ -36,7 +37,7 @@ public class Scout extends GunDefinition {
 		animator.setFPS(14);
 		animator.setAnimation("Bolt");
 		animator.addCallback(() -> {
-			new GunShell(gun.getGunVectorPosition(shellSpawn), gun.getFinalAngle(), 0.8f);
+			new GunShell(SpriteProjecter.unprojectPosition(gun.getSprite(), shellSpawn), gun.getFinalAngle(), 0.8f);
 		}, 5);
 		
 		// Play bolt sound

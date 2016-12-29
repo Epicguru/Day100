@@ -48,6 +48,7 @@ import co.uk.epicguru.screens.mapeditor.MapEditorInput;
 import co.uk.epicguru.screens.mapeditor.MapEditorObject;
 import co.uk.epicguru.screens.mapeditor.MapEditorPlaceable;
 import co.uk.epicguru.screens.mapeditor.PhysicsData;
+import co.uk.epicguru.screens.mapeditor.VehicleEditor;
 import co.uk.epicguru.screens.mapeditor.VisUIHandler;
 
 
@@ -73,7 +74,7 @@ public final class MapEditor extends GameScreen {
 	public static float timer = 0;
 	public static String exportStatus = "UNKNOWN";
 
-	public static TextureRegion exit, refresh, run, physics, objectBox, cover, xAxis, yAxis, ground, gunsButton;
+	public static TextureRegion exit, refresh, run, physics, objectBox, cover, xAxis, yAxis, ground, gunsButton, vehiclesButton;
 	public static TextureRegion newButton;
 	public static NinePatch boxInner, boxOuter;
 	public static Vector2 ghostRenderPos = new Vector2();
@@ -164,6 +165,7 @@ public final class MapEditor extends GameScreen {
 		physics = Day100.UIAtlas.findRegion("Physics");
 		newButton = Day100.UIAtlas.findRegion("New");
 		gunsButton = Day100.UIAtlas.findRegion("Gun");
+		vehiclesButton = Day100.UIAtlas.findRegion("Vehicle");
 
 		boxInner = Day100.UIAtlas.createPatch("InnerBox");
 		boxOuter = Day100.UIAtlas.createPatch("Box");
@@ -171,7 +173,7 @@ public final class MapEditor extends GameScreen {
 		input = new MapEditorInput();
 		Gdx.input.setInputProcessor(input);
 	}
-	
+
 	public void updateMusic(){
 		if(!Day100.DEVELOPER_MODE)
 			return;
@@ -324,7 +326,7 @@ public final class MapEditor extends GameScreen {
 	public void update(float delta) {
 
 		updateMusic();
-		
+
 		switch(state){
 		case SELECT_MAP:
 
@@ -360,6 +362,20 @@ public final class MapEditor extends GameScreen {
 			}
 
 			GunEditor.update(delta);
+
+			break;
+		case VEHICLES:
+			// Camera and mouse movement
+			if(Day100.camera.zoom != input.zoom)
+				Day100.camera.zoom += (input.zoom - Day100.camera.zoom) * 0.2f;
+			if(Gdx.input.isButtonPressed(Buttons.FORWARD)){
+				input.zoom = 1;
+			}
+			if(Gdx.input.isButtonPressed(Buttons.MIDDLE)){
+				Day100.camera.position.add(-Gdx.input.getDeltaX() / Constants.PPM * Day100.camera.zoom, Gdx.input.getDeltaY() / Constants.PPM * Day100.camera.zoom, 0);
+			}
+			
+			VehicleEditor.update(delta);
 
 			break;
 		case CREATION:
@@ -703,6 +719,10 @@ public final class MapEditor extends GameScreen {
 		if(state == State.GUNS){
 			GunEditor.render(batch);
 		}
+		
+		if(state == State.VEHICLES){
+			VehicleEditor.render(batch);
+		}
 
 		if(state != State.CREATION)
 			return;
@@ -985,6 +1005,23 @@ public final class MapEditor extends GameScreen {
 				}
 			}
 
+			// Vehicles editor
+			int vX = 325;
+			int vY = height - 37;
+			batch.draw(vehiclesButton, vX, vY);
+			rect.set(vX, vY, 32, 32);
+			if(rect.contains(Input.getMousePosYFlip())){
+				if(Input.clickLeft() && !VisUIHandler.propertiesOpen && !VisUIHandler.colourOpen){
+					// Open vehicles editor
+					VehicleEditor.open();
+					state = State.VEHICLES;
+					returnToFromPhysics.set(Day100.camera.position.x, Day100.camera.position.y, 0);
+					returnToFromPhysics.z = Day100.camera.zoom;
+					input.zoom = .5f;
+					Day100.camera.position.set(0, 0, 0);
+				}
+			}
+
 			// Exit
 			int eX = width - 50;
 			int eY = height - 50;
@@ -1085,6 +1122,24 @@ public final class MapEditor extends GameScreen {
 			VisUIHandler.renderUI(batch);
 
 			break;
+		case VEHICLES:
+
+			// exit
+			eX = width - 50;
+			eY = height - 50;
+			batch.draw(exit, eX, eY);
+			rect.set(eX, eY, 32, 32);
+			if(Input.clickLeft() && rect.contains(Input.getMousePosYFlip())){
+				// TODO Save
+				VehicleEditor.close();
+				state = State.CREATION;
+				Day100.camera.position.set(returnToFromPhysics);
+				input.zoom = returnToFromPhysics.z;
+			}
+
+			VisUIHandler.renderUI(batch);
+
+			break;
 		}
 
 	}
@@ -1176,6 +1231,7 @@ public final class MapEditor extends GameScreen {
 	public void resize(int width, int height){
 		VisUIHandler.resized(width, height);
 		GunEditor.resize(width, height);
+		VehicleEditor.resize(width, height);
 		if(lighting != null)
 			lighting.resizeFBO(width / 2, height / 2);
 	}
@@ -1282,7 +1338,8 @@ public final class MapEditor extends GameScreen {
 		EXPORTING,
 		RUNNING,
 		PHYSICS,
-		GUNS
+		GUNS,
+		VEHICLES
 	}
 
 }

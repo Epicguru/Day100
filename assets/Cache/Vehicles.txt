@@ -1,0 +1,1 @@
+-name<S>[Helicopter]-maxRiders<I>[1]-backRotorPosition<V>[0.08/0.7]-rotorPosition<V>[0.725/1.0]-playerPosition<V>[0.835/0.455]

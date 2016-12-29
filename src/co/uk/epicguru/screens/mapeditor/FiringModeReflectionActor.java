@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
 import co.uk.epicguru.player.weapons.FiringMode;
-import co.uk.epicguru.player.weapons.GunDefinition;
 
 public final class FiringModeReflectionActor extends ReflectionActor {
 		
@@ -13,7 +12,7 @@ public final class FiringModeReflectionActor extends ReflectionActor {
 	}
 
 	@Override
-	public void apply(GunDefinition gun) throws Exception{
+	public void apply(Object gun) throws Exception{
 		int amount = 0;
 		for(Actor actor : this.actors){
 			VisCheckBox box = (VisCheckBox)actor;
