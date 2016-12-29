@@ -124,6 +124,7 @@ public class Day100 extends ApplicationAdapter {
 			float dst = targetTimeScale - timeScale;
 			timeScale += dst * 0.05f;
 		}
+		targetTimeScale = 1f;
 		deltaTime = Gdx.graphics.getDeltaTime() * timeScale;
 		camera.update();
 		UIcamera.update();

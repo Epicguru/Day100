@@ -823,3 +823,24 @@ ScoutReload9
   orig: 263, 44
   offset: 0, 0
   index: -1
+Shell
+  rotate: false
+  xy: 251, 231
+  size: 14, 3
+  orig: 14, 3
+  offset: 0, 0
+  index: -1
+StandardParticle
+  rotate: false
+  xy: 2, 2
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+StandardParticle2
+  rotate: false
+  xy: 1470, 213
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1

@@ -7,7 +7,6 @@ import org.reflections.Reflections;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.RayCastCallback;
 
+import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.helpers.AlphabeticalHelper;
@@ -43,6 +43,7 @@ public final class GunManager {
 	private float timer = 0;
 	private boolean canShoot = false;
 	private PointLight flash;
+	private ConeLight flashCone;
 	private float angleOffset = 0;
 	private float angleVelocity = 0;
 	private boolean inBurst;
@@ -62,6 +63,22 @@ public final class GunManager {
 	 */
 	public float getOffset(){
 		return angleOffset;
+	}
+	
+	/**
+	 * Gets the direction the gun is facing in.
+	 * @return
+	 */
+	public float getBaseAngle(){
+		return getAngle();
+	}
+	
+	/**
+	 * Gets the final angle that the gun is rendered at.
+	 * @return
+	 */
+	public float getFinalAngle(){
+		return getBaseAngle() + getOffset();
 	}
 	
 	/**
@@ -87,7 +104,11 @@ public final class GunManager {
 			if(this.equippedInstance != null) this.equippedInstance.dequipped();
 			this.equippedInstance = null;
 		}else{
-			this.equippedInstance = gun.getInstance(this, player);			
+			this.equippedInstance = gun.getInstance(this, player);	
+			if(flash != null) flash.remove();
+			flash = equipped.getPointFlash(Day100.map.rayHandler, player.body.getPosition());
+			if(flashCone != null) flashCone.remove();
+			flashCone = equipped.getConeFlash(Day100.map.rayHandler, Vector2.Zero, 0);
 		}
 		gunChanged();
 		return gun;
@@ -261,9 +282,8 @@ public final class GunManager {
 		// Deactivate flash
 		if (flash != null) {
 			flash.setActive(false);
-			flash.remove();
+			flashCone.setActive(false);
 		}
-		flash = null;
 
 		switch (equipped.firingModes[equippedInstance.getSelectedFireMode()]) {
 		case BURST:
@@ -337,9 +357,13 @@ public final class GunManager {
 		//Day100.map.blood.add(new MapBlood(Input.getMouseWorldPos(), angle));
 
 		// Flash
-		flash = new PointLight(Day100.map.rayHandler, Constants.RAYS, new Color(1, 1, 0, 0.4f), 10f,
-				this.player.body.getPosition().x, this.player.body.getPosition().y);
-		flash.setActive(true);
+		if(!player.isDead()){
+			flash.setPosition(player.getBody().getPosition());
+			flash.setActive(true);
+			flashCone.setPosition(bulletSpawn);
+			flashCone.setDirection(angle);
+			flashCone.setActive(true);
+		}
 		
 		// Visual flash
 		new FlashFade(new Vector2(bulletSpawn.x, bulletSpawn.y),  angle, equipped.range);

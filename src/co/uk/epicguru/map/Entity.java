@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
 
 import co.uk.epicguru.main.Day100;
 
@@ -174,6 +175,17 @@ public class Entity {
 	 * @param batch The Batch to draw with.
 	 */
 	public void renderUI(Batch batch){
+		
+	}
+	
+	/**
+	 * Called when the {@link #body} comes into contact with another body that IS OWNED BY AN ENTITY.
+	 * By default does nothing.
+	 * @param otherBody The other Box2D body that was part of the collision.
+	 * @param otherEntity The Entity who owns the other body.
+	 * @param contact The contact data.
+	 */
+	public void bodyContact(Body otherBody, Entity otherEntity, Contact contact){
 		
 	}
 	

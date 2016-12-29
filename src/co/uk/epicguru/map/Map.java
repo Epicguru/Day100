@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 import co.uk.epicguru.IO.JLineReader;
+import co.uk.epicguru.helpers.ContactManager;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
@@ -43,7 +44,7 @@ public final class Map {
 	private String name;
 	private int width;
 	private int height;
-	private TextureRegion floor;
+	public TextureRegion floorTile;
 	public World world;
 	public RayHandler rayHandler;
 	public DirectionalLight sun;
@@ -62,7 +63,7 @@ public final class Map {
 		this.sourceFolder = source;
 		this.saveFolder = new File(source.getAbsoluteFile() + "\\Game Data\\");
 		this.name = source.getName();
-		this.floor = Day100.UIAtlas.findRegion("Ground");
+		this.floorTile = Day100.UIAtlas.findRegion("Ground");
 		Entity.clearAllEntities();
 	}
 
@@ -122,6 +123,8 @@ public final class Map {
 		// World creation
 		world = new World(new Vector2(0, -9.803f), true);
 		
+		world.setContactListener(new ContactManager());
+		
 		// Create floor
 		BodyDef def = new BodyDef();
 		def.type = BodyType.StaticBody;
@@ -135,6 +138,9 @@ public final class Map {
 		fixtureDef.friction = 1f;
 		Body body = world.createBody(def);
 		body.createFixture(fixtureDef);
+		
+		// Floor entity
+		new FloorEntity(body);
 	}
 
 	private void setupLighting(){
@@ -181,7 +187,7 @@ public final class Map {
 	
 	public void renderFloor(Batch batch){
 		for(int x = 0; x < width; x++){
-			batch.draw(floor, x, -1, 1.01f, 1.01f);
+			batch.draw(floorTile, x, -1, 1.01f, 1.01f);
 		}
 	}
 

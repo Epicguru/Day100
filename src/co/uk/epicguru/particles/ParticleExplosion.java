@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import co.uk.epicguru.main.Log;
+
 public class ParticleExplosion {
 
 	private static Random random = new Random();
@@ -27,6 +29,7 @@ public class ParticleExplosion {
 		// Cause a rain of particles
 		
 		if(Gdx.graphics.getFramesPerSecond() <= 30 || ParticleInstance.particlesActive >= 400){
+			Log.error("ERROR", ParticleInstance.particlesActive + " >= 400 !");
 			return;
 		}
 		

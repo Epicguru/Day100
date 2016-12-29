@@ -3,12 +3,18 @@ package co.uk.epicguru.player.weapons;
 import java.lang.reflect.Field;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
+import box2dLight.ConeLight;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
+import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.Entity;
@@ -390,4 +396,21 @@ public abstract class GunDefinition {
 	public GunInstance getInstance(GunManager gunManager, Entity entity){
 		return new GunInstance(gunManager, entity);
 	}	
+
+	/**
+	 * Gets the muzzle flash light.
+	 * @param position The position of the muzzle flash.
+	 * @param angle THe angle of the flash.
+	 * @return The light to be rendered.
+	 */
+	@Exclude
+	private static Color defaultColor = new Color(0.5f, 0f, 0.3f, 0.3f);
+	public ConeLight getConeFlash(RayHandler rayHandler, Vector2 position, float angle){
+		return new ConeLight(rayHandler, Constants.RAYS, defaultColor, range / 2, bulletSpawn.x, bulletSpawn.y, angle, 5);
+	}
+	
+	public PointLight getPointFlash(RayHandler rayHandler, Vector2 position){
+		return new PointLight(rayHandler, Constants.RAYS, defaultColor, MathUtils.random(9, 11),
+				position.x, position.y);
+	}
 }

@@ -37,7 +37,7 @@ public class ParticleInstance extends Entity{
 		shape.setRadius(0.05f);
 		FixtureDef fixture = new FixtureDef();
 		fixture.shape = shape;
-		fixture.filter.groupIndex = -321;
+		fixture.filter.groupIndex = -123;
 		setBody(Day100.map.world.createBody(def));
 		getBody().createFixture(fixture);
 	}
