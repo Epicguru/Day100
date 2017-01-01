@@ -46,6 +46,13 @@ AK-47Fire4
   orig: 247, 75
   offset: 0, 0
   index: -1
+C4
+  rotate: false
+  xy: 4, 9
+  size: 16, 10
+  orig: 16, 10
+  offset: 0, 0
+  index: -1
 Flash
   rotate: false
   xy: 273, 499
@@ -842,19 +849,5 @@ Shell
   xy: 255, 349
   size: 14, 3
   orig: 14, 3
-  offset: 0, 0
-  index: -1
-StandardParticle
-  rotate: false
-  xy: 881, 232
-  size: 5, 5
-  orig: 5, 5
-  offset: 0, 0
-  index: -1
-StandardParticle2
-  rotate: false
-  xy: 890, 232
-  size: 5, 5
-  orig: 5, 5
   offset: 0, 0
   index: -1

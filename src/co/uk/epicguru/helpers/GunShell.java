@@ -16,7 +16,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
-import co.uk.epicguru.sound.SoundUtils;
 
 public class GunShell extends Entity{
 
@@ -78,9 +77,9 @@ public class GunShell extends Entity{
 	}
 
 	public void bodyContact(Body otherBody, Entity otherEntity, Contact contact) {
-		float speed = Math.abs(getBody().getLinearVelocity().x) + Math.abs(getBody().getLinearVelocity().y);
-		speed /= 10;
-		if(speed > 0.2)
-			SoundUtils.playSound(this, shellSound, speed / 2, 1.3f + speed / 5, 30);
+		//float speed = Math.abs(getBody().getLinearVelocity().x) + Math.abs(getBody().getLinearVelocity().y);
+		//speed /= 10;
+		//if(speed > 0.2)
+			//SoundUtils.playSound(this, shellSound, speed / 2, 1.3f + speed / 5, 30);
 	}
 }

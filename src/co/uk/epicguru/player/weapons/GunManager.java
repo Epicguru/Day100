@@ -1,6 +1,7 @@
 package co.uk.epicguru.player.weapons;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import org.reflections.Reflections;
@@ -33,6 +34,8 @@ public final class GunManager {
 	public static final String TAG = "Gun Manager";
 	public int colleateralCount = 0;
 	public static ArrayList<GunDefinition> guns = new ArrayList<GunDefinition>();
+	private static ArrayList<DamageData> freePool = new ArrayList<DamageData>();
+	private static ArrayList<DamageData> usingPool = new ArrayList<DamageData>();
 	/**
 	 * NULL WARNING! CHECK
 	 */
@@ -51,11 +54,12 @@ public final class GunManager {
 	public Entity player;
 	public Vector2 crosshair = new Vector2();
 	private boolean requestingShoot = true;
+	private HashMap<Entity, DamageData[]> hitsCalc = new HashMap<Entity, DamageData[]>();
 
 	public GunManager(Entity player){
 		this.player = player;
 	}
-	
+
 	/**
 	 * Gets the recoil angle offset.
 	 * @return The current recoil angle offset.
@@ -63,7 +67,7 @@ public final class GunManager {
 	public float getOffset(){
 		return angleOffset;
 	}
-	
+
 	/**
 	 * Gets the direction the gun is facing in.
 	 * @return
@@ -71,7 +75,7 @@ public final class GunManager {
 	public float getBaseAngle(){
 		return getAngle();
 	}
-	
+
 	/**
 	 * Gets the final angle that the gun is rendered at.
 	 * @return
@@ -79,21 +83,21 @@ public final class GunManager {
 	public float getFinalAngle(){
 		return getBaseAngle() + getOffset();
 	}
-	
+
 	/**
 	 * Gets the equipped weapon. May be null.
 	 */
 	public GunDefinition getEquipped(){
 		return equipped;
 	}
-	
+
 	/**
 	 * Gets the equipped weapon's instance. May be null if weapon is null/
 	 */
 	public GunInstance getEquippedInstance(){
 		return equippedInstance;
 	}
-	
+
 	/**
 	 * Sets the equipped weapon to the gun specified and returns new new gun.
 	 */
@@ -112,7 +116,7 @@ public final class GunManager {
 		gunChanged();
 		return gun;
 	}
-	
+
 	/**
 	 * Sets the equipped weapon to the gun at the specified index in the {@link #guns} array and returns new new gun.
 	 */
@@ -124,16 +128,17 @@ public final class GunManager {
 		setEquipped(guns.get(gunIndex));
 		return this.equipped;
 	}
-	
+
 	/**
 	 * Gets the sprite that is used to render.
 	 */
 	public Sprite getSprite(){
 		return gun;
 	}
-	
+
 	public static void reset() {
 		guns.clear();
+		startDamageDataPool(20);
 
 		Log.info(TAG, "Registering new guns...");
 
@@ -156,9 +161,9 @@ public final class GunManager {
 					//Log.error(TAG, "Error in constructor call for gun class '" + gun.getName() + "'", e);
 				}
 			}
-			
+
 		}
-		
+
 		// Sort them
 		String[] names = new String[guns.size()];
 		int index = 0;
@@ -242,10 +247,10 @@ public final class GunManager {
 	public void nextFiringMode(){
 		if(equipped == null || inBurst)
 			return;
-		
+
 		equippedInstance.setSelectedFireMode((equippedInstance.getSelectedFireMode() + 1) % equipped.firingModes.length);
 	}
-	
+
 	/**
 	 * Call to indicate a change in weapon.
 	 */
@@ -267,7 +272,7 @@ public final class GunManager {
 	public void shoot(){
 		requestingShoot = true;
 	}
-	
+
 	public void update(float delta) {
 		if (equipped == null)
 			return;
@@ -275,7 +280,7 @@ public final class GunManager {
 		timer += delta;
 
 		float timeScale = Day100.timeScale;
-		
+
 		angleOffset += angleVelocity * timeScale;
 		float angleAdd = -angleOffset * (1f - equipped.recovery);
 		angleAdd *= timeScale;
@@ -334,11 +339,58 @@ public final class GunManager {
 			break;
 
 		}
-		
+
 		requestingShoot = false;
-		
+
 		equipped.update(getEquippedInstance(), player, this, delta);
 		if(equippedInstance != null) equippedInstance.update(delta);
+	}
+
+	public static void clearDamageDataPool(){
+		freePool.clear();
+		usingPool.clear();
+		System.gc();
+	}
+
+	public static void startDamageDataPool(int size){
+		clearDamageDataPool();
+		ensurePoolSize(size);
+		Log.info(TAG, "Started data pool with " + size + " objects.");
+	}
+
+	public static boolean ensurePoolSize(int size){
+		if(freePool.size() >= size){
+			return false;
+		}else{
+			while(freePool.size() < size){				
+				freePool.add(new DamageData());
+			}
+			return true;
+		}
+	}
+
+	public DamageData borrowDamageData(){
+		if(freePool.size() > 0){
+			DamageData data = freePool.get(0);
+			freePool.remove(0);			
+			usingPool.add(data);			
+			return data;
+		}else{
+			Log.error(TAG, "Ran out of DamageData's to lend! There are " + freePool.size() + " free ones and " + usingPool.size() + " borrowed ones. Adding 5 to the capacity.");
+			ensurePoolSize(freePool.size() + 5);
+			Log.error(TAG, "There are now " + (freePool.size() + usingPool.size()) + " total objects pooled.");
+			DamageData data = freePool.get(0);
+			freePool.remove(0);
+			usingPool.add(data);			
+			return data;
+		}
+	}
+
+	public void returnDamageData(DamageData data){
+		if(usingPool.remove(data)){
+			freePool.add(data);
+			data.reset();
+		}
 	}
 
 	public void shootEquiped(float angle, Vector2 bulletSpawn) {
@@ -354,7 +406,7 @@ public final class GunManager {
 			float volume = MathUtils.random(equipped.minVolume, equipped.maxVolume);
 			float pitch = MathUtils.random(equipped.minPitch, equipped.maxPitch);
 			SoundUtils.playSound(player, sound, volume, pitch, equipped.shotSoundDistance);
-			
+
 		}
 
 		// TESTING
@@ -369,12 +421,12 @@ public final class GunManager {
 			flashCone.setDirection(angle);
 			flashCone.setActive(true);
 		}
-		
+
 		float innacuracy = MathUtils.random(-equipped.inaccuracy, equipped.inaccuracy);
-		
+
 		// Visual flash
 		new FlashFade(new Vector2(bulletSpawn.x, bulletSpawn.y), angle + innacuracy, equipped.range);
-		
+
 		// RAY
 		Vector2 end = new Vector2();
 		float MAX = 200; // If range is very high, this will limit. It is the end point of the ray.
@@ -382,26 +434,79 @@ public final class GunManager {
 		end.y = MathUtils.sinDeg(angle + innacuracy) * MAX + bulletSpawn.y;
 		colleateralCount = 0;
 		GunManager.flashInstance = this;
+		int maxHits = 10;
 		Day100.map.world.rayCast(new RayCastCallback() {
-			
+
 			@Override
 			public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
 				//DevCross.drawCentred(point.x, point.y);
 				Object user = fixture.getBody().getUserData();
 				if(user != null && user instanceof Entity){
-					if(point.dst(bulletSpawn) <= equipped.range){
-						// HIT AN ENTITY
-						Entity e = ((Entity)user);
-						e.takeDamage(equipped.damage, new DamageData(GunManager.flashInstance.player, angle + 180, new Vector2(GunManager.flashInstance.player.getBody().getPosition()), point));		
+					if(hitsCalc.containsKey((Entity)user)){
+						DamageData[] array = hitsCalc.get((Entity)user);
+						for(int i = 0; i < maxHits; i++){
+							if(array[i].hitPoint == null){
+								array[i].set(player, angle, bulletSpawn, point);
+								break;
+							}
+						}
+						return 1;
+					}else if((point.dst(bulletSpawn) <= equipped.range)){
+						DamageData[] array = new DamageData[maxHits];
+						for(int i = 0; i < maxHits; i++){
+							array[i] = borrowDamageData().set(player, angle, bulletSpawn, point);
+						}
+						array[0].hitPoint = point;
+						hitsCalc.put((Entity)user, array);
 					}
+
 				}
 				return colleateralCount++ + 1 < equipped.collaterals ? 1 : 0;
 			}
 		}, bulletSpawn, end);
+
+		//Log.error(TAG, hitsCalc.size() + " entities were hit!");
 		
+		for(Entity e : hitsCalc.keySet()){
+			DamageData[] array = hitsCalc.get(e);
+			//int hitCount = 0;
+			float minDst = equipped.range;
+			int minDstIndex = -1;
+			int index = 0;
+			for(DamageData data : array){
+				if(data.hitPoint != null){
+					//hitCount++;
+					float dst = data.hitPoint.dst(bulletSpawn);
+					if(dst < minDst){
+						minDstIndex = index;
+						minDst = dst;
+					}
+				}
+				index++;
+			}
+			if(minDstIndex != -1){
+				// Hit with point array[hitDstIndex]
+				DamageData data = array[minDstIndex];
+				//DevCross.drawCentred(data.hitPoint.x, data.hitPoint.y, 1);
+				e.takeDamage(equipped.damage, data);
+			}
+
+			//Log.info(TAG, "Entity " + e.getName() + " was hit " + hitCount + " times in one shot.");
+		}	
+		// Flush all data's borrowed
+		for(DamageData[] data : hitsCalc.values()){
+			for(int i = 0; i < data.length; i++)
+				returnDamageData(data[i]);
+		}
+
+		// Could do hit info here...
+
+		hitsCalc.clear();
+
 		if(equipped != null && player != null) equipped.shot(getEquippedInstance(), this, player);
-		
+
 	}
+
 
 	public static TextureRegion[] getAnim(GunDefinition gun, String animName, int frames){
 		TextureRegion[] textures = new TextureRegion[frames];
@@ -410,11 +515,13 @@ public final class GunManager {
 		}
 		return textures;
 	}
-	
+
+
 	public static TextureRegion[] getAnim(String gun, String animName, int frames){
 		return getAnim(find(gun), animName, frames);
 	}
-	
+
+
 	/**
 	 * Is the gun to the right side of the player?
 	 */
@@ -423,7 +530,8 @@ public final class GunManager {
 			return true; // Dunno
 		return crosshair.x >= this.player.body.getPosition().x;
 	}
-	
+
+
 	private float getAngle(){
 		if(equipped == null)
 			return 0;
@@ -438,14 +546,14 @@ public final class GunManager {
 	public void render(Batch batch) {
 		if (equipped == null)
 			return;
-		
+
 		equipped.render(getEquippedInstance(), player, this, batch);
-		
+
 		if(equippedInstance != null) equippedInstance.render(batch);
-		
+
 		Vector2 playerPosition = this.player.body.getPosition();
 		float offset = (toRight()) ? equipped.distanceFromPlayer : -equipped.distanceFromPlayer;
-		
+
 		// RENDER WEAPON
 		gun.setRegion(equippedInstance.getTexture());
 		gun.setSize(equippedInstance.getTexture().getRegionWidth() / Constants.PPM / 2, equippedInstance.getTexture().getRegionHeight() / Constants.PPM / 2);
@@ -456,18 +564,19 @@ public final class GunManager {
 		gun.setPosition(playerPosition.x + offset - originX, playerPosition.y - originY);
 		gun.setRotation(getAngle() + angleOffset * (toRight() ? 1 : -1));
 		gun.draw(batch);
-		
-		
+
+
 		if(!shoot)
 			return;
-		
+
 		// TIP
-		
+
 		// Fire!
 		shootEquiped(getAngle() + angleOffset * (toRight() ? 1 : -1), SpriteProjecter.unprojectPosition(gun, equipped.bulletSpawn));
-		
+
 		shoot = false;
 	}
+
 
 	public void renderUI(Batch batch){
 		if(equipped == null)
@@ -477,19 +586,21 @@ public final class GunManager {
 		batch.draw(equippedInstance.getTexture(), 5, 5);
 		Day100.smallFont.setColor(1, 1, 1, 1);
 		Day100.smallFont.draw(batch, "Firing mode : " + equipped.firingModes[equippedInstance.getSelectedFireMode()].toString().toLowerCase(), equippedInstance.getTexture().getRegionWidth(), 30);
-	
+
 		if(equipped != null) equipped.renderUI(getEquippedInstance(), player, this, batch);
 		if(equippedInstance != null) equippedInstance.renderUI(batch);
 	}
-	
+
+
 	public static Sound getGunSound(final String name) {
 		return Day100.assets.get("Audio/SFX/Guns/" + name);
 	}
+
 
 	public void dispose(){
 		if(flashInstance == this){
 			flashInstance = null;
 		}
 	}
-	
+
 }

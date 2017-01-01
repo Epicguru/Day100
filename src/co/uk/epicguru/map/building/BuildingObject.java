@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.MathUtils;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.map.DamageData;
 import co.uk.epicguru.map.Entity;
-import co.uk.epicguru.particles.ParticleExplosion;
+import co.uk.epicguru.particles.ParticleBurst;
 
 public abstract class BuildingObject extends Entity {
 
@@ -35,7 +35,7 @@ public abstract class BuildingObject extends Entity {
 		int width = this.texture.getRegionWidth();
 		int height = this.texture.getRegionHeight();
 		this.texture.setRegion(MathUtils.random(x, x + width), MathUtils.random(y, y + height), particleSize, particleSize);
-		new ParticleExplosion(data.hitPoint, data.angle, data.angle + MathUtils.random(-50, 50), 5, 12, 2, 10, 1, 3, new TextureRegion(this.texture), MathUtils.random(987123897123L));
+		new ParticleBurst(data.hitPoint, data.angle, data.angle + MathUtils.random(-50, 50), 5, 12, 2, 10, 1, 3, new TextureRegion(this.texture), MathUtils.random(987123897123L));
 		this.texture.setRegion(x, y, width, height);
 	}
 

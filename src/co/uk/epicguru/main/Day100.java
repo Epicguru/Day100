@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
+import co.uk.epicguru.helpers.CamShake;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.map.Map;
 import co.uk.epicguru.player.PlayerController;
@@ -39,6 +40,7 @@ public class Day100 extends ApplicationAdapter {
 	public static TextureAtlas gunsAtlas;
 	public static TextureAtlas buildingAtlas;
 	public static TextureAtlas vehiclesAtlas;
+	public static TextureAtlas particlesAtlas;
 	public static Map map;
 	public static PlayerController player;
 
@@ -91,6 +93,7 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Cache/Guns.atlas", TextureAtlas.class);
 		assets.load("Cache/Building.atlas", TextureAtlas.class);
 		assets.load("Cache/Vehicles.atlas", TextureAtlas.class);
+		assets.load("Cache/Particles.atlas", TextureAtlas.class);
 	}
 
 	public void packTextures(){
@@ -105,6 +108,7 @@ public class Day100 extends ApplicationAdapter {
 		TexturePacker.process(settings, "bin/Textures/Guns", "bin/Cache", "Guns");	
 		TexturePacker.process(settings, "bin/Textures/Building", "bin/Cache", "Building");	
 		TexturePacker.process(settings, "bin/Textures/Vehicles", "bin/Cache", "Vehicles");	
+		TexturePacker.process(settings, "bin/Textures/Particles", "bin/Cache", "Particles");	
 	}
 
 	public static void init(){
@@ -112,11 +116,14 @@ public class Day100 extends ApplicationAdapter {
 		// Fonts
 		font = assets.get("Fonts/Xolonium.fnt", BitmapFont.class);
 		smallFont = assets.get("Fonts/Small.fnt", BitmapFont.class);
+		
+		// Atlas
 		UIAtlas = assets.get("Cache/UI.atlas", TextureAtlas.class);
 		playerAtlas = assets.get("Cache/Player.atlas", TextureAtlas.class);
 		gunsAtlas = assets.get("Cache/Guns.atlas", TextureAtlas.class);
 		buildingAtlas = assets.get("Cache/Building.atlas", TextureAtlas.class);
 		vehiclesAtlas = assets.get("Cache/Vehicles.atlas", TextureAtlas.class);
+		particlesAtlas = assets.get("Cache/Particles.atlas", TextureAtlas.class);
 
 		ScreenManager.init();
 	}
@@ -128,8 +135,19 @@ public class Day100 extends ApplicationAdapter {
 			float dst = targetTimeScale - timeScale;
 			timeScale += dst * 0.05f;
 		}
+		
 		targetTimeScale = 1f;
 		deltaTime = Gdx.graphics.getDeltaTime() * timeScale;
+		
+		// Camera shake
+		if(ScreenManager.getScreen() == Screen.MAP_EDITOR){
+			CamShake.update(deltaTime);
+			camera.position.add(CamShake.addition.x, CamShake.addition.y, 0);
+		}else{
+			CamShake.addition.set(0, 0);
+		}
+		
+		// Camera update
 		camera.update();
 		UIcamera.update();
 		Input.update();

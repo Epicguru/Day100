@@ -15,7 +15,7 @@ import co.uk.epicguru.map.Entity;
 public class ParticleInstance extends Entity{
 
 	public static int particlesActive = 0;
-	private float timer;
+	protected float timer;
 	public TextureRegion texture;
 	
 	public ParticleInstance(Vector2 position, Vector2 velocity, float time, TextureRegion region){

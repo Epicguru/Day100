@@ -9,6 +9,8 @@ public final class DamageData {
 	public Vector2 originPoint;
 	public Vector2 hitPoint;
 	
+	public DamageData(){}
+	
 	public DamageData(Entity dealer, float angle, Vector2 origin, Vector2 hitPoint){
 		this.dealer = dealer;
 		this.angle = angle;
@@ -16,4 +18,25 @@ public final class DamageData {
 		this.hitPoint = hitPoint;
 	}
 	
+	public DamageData(DamageData other){
+		this.dealer = other.dealer;
+		this.angle = other.angle;
+		this.originPoint = other.originPoint;
+		this.hitPoint = other.hitPoint;
+	}
+	
+	public void reset(){
+		this.dealer = null;
+		this.angle = 0;
+		this.originPoint = null;
+		this.hitPoint = null;
+	}
+	
+	public DamageData set(Entity dealer, float angle, Vector2 origin, Vector2 hitPoint){
+		this.dealer = dealer;
+		this.angle = angle;
+		this.originPoint = origin;
+		this.hitPoint = hitPoint;
+		return this;
+	}	
 }

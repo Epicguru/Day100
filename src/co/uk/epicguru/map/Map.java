@@ -30,7 +30,6 @@ import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
-import co.uk.epicguru.player.BotController;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
@@ -176,6 +175,10 @@ public final class Map {
 		objects.clear();
 		Entity.clearAllEntities();
 		BuildingManager.reset();
+		rayHandler.dispose();
+		world.dispose();
+		debugRenderer.dispose();
+		atlas.dispose();
 		System.gc();
 	}
 
@@ -222,12 +225,12 @@ public final class Map {
 	}
 	
 	public void renderLighting(Batch batch){
-//		batch.end();
-//		// Lighting
-//		rayHandler.setCombinedMatrix(Day100.camera);
-//		rayHandler.updateAndRender();			
-//
-//		batch.begin();
+		batch.end();
+		// Lighting
+		rayHandler.setCombinedMatrix(Day100.camera);
+		rayHandler.updateAndRender();			
+
+		batch.begin();
 	}
 	
 	public void update(float delta) {
@@ -244,8 +247,8 @@ public final class Map {
 		
 		// TEST
 		if(MathUtils.randomBoolean(0.4f * delta)){
-			if(!Day100.player.isDead())
-				new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
+			//if(!Day100.player.isDead())
+				//new BotController(new Vector2(Day100.player.body.getPosition().x + MathUtils.random(20, 40), 2), true);
 		}	
 		
 		Entity.updateAll(delta);

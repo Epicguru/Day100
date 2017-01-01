@@ -1,6 +1,7 @@
 package co.uk.epicguru.vehicles.definitions.instances;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,11 +13,17 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import co.uk.epicguru.helpers.SpriteProjecter;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
+import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.map.DamageData;
+import co.uk.epicguru.particles.ParticleBurst;
+import co.uk.epicguru.sound.SoundUtils;
 import co.uk.epicguru.vehicles.VehicleInstance;
 import co.uk.epicguru.vehicles.definitions.Helicopter;
 
 public class HelicopterInstance extends VehicleInstance {
 
+	public static TextureRegion[] particles;
+	private static Sound thud;
 	public static Sprite sprite;
 	public static TextureRegion[] backBlades;
 	public static TextureRegion[] bladesSpinUp;
@@ -46,6 +53,14 @@ public class HelicopterInstance extends VehicleInstance {
 			}
 		}
 		setBody(getBodyFromData("Helicopter", position, angle, linear, angular, parent.defaultTexture.getRegionWidth(), sprite.getRegionHeight()));
+	
+		if(particles == null){
+			particles = new TextureRegion[]{
+					Day100.particlesAtlas.findRegion("StandardParticle"),
+					Day100.particlesAtlas.findRegion("StandardParticle2")
+			};
+			thud = Day100.assets.get("Audio/SFX/Misc/Thud.mp3", Sound.class);
+		}
 	}
 	
 	@Override
@@ -190,6 +205,12 @@ public class HelicopterInstance extends VehicleInstance {
 		sprite.setRotation(getBody().getAngle() * MathUtils.radiansToDegrees);
 		//DevCross.drawCentred(pos.x, pos.y, 0.5f);
 		sprite.draw(batch);
+	}
+
+	public void takeDamage(float damage, DamageData data) {
+		super.takeDamage(damage, data);
+		new ParticleBurst(data.hitPoint, data.angle, data.angle, 2, 5, 20, 30, 2, 3, particles[MathUtils.random(0, 1)], MathUtils.random(78126312));	
+		SoundUtils.playSound(data.hitPoint, thud, 1, 1, 20);
 	}
 
 }

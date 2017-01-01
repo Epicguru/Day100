@@ -9,6 +9,7 @@ Audio/SFX/Guns/GlockIn.mp3
 Audio/SFX/Guns/GlockOut.mp3
 Audio/SFX/Guns/LeeEnfield.mp3
 Audio/SFX/Guns/LeeEnfield2.mp3
+Audio/SFX/Guns/Minigun.mp3
 Audio/SFX/Guns/P90.mp3
 Audio/SFX/Guns/P902.mp3
 Audio/SFX/Guns/ReloadIn.mp3

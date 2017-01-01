@@ -15,6 +15,7 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.player.weapons.GunManager;
+import co.uk.epicguru.player.weapons.instances.C4;
 import co.uk.epicguru.vehicles.VehiclesManager;
 
 public final class PlayerController extends Entity{
@@ -94,6 +95,9 @@ public final class PlayerController extends Entity{
 		}
 		if(Input.isKeyJustDown(Keys.F) && !BuildingManager.placing){
 			gunManager.nextFiringMode();
+		}		
+		if(Input.isKeyJustDown(Keys.T) && !BuildingManager.placing){
+			new C4(getBody().getPosition());
 		}
 		
 		if(Input.isKeyJustDown(Keys.L) && !BuildingManager.placing && !isMounting()){

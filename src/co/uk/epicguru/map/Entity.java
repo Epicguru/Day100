@@ -239,7 +239,6 @@ public class Entity {
 		}
 		for(Entity e : entitiesPending){
 			entities.add(e);
-			e.update(delta);
 		}	
 		entitiesPending.clear();
 		for(Entity e : entitiesBin){
@@ -259,7 +258,6 @@ public class Entity {
 		}
 		for(Entity e : entitiesPending){
 			entities.add(e);
-			e.render(batch);
 		}	
 		entitiesPending.clear();
 		for(Entity e : entitiesBin){

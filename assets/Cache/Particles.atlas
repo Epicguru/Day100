@@ -1,0 +1,48 @@
+
+Particles.png
+size: 64,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Smoke1
+  rotate: false
+  xy: 4, 29
+  size: 31, 27
+  orig: 31, 27
+  offset: 0, 0
+  index: -1
+Smoke2
+  rotate: false
+  xy: 4, 4
+  size: 24, 21
+  orig: 24, 21
+  offset: 0, 0
+  index: -1
+Spark1
+  rotate: false
+  xy: 39, 49
+  size: 10, 7
+  orig: 10, 7
+  offset: 0, 0
+  index: -1
+Spark2
+  rotate: false
+  xy: 39, 38
+  size: 10, 7
+  orig: 10, 7
+  offset: 0, 0
+  index: -1
+StandardParticle
+  rotate: false
+  xy: 53, 51
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
+StandardParticle2
+  rotate: false
+  xy: 39, 29
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1
