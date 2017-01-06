@@ -1,5 +1,7 @@
 Battered Bottom.fsh
 Battered Bottom.vsh
+Chromatic Aberration.fsh
+Chromatic Aberration.vsh
 Flag.fsh
 Flag.vsh
 Outline.fsh

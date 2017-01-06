@@ -4,9 +4,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 
 import box2dLight.PointLight;
-import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
+import co.uk.epicguru.settings.GameSettings;
 
 public class FlareLight extends Entity {
 
@@ -21,7 +21,11 @@ public class FlareLight extends Entity {
 		timerStart = time;
 		timer = timerStart;
 		dstStart = startDst;
-		light = new PointLight(Day100.map.rayHandler, Constants.RAYS, color, startDst, position.x, position.y);
+		if(Day100.map.rayHandler == null){
+			slay();
+			return;
+		}
+		light = new PointLight(Day100.map.rayHandler, GameSettings.getLightQuality().getValue(), color, startDst, position.x, position.y);
 		light.setSoftnessLength(6);
 	}
 	
@@ -37,7 +41,11 @@ public class FlareLight extends Entity {
 	
 	public void destroyed(){
 		super.destroyed();
-		light.remove();
+		try{			
+			//light.remove();
+		}catch(Exception e){
+			
+		}
 	}
 
 }

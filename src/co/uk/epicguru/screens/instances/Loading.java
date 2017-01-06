@@ -6,11 +6,14 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import co.uk.epicguru.bullshittery.Randomness;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.screens.GameScreen;
@@ -22,6 +25,9 @@ public final class Loading extends GameScreen {
 	public NinePatch barGreen, barRed;
 	public TextureRegion title, loading;
 	public boolean finished = false;
+	private BitmapFont font;
+	private float timer = 0;
+	private String current = Randomness.getRandomness();
 	
 	public Loading() {
 		super("Loading", Screen.LOADING);
@@ -38,6 +44,7 @@ public final class Loading extends GameScreen {
 		barRed = atlas.createPatch("LoadingBarRed");
 		loading = atlas.findRegion("Loading");
 		title = atlas.findRegion("Title");
+		font = Day100.assets.get("Fonts/Small.fnt", BitmapFont.class);
 		
 		Log.info(TAG, "Got assets for the loading screen");
 		
@@ -48,6 +55,8 @@ public final class Loading extends GameScreen {
 
 	@Override
 	public void update(float delta) {
+		
+		timer += delta;
 		
 		// Day100.assets.update()
 		if(Day100.assets.update()){
@@ -94,6 +103,14 @@ public final class Loading extends GameScreen {
 		if(width < 65)
 			width = 65;
 		barGreen.draw(batch, 10, 50, width, height);
+		
+		font.setColor(Color.WHITE);
+		font.draw(batch, current, 30, 30);
+		float interval = 0.1f;
+		while(timer >= interval){
+			current = Randomness.getRandomness(current);
+			timer -= interval;
+		}
 	}
 
 }

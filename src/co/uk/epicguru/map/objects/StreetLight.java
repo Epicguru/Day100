@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
 import box2dLight.ConeLight;
-import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.settings.GameSettings;
 
 public final class StreetLight extends MapObject {
 
@@ -19,7 +19,7 @@ public final class StreetLight extends MapObject {
 	
 	public StreetLight(String name, Vector2 position, Vector2 size, TextureRegion texture, Color color) {
 		super(name, position, size, texture, color);
-		this.light = new ConeLight(Day100.map.rayHandler, Constants.RAYS, new Color(1, 1, 0.3f, 0.8f), 12, position.x + 0.35f, position.y + 7.8f, -90, 40);
+		this.light = new ConeLight(Day100.map.rayHandler, GameSettings.getLightQuality().getValue(), new Color(1, 1, 0.3f, 0.8f), 12, position.x + 0.35f, position.y + 7.8f, -90, 40);
 	}
 	
 	public void update(float delta){

@@ -16,11 +16,11 @@ import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.helpers.Exclude;
 import co.uk.epicguru.helpers.VirtualCoordinate;
-import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.screens.mapeditor.GunEditor;
+import co.uk.epicguru.settings.GameSettings;
 
 public abstract class GunDefinition {
 
@@ -412,12 +412,13 @@ public abstract class GunDefinition {
 	 */
 	@Exclude
 	private static Color defaultColor = new Color(0.5f, 0f, 0.3f, 0.3f);
+	private static Color defaultColor2 = new Color(0.1f, 0f, 0.1f, 0.8f);
 	public ConeLight getConeFlash(RayHandler rayHandler, Vector2 position, float angle){
-		return new ConeLight(rayHandler, Constants.RAYS, defaultColor, range / 2, bulletSpawn.x, bulletSpawn.y, angle, 5);
+		return new ConeLight(rayHandler, GameSettings.getLightQuality().getValue(), defaultColor2, range + 2, bulletSpawn.x, bulletSpawn.y, angle, 1);
 	}
 	
 	public PointLight getPointFlash(RayHandler rayHandler, Vector2 position){
-		return new PointLight(rayHandler, Constants.RAYS, defaultColor, MathUtils.random(9, 11),
+		return new PointLight(rayHandler, GameSettings.getLightQuality().getValue(), defaultColor, MathUtils.random(9, 11),
 				position.x, position.y);
 	}
 }

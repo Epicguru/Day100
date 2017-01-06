@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -24,7 +25,6 @@ import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.helpers.ContactManager;
-import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
@@ -33,6 +33,7 @@ import co.uk.epicguru.map.objects.MapObjectSupplier;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
+import co.uk.epicguru.settings.GameSettings;
 import co.uk.epicguru.vehicles.VehiclesManager;
 
 public final class Map {
@@ -121,6 +122,8 @@ public final class Map {
 
 		reader.dispose();
 		properties.dispose();
+		
+		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	private void setupWorld(){
@@ -150,7 +153,7 @@ public final class Map {
 
 	private void setupLighting(){
 		rayHandler = new RayHandler(world);
-		sun = new DirectionalLight(rayHandler, Constants.RAYS * 2, new Color(0.0f, 0.0f, 0.0f, 0.9f), -90);
+		sun = new DirectionalLight(rayHandler, GameSettings.getLightQuality().getValue() * 2, new Color(0.0f, 0.0f, 0.0f, 0.3f), -90);
 		Filter f = new Filter();
 		f.groupIndex = -123;
 		sun.setContactFilter(f);
@@ -171,6 +174,10 @@ public final class Map {
 		return true;
 	}
 
+	public void resize(int width, int height){
+		rayHandler.resizeFBO((int)(width * GameSettings.getShadowQuality().getValue()), (int)(height * GameSettings.getShadowQuality().getValue()));
+	}
+	
 	public void dispose(){
 		objects.clear();
 		Entity.clearAllEntities();

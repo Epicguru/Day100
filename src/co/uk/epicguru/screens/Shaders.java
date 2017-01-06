@@ -122,15 +122,8 @@ public final class Shaders {
 				Log.error("Shaders", "A file for a shader was not found : " + e.getMessage());
 				throw e;
 			}
-			Log.info("Shaders", "Loaded shader : " + name);
 			ShaderProgram shader = new ShaderProgram(vertex, fragment);
-
-			if (shader.isCompiled()) {
-				Log.info("Shaders", "The shader is healthy!");
-			} else {
-				Log.error("Shaders", "The shader did not compile!");
-				Log.error("Shaders", shader.getLog());
-			}
+			Log.info("Shaders", "Loaded shader : " + name + " - " + (shader.isCompiled() ? "Shader is compiled" : "Shader is NOT compiled!") + " : " + shader.getUniforms().length + " uniforms.");
 
 			return shader;
 		} catch (Exception e) {

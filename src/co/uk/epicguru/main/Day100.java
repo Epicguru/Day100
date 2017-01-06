@@ -5,9 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 
@@ -19,6 +22,7 @@ import co.uk.epicguru.screens.Screen;
 import co.uk.epicguru.screens.ScreenManager;
 import co.uk.epicguru.screens.instances.Loading;
 import co.uk.epicguru.screens.instances.MapEditor;
+import co.uk.epicguru.settings.GameSettings;
 import co.uk.epicguru.sound.SoundUtils;
 
 public class Day100 extends ApplicationAdapter {
@@ -43,6 +47,8 @@ public class Day100 extends ApplicationAdapter {
 	public static TextureAtlas particlesAtlas;
 	public static Map map;
 	public static PlayerController player;
+	public static Pixmap cursor;
+	public static Pixmap cursorCrosshair;
 
 	@Override
 	public void create () {
@@ -52,6 +58,8 @@ public class Day100 extends ApplicationAdapter {
 		UIcamera.setToOrtho(false);
 		assets = new AssetManager();
 
+		// Load game settings
+		GameSettings.load();
 
 		// Add all game screens
 		registerScreens();
@@ -77,13 +85,13 @@ public class Day100 extends ApplicationAdapter {
 		// This needs to be loaded before anything else.
 		long start = System.currentTimeMillis();
 		Log.info(TAG, "Starting UI atlas load...");
+		assets.load("Fonts/Small.fnt", BitmapFont.class);
 		assets.load("Cache/UI.atlas", TextureAtlas.class);
 		assets.finishLoading();			
 		Log.info(TAG, "Done! It took " + ((float)(System.currentTimeMillis() - start) / 1000f) + " seconds.");
 		
 		// Other assets
 		assets.load("Fonts/Xolonium.fnt", BitmapFont.class);
-		assets.load("Fonts/Small.fnt", BitmapFont.class);
 		assets.load("Cache/Player.atlas", TextureAtlas.class);
 		
 		// Loads all sounds
@@ -103,12 +111,15 @@ public class Day100 extends ApplicationAdapter {
 		settings.paddingY = 4;
 		settings.maxWidth = 4096; // POW!
 		settings.maxHeight = 4096;
+		Log.error(TAG, "Packing all atlases...");
+		long start = System.currentTimeMillis();
 		TexturePacker.process(settings, "bin/Textures/UI", "bin/Cache", "UI");	
 		TexturePacker.process(settings, "bin/Textures/Player", "bin/Cache", "Player");	
 		TexturePacker.process(settings, "bin/Textures/Guns", "bin/Cache", "Guns");	
 		TexturePacker.process(settings, "bin/Textures/Building", "bin/Cache", "Building");	
 		TexturePacker.process(settings, "bin/Textures/Vehicles", "bin/Cache", "Vehicles");	
-		TexturePacker.process(settings, "bin/Textures/Particles", "bin/Cache", "Particles");	
+		TexturePacker.process(settings, "bin/Textures/Particles", "bin/Cache", "Particles");
+		Log.error(TAG, "Done! It took " + ((float)(System.currentTimeMillis() - start) / 1000f) + " seconds.");
 	}
 
 	public static void init(){
@@ -125,7 +136,37 @@ public class Day100 extends ApplicationAdapter {
 		vehiclesAtlas = assets.get("Cache/Vehicles.atlas", TextureAtlas.class);
 		particlesAtlas = assets.get("Cache/Particles.atlas", TextureAtlas.class);
 
+		// Load cursors
+		loadCursors();
+		
 		ScreenManager.init();
+	}
+	
+	public static void loadCursors(){
+		// Default
+		TextureRegion texture = UIAtlas.findRegion("Cursor");
+		cursor = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
+		texture.getTexture().getTextureData().prepare();
+		Pixmap p2 = texture.getTexture().getTextureData().consumePixmap();
+		cursor.drawPixmap(p2, 0, 0, texture.getRegionX(), texture.getRegionY(), texture.getRegionWidth(), texture.getRegionHeight());
+	
+		// Crosshair version
+		texture = UIAtlas.findRegion("CursorCrosshair");
+		cursorCrosshair = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
+		texture.getTexture().getTextureData().prepare();
+		p2 = texture.getTexture().getTextureData().consumePixmap();
+		cursorCrosshair.drawPixmap(p2, 0, 0, texture.getRegionX(), texture.getRegionY(), texture.getRegionWidth(), texture.getRegionHeight());
+	
+		// Apply
+		
+	}
+	
+	public static void setDefaultCursor(){
+		
+	}
+	
+	public static void setCrosshairCursor(){
+		
 	}
 
 	public void update(){
@@ -191,6 +232,7 @@ public class Day100 extends ApplicationAdapter {
 	public void dispose () {
 		try{
 			ScreenManager.dispose();
+			GameSettings.save();
 			batch.dispose();
 			assets.dispose();
 			UIAtlas.dispose();

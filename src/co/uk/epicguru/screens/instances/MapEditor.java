@@ -50,6 +50,7 @@ import co.uk.epicguru.screens.mapeditor.MapEditorPlaceable;
 import co.uk.epicguru.screens.mapeditor.PhysicsData;
 import co.uk.epicguru.screens.mapeditor.VehicleEditor;
 import co.uk.epicguru.screens.mapeditor.VisUIHandler;
+import co.uk.epicguru.settings.GameSettings;
 
 
 public final class MapEditor extends GameScreen {
@@ -950,8 +951,8 @@ public final class MapEditor extends GameScreen {
 					refreshObjects();
 					MapObject.register();
 					Shaders.getAllShaders();
-					// Shader refresh : debug only
 					outlineShader = Shaders.getShader("Outline");
+					// Shader refresh : debug only
 					objectsUIOffsetTarget = 0;
 				}
 			}
@@ -1233,7 +1234,10 @@ public final class MapEditor extends GameScreen {
 		GunEditor.resize(width, height);
 		VehicleEditor.resize(width, height);
 		if(lighting != null)
-			lighting.resizeFBO(width / 2, height / 2);
+			lighting.resizeFBO((int)(width * GameSettings.getShadowQuality().getValue()), (int)(height * GameSettings.getShadowQuality().getValue()));
+		if(state == State.RUNNING){
+			runMap.resize(width, height);
+		}
 	}
 
 	public void renderPreview(Batch batch){
@@ -1265,7 +1269,7 @@ public final class MapEditor extends GameScreen {
 	public void loadPhysics(){
 		world = new World(new Vector2(0, -9.803f), true);
 		lighting = new RayHandler(world);	
-		sun = new DirectionalLight(lighting, Constants.RAYS * 2, new Color(0.0f, 0.0f, 0.0f, 1.0f), -90);
+		sun = new DirectionalLight(lighting, GameSettings.getLightQuality().getValue() * 2, new Color(0.0f, 0.0f, 0.0f, 1.0f), -90);
 		//new PointLight(lighting, Constants.RAYS, Color.RED, 20, 0, 0);
 		// Load world
 

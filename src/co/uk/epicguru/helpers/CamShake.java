@@ -9,7 +9,7 @@ public class CamShake {
 	private static float radis;
 	private static int angle = 0;
 
-	public static void shake(int force)
+	public static void shake(float force)
 	{
 		radis = force;
 	}
@@ -17,8 +17,8 @@ public class CamShake {
 	public static void update(float delta)
 	{
 		angle += 150 + MathUtils.random(0, 60);
-		radis *= 0.9f;
-		angle *= 0.95f;
+		radis *= 0.93f;
+		angle *= 0.98f;
 
 		if (radis < 0.05f)
 			radis = 0;

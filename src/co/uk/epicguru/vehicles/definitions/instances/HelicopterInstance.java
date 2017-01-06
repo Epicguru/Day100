@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 
+import co.uk.epicguru.helpers.Explosion;
 import co.uk.epicguru.helpers.SpriteProjecter;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
@@ -213,4 +214,10 @@ public class HelicopterInstance extends VehicleInstance {
 		SoundUtils.playSound(data.hitPoint, thud, 1, 1, 20);
 	}
 
+	public void destroyed(){
+		
+		Explosion.explode(body.getPosition().add(parent.defaultTexture.getRegionWidth() / Constants.PPM / 2, parent.defaultTexture.getRegionHeight() / Constants.PPM / 2), 2);
+		
+		super.destroyed();
+	}
 }
