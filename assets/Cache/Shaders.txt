@@ -4,6 +4,8 @@ Chromatic Aberration.fsh
 Chromatic Aberration.vsh
 Flag.fsh
 Flag.vsh
+Gaussian.fsh
+Gaussian.vsh
 Outline.fsh
 Outline.vsh
 Wavy.fsh

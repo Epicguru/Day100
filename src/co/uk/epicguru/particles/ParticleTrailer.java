@@ -1,6 +1,5 @@
 package co.uk.epicguru.particles;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
@@ -17,8 +16,8 @@ public class ParticleTrailer extends ParticleInstance{
 		super(position, velocity, time, region);
 //		new Thread(new Runnable() {
 //			public void run() {				
-				light = new FlareLight(position, time, new Color(0, 0, 0, 0.5f), 3);
-				done = true;
+				//light = new FlareLight(position, time, new Color(0, 0, 0, 0.5f), 3);
+				//done = true;
 //			}
 //		}, "Light creator").start();
 		
@@ -33,8 +32,8 @@ public class ParticleTrailer extends ParticleInstance{
 			new ExplosionParticleInstance(getBody().getPosition(), TEMP, 0.4f, this.texture);
 		}
 		super.update(delta);
-		if(done)
-			light.light.setPosition(body.getPosition());
+		//if(done)
+			//light.light.setPosition(body.getPosition());
 	}
 	
 	public void render(Batch batch){
@@ -45,7 +44,7 @@ public class ParticleTrailer extends ParticleInstance{
 		super.destroyed();
 		if(done){
 			try{
-				light.light.remove();				
+				//light.light.remove();				
 			}catch(NullPointerException e){
 				e.printStackTrace();
 			}finally{

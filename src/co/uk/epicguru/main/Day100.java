@@ -3,7 +3,7 @@ package co.uk.epicguru.main;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
@@ -18,6 +18,7 @@ import co.uk.epicguru.helpers.CamShake;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.map.Map;
 import co.uk.epicguru.player.PlayerController;
+import co.uk.epicguru.screens.PostProcessing;
 import co.uk.epicguru.screens.Screen;
 import co.uk.epicguru.screens.ScreenManager;
 import co.uk.epicguru.screens.instances.Loading;
@@ -47,8 +48,8 @@ public class Day100 extends ApplicationAdapter {
 	public static TextureAtlas particlesAtlas;
 	public static Map map;
 	public static PlayerController player;
-	public static Pixmap cursor;
-	public static Pixmap cursorCrosshair;
+	public static Cursor cursor;
+	public static Cursor cursorCrosshair;
 
 	@Override
 	public void create () {
@@ -102,6 +103,9 @@ public class Day100 extends ApplicationAdapter {
 		assets.load("Cache/Building.atlas", TextureAtlas.class);
 		assets.load("Cache/Vehicles.atlas", TextureAtlas.class);
 		assets.load("Cache/Particles.atlas", TextureAtlas.class);
+		
+		// Needs to be done
+		PostProcessing.start();
 	}
 
 	public void packTextures(){
@@ -145,28 +149,32 @@ public class Day100 extends ApplicationAdapter {
 	public static void loadCursors(){
 		// Default
 		TextureRegion texture = UIAtlas.findRegion("Cursor");
-		cursor = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
+		Pixmap cursor = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
 		texture.getTexture().getTextureData().prepare();
 		Pixmap p2 = texture.getTexture().getTextureData().consumePixmap();
 		cursor.drawPixmap(p2, 0, 0, texture.getRegionX(), texture.getRegionY(), texture.getRegionWidth(), texture.getRegionHeight());
 	
 		// Crosshair version
 		texture = UIAtlas.findRegion("CursorCrosshair");
-		cursorCrosshair = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
+		Pixmap cursorCrosshair = new Pixmap(texture.getRegionWidth(), texture.getRegionHeight(), Format.RGBA8888);
 		texture.getTexture().getTextureData().prepare();
 		p2 = texture.getTexture().getTextureData().consumePixmap();
 		cursorCrosshair.drawPixmap(p2, 0, 0, texture.getRegionX(), texture.getRegionY(), texture.getRegionWidth(), texture.getRegionHeight());
 	
 		// Apply
+		Day100.cursor = Gdx.graphics.newCursor(cursor, 0, 0);
+		Day100.cursorCrosshair = Gdx.graphics.newCursor(cursorCrosshair, 16, 16);
 		
+		// Set default
+		setDefaultCursor();
 	}
 	
 	public static void setDefaultCursor(){
-		
+		Gdx.graphics.setCursor(cursor);
 	}
 	
 	public static void setCrosshairCursor(){
-		
+		Gdx.graphics.setCursor(cursorCrosshair);		
 	}
 
 	public void update(){
@@ -201,17 +209,14 @@ public class Day100 extends ApplicationAdapter {
 
 		update();
 
-		if(ScreenManager.getScreen() == Screen.LOADING)
-			Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
-		else
-			Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		// Normal render mode
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
+		// Start batch
+		PostProcessing.beginRender(batch);
+		
+		// Normal render mode		
 		ScreenManager.render();	
-		batch.end();
+		
+		// End batch
+		PostProcessing.endRender(batch);
 
 		// UI render mode
 		batch.setProjectionMatrix(UIcamera.combined);
@@ -225,6 +230,7 @@ public class Day100 extends ApplicationAdapter {
 		UIcamera.setToOrtho(false, width, height);
 		camera.viewportWidth = width / Constants.PPM;
 		camera.viewportHeight = height / Constants.PPM;
+		PostProcessing.resize(width, height);
 		ScreenManager.resize(width, height);
 	}
 
@@ -233,6 +239,7 @@ public class Day100 extends ApplicationAdapter {
 		try{
 			ScreenManager.dispose();
 			GameSettings.save();
+			PostProcessing.end();
 			batch.dispose();
 			assets.dispose();
 			UIAtlas.dispose();

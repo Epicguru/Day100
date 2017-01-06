@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
+import co.uk.epicguru.helpers.CamZoom;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
@@ -119,7 +120,7 @@ public final class PlayerController extends Entity{
 				break;
 			case SEMI:
 				if(Input.clickLeft())
-					gunManager.shoot();
+					gunManager.shoot();				
 				break;	
 			}
 		}
@@ -140,6 +141,14 @@ public final class PlayerController extends Entity{
 		if(BuildingManager.placing){
 			gunManager.setEquipped(null);
 		}
+		
+		if(gunManager.getEquipped() != null){		
+			Day100.setCrosshairCursor();
+		}else{			
+			Day100.setDefaultCursor();
+		}
+		
+		Day100.camera.zoom += (CamZoom.getZoom() - Day100.camera.zoom) * 0.5f;
 	}
 	
 	public void render(Batch batch){
@@ -161,6 +170,7 @@ public final class PlayerController extends Entity{
 	public void destroyed(){
 		super.destroyed();
 		gunManager.dispose();
+		Day100.setDefaultCursor();
 	}
 	
 }

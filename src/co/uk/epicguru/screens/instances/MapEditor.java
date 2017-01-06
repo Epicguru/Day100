@@ -618,7 +618,7 @@ public final class MapEditor extends GameScreen {
 			break;
 		case RUNNING:
 
-			if(Day100.camera.zoom != input.zoom)
+			if(Day100.player.isDead() && Day100.camera.zoom != input.zoom)
 				Day100.camera.zoom += (input.zoom - Day100.camera.zoom) * 0.2f;
 
 			// Move with mouse
