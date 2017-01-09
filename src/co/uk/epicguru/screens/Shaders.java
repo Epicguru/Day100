@@ -123,8 +123,18 @@ public final class Shaders {
 				throw e;
 			}
 			ShaderProgram shader = new ShaderProgram(vertex, fragment);
-			Log.info("Shaders", "Loaded shader : " + name + " - " + (shader.isCompiled() ? "Shader is compiled" : "Shader is NOT compiled!") + " : " + shader.getUniforms().length + " uniforms.");
-
+			
+			int uniforms = 0;
+			if(shader.getUniforms() != null){
+				uniforms = shader.getUniforms().length;
+			}
+			if(shader.isCompiled()){
+				Log.info("Shaders", "Loaded shader : " + name + " - " + "Shader is compiled" + " : " + uniforms + " uniforms.");		
+			}else{	
+				Log.error("Shaders", "Loaded shader : " + name + " - " + "Shader is NOT compiled!" + " : " + uniforms + " uniforms.");
+				Log.error("Shaders", shader.getLog());
+			}
+				
 			return shader;
 		} catch (Exception e) {
 			Log.error("Shaders", "Failed to load shader : " + name);

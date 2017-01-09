@@ -2,9 +2,9 @@ package co.uk.epicguru.player.weapons.instances;
 
 import com.badlogic.gdx.math.Vector2;
 
-import co.uk.epicguru.helpers.VirtualCoordinate;
 import co.uk.epicguru.helpers.GunShell;
 import co.uk.epicguru.helpers.SpriteProjecter;
+import co.uk.epicguru.helpers.VirtualCoordinate;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.player.weapons.AnimatedInstance;

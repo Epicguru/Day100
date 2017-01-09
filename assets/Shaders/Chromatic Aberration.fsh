@@ -9,13 +9,14 @@ uniform mat4 u_projTrans;
 uniform vec2 u_multi; 
 uniform vec2 u_sub; 
 uniform float u_time;
+uniform float u_amount;
 
 void main() {
 	vec2 T = (v_texCoords - u_sub) * u_multi;
 	
-	float maxDst = distance(vec2(0.5, 0.5), vec2(1.0, 1.0)) / 4;
-	float dst = distance(T, vec2(0.5, 0.5)) / 4;
-	float amount = 0.02 * dst;
+	float maxDst = distance(vec2(0.5, 0.5), vec2(1.0, 1.0)) / 4.0;
+	float dst = distance(T, vec2(0.5, 0.5)) / 4.0;
+	float amount = u_amount * dst;
 	vec3 col;
     col.r = texture2D(u_texture, vec2(v_texCoords.x + amount, v_texCoords.y + amount)).r;
     col.g = texture2D(u_texture, vec2(v_texCoords.x, v_texCoords.y - amount)).g;

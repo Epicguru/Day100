@@ -9,7 +9,7 @@ public class ParticleTrailer extends ParticleInstance{
 
 	private float timer2;
 	private static Vector2 TEMP = new Vector2();
-	private FlareLight light;
+	//private FlareLight light;
 	private boolean done = false;
 	
 	public ParticleTrailer(Vector2 position, Vector2 velocity, float time, TextureRegion region) {

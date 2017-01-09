@@ -182,8 +182,9 @@ public final class Map {
 		objects.clear();
 		Entity.clearAllEntities();
 		BuildingManager.reset();
-		rayHandler.dispose();
 		world.dispose();
+		world = null;
+		rayHandler.dispose();
 		debugRenderer.dispose();
 		atlas.dispose();
 		System.gc();
@@ -232,12 +233,9 @@ public final class Map {
 	}
 	
 	public void renderLighting(Batch batch){
-		batch.end();
-		// Lighting
-		rayHandler.setCombinedMatrix(Day100.camera);
-		rayHandler.updateAndRender();			
-
-		batch.begin();
+		
+		// Lighting - CHANGE, NOW IN POST PROCESSING
+			
 	}
 	
 	public void update(float delta) {

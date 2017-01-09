@@ -209,7 +209,7 @@ public class Day100 extends ApplicationAdapter {
 
 		update();
 
-		// Start batch
+		// Start batch using the post processor
 		PostProcessing.beginRender(batch);
 		
 		// Normal render mode		
@@ -217,10 +217,12 @@ public class Day100 extends ApplicationAdapter {
 		
 		// End batch
 		PostProcessing.endRender(batch);
-
+		
+		// Render light if in map or map editor
+		ScreenManager.renderLight();
+		
 		// UI render mode
 		batch.setProjectionMatrix(UIcamera.combined);
-		batch.begin();
 		ScreenManager.renderUI();
 		batch.end();
 	}

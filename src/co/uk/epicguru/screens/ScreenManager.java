@@ -55,6 +55,14 @@ public final class ScreenManager {
 		}
 	}
 	
+	public static void renderLight(){
+		for (GameScreen gameScreen : screens){
+			if(gameScreen.isScreen(screen)){
+				gameScreen.renderLight(Day100.batch);
+			}
+		}
+	}
+	
 	public static void init(){
 		// TODO
 		GameScreen.font = Day100.font;

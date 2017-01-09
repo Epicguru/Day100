@@ -45,6 +45,10 @@ public abstract class GameScreen{
 		
 	}
 	
+	public void renderLight(Batch batch){
+		
+	}
+	
 	public final boolean isScreen(Screen screen){
 		for (Screen screen2 : screens) {
 			if(screen == screen2)

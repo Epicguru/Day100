@@ -5,17 +5,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
 import co.uk.epicguru.main.Day100;
+import co.uk.epicguru.main.Log;
 
 // Post processing effects
 public class PostProcessing {
 
+	private static final String TAG = "PP";
 	private static boolean ready = false;
 	public static FrameBuffer fbo;
-	public static TextureRegion fboRegion;
 
 	public static void beginRender(Batch batch){
 
@@ -26,9 +26,9 @@ public class PostProcessing {
 			Gdx.gl.glClearColor(0.9f, 0.9f, 0.9f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-//		if(ready){
-//			fbo.begin();
-//		}
+		if(ready){
+			fbo.begin();
+		}
 
 		// Clear FBO or batch
 		if(ScreenManager.getScreen() == Screen.LOADING)
@@ -47,8 +47,6 @@ public class PostProcessing {
 			return;
 
 		fbo = new FrameBuffer(Format.RGB888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
-		fboRegion = new TextureRegion(fbo.getColorBufferTexture());
-		fboRegion.flip(false, true);
 
 		ready = true;
 	}
@@ -66,6 +64,7 @@ public class PostProcessing {
 		if(!ready)
 			return;
 		fbo = new FrameBuffer(Format.RGB888, width, height, false);
+		Log.info(TAG, "Resized FBO");
 	}
 
 	public static void endRender(Batch batch){	
@@ -74,25 +73,40 @@ public class PostProcessing {
 		batch.end();
 
 		// Unbind FBO if ready and running
-//		if(ready)
-//			fbo.end();
-//
+		if(ready)
+			fbo.end();
+
 		// Render FBO (again if ready)
 		render(batch);
 	}
 
 	private static void render(Batch batch){
+
 		if(!ready)
 			return;
 
 		// Start batch up again
 		batch.begin();
-
+		batch.setShader(null);	// SET SHADER HERE
+		batch.getShader().setUniformf("u_amount", 0.003f / Day100.camera.zoom);
+		
+		batch.setProjectionMatrix(Day100.UIcamera.combined);
+		
 		batch.setColor(Color.WHITE);
-		//fboRegion = new TextureRegion(fbo.getColorBufferTexture());
-		//batch.draw(fboRegion, 0, 0);
-
+		batch.draw(fbo.getColorBufferTexture(), 0, 0, fbo.getWidth(), fbo.getHeight(), 0, 0, fbo.getWidth(), fbo.getHeight(), false, true);
+		
 		// End all
 		batch.end();
+		
+		// Render light, uses its own batch
+		if(Day100.map != null && Day100.map.rayHandler != null && Day100.map.world != null){
+			Day100.map.rayHandler.setCombinedMatrix(Day100.camera);
+			Day100.map.rayHandler.updateAndRender();
+		}
+		
+		
+		batch.setProjectionMatrix(Day100.camera.combined);
+		batch.setShader(null);
+		batch.begin();
 	}	
 }

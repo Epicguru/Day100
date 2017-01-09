@@ -677,7 +677,6 @@ public final class MapEditor extends GameScreen {
 
 		if(state == State.RUNNING){
 			runMap.render(batch);
-			runMap.renderLighting(batch);
 		}
 		if(state == State.PHYSICS){
 
@@ -780,19 +779,25 @@ public final class MapEditor extends GameScreen {
 		// Ground
 		renderGround(batch);
 
-		batch.end();
-		// Lighting
-		if(!renderDebug){
-			lighting.setCombinedMatrix(Day100.camera);
-			lighting.updateAndRender();			
-		}else{
-			debugRenderer.render(world, Day100.camera.combined);
-		}
-
-		batch.begin();
-
 	}
 
+	public void renderLight(Batch batch){
+		if(state == State.RUNNING){
+			runMap.renderLighting(batch);
+		}else if(state == State.CREATION){
+			batch.end();
+			// Lighting
+			if(!renderDebug){
+				lighting.setCombinedMatrix(Day100.camera);
+				lighting.updateAndRender();			
+			}else{
+				debugRenderer.render(world, Day100.camera.combined);
+			}
+
+			batch.begin();
+		}
+	}
+	
 	public void renderGround(Batch batch){
 		for(int x = 0; x < size.x; x++){
 			batch.draw(ground, x, -1, 1.01f, 1.01f);
