@@ -88,7 +88,7 @@ public class PostProcessing {
 		// Start batch up again
 		batch.begin();
 		batch.setShader(null);	// SET SHADER HERE
-		batch.getShader().setUniformf("u_amount", 0.003f / Day100.camera.zoom);
+		//batch.getShader().setUniformf("u_amount", 0.003f / Day100.camera.zoom);
 		
 		batch.setProjectionMatrix(Day100.UIcamera.combined);
 		

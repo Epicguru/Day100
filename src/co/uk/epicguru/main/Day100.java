@@ -17,6 +17,9 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import co.uk.epicguru.helpers.CamShake;
 import co.uk.epicguru.input.Input;
 import co.uk.epicguru.map.Map;
+import co.uk.epicguru.net.NetUtils;
+import co.uk.epicguru.net.client.GameClient;
+import co.uk.epicguru.net.server.GameServer;
 import co.uk.epicguru.player.PlayerController;
 import co.uk.epicguru.screens.PostProcessing;
 import co.uk.epicguru.screens.Screen;
@@ -50,6 +53,8 @@ public class Day100 extends ApplicationAdapter {
 	public static PlayerController player;
 	public static Cursor cursor;
 	public static Cursor cursorCrosshair;
+	public static GameServer server;
+	public static GameClient client;
 
 	@Override
 	public void create () {
@@ -74,6 +79,8 @@ public class Day100 extends ApplicationAdapter {
 
 		// Set screen
 		ScreenManager.setScreen(Screen.LOADING);
+		
+		NetUtils.createServer();
 
 	}
 

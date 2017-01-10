@@ -7,6 +7,7 @@ import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 
 import co.uk.epicguru.main.Log;
+import co.uk.epicguru.net.NetRegister;
 import co.uk.epicguru.net.client.GameConnection;
 
 public final class GameServer extends Server {
@@ -18,6 +19,8 @@ public final class GameServer extends Server {
 	
 	public GameServer(int tcp, int udp){
 		super();
+		this.tcp = tcp;
+		this.udp = udp;
 	}
 	
 	/**
@@ -35,6 +38,7 @@ public final class GameServer extends Server {
 			super.bind(tcp, udp);
 			Log.info(TAG, "The server has started and is now bound to ports - TCP: " + tcp + ", UDP: " + udp);
 			started = true;
+			disposed = false;
 		} catch (IOException e) {
 			Log.error(TAG, "Binding of server failed to the ports - TCP: " + tcp + ", UDP: " + udp, e);
 		}
@@ -71,6 +75,13 @@ public final class GameServer extends Server {
 			Log.error(TAG, "Failed to dispose server!", e);
 		}
 		disposed = true;
+	}
+	
+	/**
+	 * Registers net objects to this server using the supplied register.
+	 */
+	public void register(NetRegister register){
+		register.apply(getKryo());
 	}
 	
 	/**
