@@ -15,6 +15,7 @@ import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.map.Entity;
 import co.uk.epicguru.map.building.BuildingManager;
+import co.uk.epicguru.net.NetUtils;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.player.weapons.instances.C4;
 import co.uk.epicguru.vehicles.VehiclesManager;
@@ -32,7 +33,11 @@ public final class PlayerController extends Entity{
 		super("Player", 100);
 		setup(spawn);
 		this.gunManager = new GunManager(this);
-		GunManager.reset();
+		if(GunManager.guns.size() == 0)
+			GunManager.reset();
+		
+		// Net create client
+		NetUtils.createAndConnectClient();
 	}
 	
 	/**
@@ -171,6 +176,18 @@ public final class PlayerController extends Entity{
 		super.destroyed();
 		gunManager.dispose();
 		Day100.setDefaultCursor();
+		
+		// Net
+		NetUtils.shutDownClient();
+	}
+	
+	/**
+	 * Respawns the player at a given position.
+	 */
+	public static void respawn(Vector2 spawn){
+		if(Day100.player == null || (Day100.player != null && Day100.player.isDead())){
+			Day100.player = new PlayerController(spawn);
+		}
 	}
 	
 }

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Fixture;
 
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
@@ -24,6 +26,9 @@ public abstract class MapObject {
 	Vector2 position;
 	Vector2 size;
 	TextureRegion texture;
+	public Body body;
+	public boolean solid;
+	public boolean light;
 	
 	public static void register(){
 		
@@ -64,6 +69,24 @@ public abstract class MapObject {
 	 */
 	public void start(){
 		
+	}
+	
+	/**
+	 * The body has been loaded, do stuff to it!
+	 * Sets the position.
+	 */
+	public void bodyLoaded(){
+		body.setTransform(position, 0);
+		if(!solid){
+			for(Fixture f : body.getFixtureList()){
+				f.setSensor(true);
+			}
+		}
+		if(!light){
+			for(Fixture f : body.getFixtureList()){
+				f.getFilterData().groupIndex = -123;
+			}
+		}
 	}
 	
 	/**

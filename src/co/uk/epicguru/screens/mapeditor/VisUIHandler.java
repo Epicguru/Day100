@@ -54,6 +54,7 @@ public final class VisUIHandler {
 	public static VisSelectBox<String> bodies;
 	public static VisList<String> physicsFolders;
 	public static VisWindow physicsList;
+	public static VisWindow individualProperties;
 	public static boolean physicsListOpen = false;
 	public static boolean creatingNewPhysics = false;
 	public static VisTable physicsOptions;
@@ -62,6 +63,7 @@ public final class VisUIHandler {
 	public static VisList<String> changeImageList;
 	public static VisCheckBox solid;
 	public static VisCheckBox castShadows;
+	public static VisCheckBox light;
 	
 	private VisUIHandler(){}
 	
@@ -201,7 +203,7 @@ public final class VisUIHandler {
 	
 	public static void reloadPhysicsList(){
 		
-		PhysicsData.refreshData(true);
+		PhysicsData.refreshData(Constants.MAP_EDITOR_FOLDER + MapEditor.selectedMap, true);
 		
 		String[] names = new String[PhysicsData.loaded.size()];
 		int index = 0;
@@ -433,8 +435,35 @@ public final class VisUIHandler {
 		
 	}
 	
-	public static void openIndividualProperties(){
+	public static void openIndividualProperties(MapEditorPlaceable object){
+		int width = Gdx.graphics.getWidth();
+		int height = Gdx.graphics.getHeight();
 		
+		solid = new VisCheckBox("Solid", object.solid);
+		solid.setPosition(width - 200, height - 50);
+		stage.addActor(solid);
+		
+		light = new VisCheckBox("Sun Light", object.light);
+		light.setPosition(width - 200, height - 70);
+		stage.addActor(light);
+	}
+	
+	public static void closeIndividualProperties(){
+		if(solid == null)
+			return;
+		
+		solid.remove();
+		solid = null;
+		light.remove();
+		light = null;
+	}
+	
+	public static void updateIndividualProperties(MapEditorPlaceable object){
+		if(solid == null)
+			return;
+		
+		object.solid = solid.isChecked();
+		object.light = light.isChecked();
 	}
 	
 	public static void openErrorDialog(final String message){

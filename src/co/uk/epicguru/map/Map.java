@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -25,14 +26,18 @@ import box2dLight.DirectionalLight;
 import box2dLight.RayHandler;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.helpers.ContactManager;
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.building.BuildingManager;
 import co.uk.epicguru.map.objects.MapObject;
 import co.uk.epicguru.map.objects.MapObjectSupplier;
+import co.uk.epicguru.net.NetUtils;
+import co.uk.epicguru.player.PlayerController;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.Shaders;
 import co.uk.epicguru.screens.instances.MapEditor;
+import co.uk.epicguru.screens.mapeditor.PhysicsData;
 import co.uk.epicguru.settings.GameSettings;
 import co.uk.epicguru.vehicles.VehiclesManager;
 
@@ -97,7 +102,9 @@ public final class Map {
 		// STUFF!
 		setupWorld();
 		setupLighting();
-		Log.info(TAG, "Setup world and lighting");
+		PhysicsData.refreshData(sourceFolder.getAbsolutePath(), false);
+		
+		Log.info(TAG, "Setup world, physics and lighting");
 		
 		Shaders.getAllShaders();
 		atlas = new TextureAtlas(new FileHandle(new File(sourceFolder.getAbsoluteFile() + "\\Cache\\Packed.atlas")));
@@ -113,6 +120,29 @@ public final class Map {
 				if(supplier == null)
 					supplier = MapObject.objects.get("Default");
 				MapObject object = supplier.getObject(ID, reader.readVector2("Position", Vector2.Zero), reader.readVector2("Size", Vector2.Zero), reader.readColor("Colour", Color.WHITE), atlas.findRegion(ID), name);
+				
+				// Is solid
+				boolean solid;
+				if((solid = reader.readBoolean("Solid", true)) == false){
+					object.solid = solid;
+				}
+				
+				// Does light
+				boolean light;
+				if((light = reader.readBoolean("Light", true)) == false){
+					object.light = light;
+				}
+				
+				// Body and name
+				String name;
+				if((name = reader.readString("Body", null)) != null){
+					PhysicsData data = PhysicsData.find(name);
+					Body b = data.toBody(world);
+					object.body = b;
+					object.bodyLoaded();
+				}
+				
+				// Shader
 				String shader = reader.readString("Shader", null);
 				object.shader = shader == null ? null : Shaders.compliedShadersNames.contains(shader) ? Shaders.compliedShaders.get(Shaders.compliedShadersNames.indexOf(shader)) : null;
 				object.allowBlood = reader.readBoolean("Blood", true);
@@ -123,7 +153,14 @@ public final class Map {
 		reader.dispose();
 		properties.dispose();
 		
+		for(MapObject object : objects){
+			object.start();
+		}
+		
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		// Networking : open server
+		NetUtils.createServer();
 	}
 
 	private void setupWorld(){
@@ -187,6 +224,10 @@ public final class Map {
 		rayHandler.dispose();
 		debugRenderer.dispose();
 		atlas.dispose();
+		
+		// Net
+		NetUtils.shutDownServer();
+		
 		System.gc();
 	}
 
@@ -262,6 +303,19 @@ public final class Map {
 	public void renderUI(Batch batch) {
 		Entity.renderAllUI(batch);
 		BuildingManager.renderUI(batch);
+		
+		if(Day100.player == null || (Day100.player != null && Day100.player.isDead())){
+			Day100.font.setColor(Color.RED);
+			Day100.font.draw(batch, "Press SPACE to respawn", Gdx.graphics.getWidth() / 2 - 250, Gdx.graphics.getHeight() / 2 - 10);
+			if(Input.isKeyJustDown(Keys.SPACE)){
+				PlayerController.respawn(new Vector2(1, 2));
+			}
+		}
+		Day100.smallFont.setColor(Color.WHITE);
+		int y = 0;
+		Day100.smallFont.draw(batch, "Ping : " + NetUtils.getPing(), 10, y += 30);
+		Day100.smallFont.draw(batch, "Connected : " + (Day100.server == null ? "Dunno, not server." : "" + Day100.server.getConnections().length),  10, y += 30);
+		//Day100.smallFont.draw(batch, "Ping : " + NetUtils.getPing(), x += 50, 10);
 	}
 
 }

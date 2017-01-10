@@ -3,7 +3,6 @@ package co.uk.epicguru.screens.mapeditor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
@@ -19,8 +18,9 @@ public class MapEditorPlaceable {
 	public Vector2 size;
 	public Color color;
 	public String shader;
-	public Body body;
-	public boolean allowBlood;
+	public boolean solid;
+	public boolean light;
+	public String bodyName;
 	// Physics data, loaded from parent and editable
 	// Colour
 	// Attached lights
@@ -45,7 +45,6 @@ public class MapEditorPlaceable {
 		this.position = reader.readVector2("Position", Vector2.Zero);
 		this.size = reader.readVector2("Size", Vector2.Zero);
 		this.shader = reader.readString("Shader", "Default");
-		this.allowBlood = reader.readBoolean("Blood", true);
 	}
 	
 	public boolean verify(){
@@ -74,8 +73,6 @@ public class MapEditorPlaceable {
 		batch.setColor(color);
 		batch.draw(parent.texture, position.x, position.y, size.x, size.y);
 		batch.setColor(old);
-		if(body != null)
-			body.setTransform(position, 0);
 	}
 
 	public void save(JLineWriter writer) {	
@@ -89,27 +86,12 @@ public class MapEditorPlaceable {
 			writer.write("Supplier", parent.supplier);
 		if(!shader.equals("Default"))
 			writer.write("Shader", shader);
-		if(allowBlood != true)
-			writer.write("Blood", allowBlood);
-	}
-	
-	public void createBody(){
+		if(!parent.body.equals("None"))
+			writer.write("Body", parent.body);
+		if(solid == false)
+			writer.write("Solid", false);	
+		if(light == false)
+			writer.write("Light", false);	
 		
-		if(body != null)
-			destroyBody();
-		
-		if(parent.body.equals("None"))
-			return;
-		PhysicsData data = PhysicsData.find(parent.body);
-		this.body = data == null ? null : data.toBody(MapEditor.world);
-		if(this.body != null)
-			this.body.setTransform(position, 0);
-	}
-	
-	public void destroyBody(){
-		if(this.body == null)
-			return;
-		MapEditor.world.destroyBody(this.body);
-		this.body = null;
 	}
 }

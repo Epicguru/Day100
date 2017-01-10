@@ -79,9 +79,6 @@ public class Day100 extends ApplicationAdapter {
 
 		// Set screen
 		ScreenManager.setScreen(Screen.LOADING);
-		
-		NetUtils.createServer();
-
 	}
 
 	public void registerScreens(){		
@@ -186,6 +183,8 @@ public class Day100 extends ApplicationAdapter {
 
 	public void update(){
 		
+		//System.out.println(NetUtils.getPing());
+		
 		// Time scale lerp
 		if(timeScale != targetTimeScale){
 			float dst = targetTimeScale - timeScale;
@@ -246,6 +245,8 @@ public class Day100 extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		try{
+			NetUtils.shutDownServer();
+			NetUtils.shutDownClient();
 			ScreenManager.dispose();
 			GameSettings.save();
 			PostProcessing.end();

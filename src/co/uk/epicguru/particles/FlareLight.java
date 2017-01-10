@@ -42,7 +42,7 @@ public class FlareLight extends Entity {
 	public void destroyed(){
 		super.destroyed();
 		try{			
-			//light.remove();
+			light.remove();
 		}catch(Exception e){
 			
 		}

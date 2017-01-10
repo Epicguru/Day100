@@ -36,7 +36,7 @@ public final class GameClient extends Client {
 		super.start();
 		Log.info(TAG, "Starting...");
 		try {
-			connect(5, ip, tcp, udp);
+			connect(5000, ip, tcp, udp);
 			connected = true;
 			Log.info(TAG, "Sucessfully connected to " + ip + " on ports " + tcp + ", " + udp);
 			Log.info(TAG, "Connection is with " + getRemoteAddressTCP().getHostString());

@@ -220,8 +220,8 @@ public final class PhysicsData {
 	 * Refreshes the loaded data array. Only folders with a properties file will be added.
 	 * @param getTextures Should this get the textures for the physics? Only should be true if in editor mode.
 	 */
-	public static void refreshData(boolean getTextures){
-		File data = new File(Constants.MAP_EDITOR_FOLDER + MapEditor.selectedMap + "\\Physics\\");
+	public static void refreshData(String path, boolean getTextures){
+		File data = new File(path + "\\Physics\\");
 		if(!data.exists() || !data.isDirectory()){
 			data.mkdirs();
 			return;

@@ -18,16 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
-import com.badlogic.gdx.physics.box2d.World;
 
-import box2dLight.DirectionalLight;
-import box2dLight.RayHandler;
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
 import co.uk.epicguru.input.Input;
@@ -50,7 +41,6 @@ import co.uk.epicguru.screens.mapeditor.MapEditorPlaceable;
 import co.uk.epicguru.screens.mapeditor.PhysicsData;
 import co.uk.epicguru.screens.mapeditor.VehicleEditor;
 import co.uk.epicguru.screens.mapeditor.VisUIHandler;
-import co.uk.epicguru.settings.GameSettings;
 
 
 public final class MapEditor extends GameScreen {
@@ -87,10 +77,6 @@ public final class MapEditor extends GameScreen {
 	public static Vector2 dragObjectStartPos = new Vector2();
 	public static boolean draggingX;
 	public static boolean draggingY;
-	public static RayHandler lighting;
-	public static World world;
-	public static DirectionalLight sun;
-	public static Box2DDebugRenderer debugRenderer;
 	public static boolean renderDebug = false;
 	public static boolean doneExporting = false;
 	public static boolean largeSelection = false;
@@ -112,7 +98,6 @@ public final class MapEditor extends GameScreen {
 
 		// Make fir if it does not exist.
 		createDir();
-		debugRenderer = new Box2DDebugRenderer();
 		Shaders.getAllShaders();
 
 		Log.info(TAG, "There are " + getMaps().length + " valid maps.");
@@ -383,9 +368,6 @@ public final class MapEditor extends GameScreen {
 
 			timer += delta;
 
-			//Setp world.
-			world.step(1f / 60f, 8, 3);
-
 			if(Day100.camera.zoom != input.zoom)
 				Day100.camera.zoom += (input.zoom - Day100.camera.zoom) * 0.2f;
 
@@ -400,6 +382,11 @@ public final class MapEditor extends GameScreen {
 
 			if(Gdx.input.isButtonPressed(Buttons.FORWARD)){
 				input.zoom = 1;
+			}
+			
+			// individual properties update
+			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
+				VisUIHandler.updateIndividualProperties(selected);
 			}
 
 			// Go to top
@@ -438,7 +425,6 @@ public final class MapEditor extends GameScreen {
 
 					// Drop and place the object
 					MapEditorPlaceable placeable = new MapEditorPlaceable(placing, new Vector2(snap().add(placing.setupSnapOffset)));
-					placeable.createBody();
 					placedObjects.add(placeable);
 					placing = null;
 				}
@@ -515,7 +501,6 @@ public final class MapEditor extends GameScreen {
 			// DELETE SELECTED
 			if(selected != null && Input.isKeyJustDown(Keys.DEL) && !largeSelection){
 				placedObjects.remove(selected);
-				selected.destroyBody();
 				selected = null;
 				draggingX = false;
 				draggingY = false;
@@ -559,7 +544,6 @@ public final class MapEditor extends GameScreen {
 			if(largeSelectionObjects.size() > 1 && Input.isKeyDown(Keys.DEL)){
 				for(MapEditorPlaceable object : largeSelectionObjects){
 					placedObjects.remove(object);
-					object.destroyBody();
 				}
 				largeSelectionObjects.clear();
 			}
@@ -784,17 +768,6 @@ public final class MapEditor extends GameScreen {
 	public void renderLight(Batch batch){
 		if(state == State.RUNNING){
 			runMap.renderLighting(batch);
-		}else if(state == State.CREATION){
-			batch.end();
-			// Lighting
-			if(!renderDebug){
-				lighting.setCombinedMatrix(Day100.camera);
-				lighting.updateAndRender();			
-			}else{
-				debugRenderer.render(world, Day100.camera.combined);
-			}
-
-			batch.begin();
 		}
 	}
 	
@@ -854,9 +827,6 @@ public final class MapEditor extends GameScreen {
 				}
 			}
 		}
-
-		// Recreate all bodies
-		createAllBodies();
 
 		Log.info(TAG, "Found " + loadedObjects.size() + " objects for the map " + selectedMap + ".");
 	}
@@ -982,7 +952,7 @@ public final class MapEditor extends GameScreen {
 				if(Input.clickLeft() && !VisUIHandler.propertiesOpen && !VisUIHandler.colourOpen){
 					// Open physics
 					state = State.PHYSICS;
-					PhysicsData.refreshData(true);
+					PhysicsData.refreshData(Constants.MAP_EDITOR_FOLDER + MapEditor.selectedMap, true);
 					VisUIHandler.openPhysicsList();
 					returnToFromPhysics.set(Day100.camera.position.x, Day100.camera.position.y, Day100.camera.zoom);
 					input.zoom = 1;
@@ -991,6 +961,7 @@ public final class MapEditor extends GameScreen {
 					}else{
 						Day100.camera.position.set(10, 10, 1);						
 					}
+					VisUIHandler.closeIndividualProperties();
 				}
 			}
 
@@ -1008,6 +979,7 @@ public final class MapEditor extends GameScreen {
 					returnToFromPhysics.z = Day100.camera.zoom;
 					input.zoom = .3f;
 					Day100.camera.position.set(0, 0, 0);
+					VisUIHandler.closeIndividualProperties();
 				}
 			}
 
@@ -1025,6 +997,7 @@ public final class MapEditor extends GameScreen {
 					returnToFromPhysics.z = Day100.camera.zoom;
 					input.zoom = .5f;
 					Day100.camera.position.set(0, 0, 0);
+					VisUIHandler.closeIndividualProperties();
 				}
 			}
 
@@ -1046,7 +1019,13 @@ public final class MapEditor extends GameScreen {
 			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
 				smallFont.setColor(Color.BLUE);
 				smallFont.draw(batch, "Individual Properties : \n" + selected.parent.name, width - 220, height - 60);
-			}			
+			}else{	
+				VisUIHandler.closeIndividualProperties();
+			}
+			
+			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0 && Input.clickLeft()){
+				VisUIHandler.openIndividualProperties(selected);				
+			}
 
 			// Render preview if open
 			renderPreview(batch);		
@@ -1062,6 +1041,7 @@ public final class MapEditor extends GameScreen {
 			break;
 		case EXPORTING:
 
+			font.setColor(Color.WHITE);
 			font.draw(batch, "Exporting and Loading...", Gdx.graphics.getWidth() / 2 - 210, Gdx.graphics.getHeight() / 2);
 			font.draw(batch, exportStatus, Gdx.graphics.getWidth() / 2 - 210, Gdx.graphics.getHeight() / 2 - 40);
 
@@ -1238,8 +1218,6 @@ public final class MapEditor extends GameScreen {
 		VisUIHandler.resized(width, height);
 		GunEditor.resize(width, height);
 		VehicleEditor.resize(width, height);
-		if(lighting != null)
-			lighting.resizeFBO((int)(width * GameSettings.getShadowQuality().getValue()), (int)(height * GameSettings.getShadowQuality().getValue()));
 		if(state == State.RUNNING){
 			runMap.resize(width, height);
 		}
@@ -1271,58 +1249,11 @@ public final class MapEditor extends GameScreen {
 		batch.setShader(null);
 	}
 
-	public void loadPhysics(){
-		world = new World(new Vector2(0, -9.803f), true);
-		lighting = new RayHandler(world);	
-		sun = new DirectionalLight(lighting, GameSettings.getLightQuality().getValue() * 2, new Color(0.0f, 0.0f, 0.0f, 1.0f), -90);
-		//new PointLight(lighting, Constants.RAYS, Color.RED, 20, 0, 0);
-		// Load world
-
-		// Create floor
-		BodyDef def = new BodyDef();
-		def.type = BodyType.StaticBody;
-		def.position.y = -.5f;
-		def.position.x = size.x / 2;
-		PolygonShape shape = new PolygonShape();
-		shape.setAsBox(size.x / 2, .5f);
-		FixtureDef fixtureDef = new FixtureDef();
-		fixtureDef.shape = shape;
-		fixtureDef.restitution = 0.05f;
-		fixtureDef.friction = 0.2f;
-		Body body = world.createBody(def);
-		body.createFixture(fixtureDef);
-
-		// Map bodies
-		createAllBodies();
-
-		Log.info(TAG, "Loaded physics");
-	}
-
-	public void createAllBodies(){
-		// Load all map editor objects bodies.
-		Log.info(TAG, "Creating all bodies...");
-		for(MapEditorPlaceable object : placedObjects){
-			object.createBody();
-		}
-		displayErrors();
-	}
-
-	public void savePhysics(){
-		if(world == null)
-			return;
-		lighting.dispose();
-		world.dispose();
-		world = null;
-		lighting = null;
-		sun = null;
-	}
-
 	public void save(){
 		saveSetup();
 		saveMap();
 		saveState();
 		VisUIHandler.stop();
-		savePhysics();
 
 		placedObjects.clear();
 		loadedObjects.clear();
@@ -1333,8 +1264,7 @@ public final class MapEditor extends GameScreen {
 		refreshObjects();
 		loadMap();
 		loadState();
-		loadPhysics();
-		PhysicsData.refreshData(true);
+		PhysicsData.refreshData(Constants.MAP_EDITOR_FOLDER + MapEditor.selectedMap, true);
 	}
 
 	public void dispose(){
