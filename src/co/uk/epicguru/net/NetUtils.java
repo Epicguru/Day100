@@ -17,7 +17,9 @@ public final class NetUtils {
 			Day100.client.start();
 			return true;
 		}else{
-			if(Day100.client.isDisposed()){
+			if(Day100.client.isDisposed() || !Day100.client.isConnected()){
+				if(!Day100.client.isDisposed())
+					Day100.client.dispose();
 				Day100.client = new GameClient(ip, tcp, udp);
 				Day100.client.register(new NetRegister());
 				Day100.client.start();
@@ -40,7 +42,7 @@ public final class NetUtils {
 			Day100.server.start();
 			return true;
 		}else{
-			if(Day100.server.isDisposed()){
+			if(Day100.server.isDisposed() || !Day100.server.isStarted()){
 				Day100.server = new GameServer(tcp, udp);
 				Day100.server.register(new NetRegister());
 				Day100.server.start();

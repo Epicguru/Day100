@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.Array;
 
 import co.uk.epicguru.IO.JLineReader;
 import co.uk.epicguru.IO.JLineWriter;
@@ -27,12 +28,14 @@ import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
 import co.uk.epicguru.map.Map;
 import co.uk.epicguru.map.objects.MapObject;
+import co.uk.epicguru.net.NetUtils;
 import co.uk.epicguru.player.PlayerController;
 import co.uk.epicguru.player.weapons.GunManager;
 import co.uk.epicguru.screens.GameScreen;
 import co.uk.epicguru.screens.Screen;
 import co.uk.epicguru.screens.ScreenManager;
 import co.uk.epicguru.screens.Shaders;
+import co.uk.epicguru.screens.mapeditor.ConvexSeparator;
 import co.uk.epicguru.screens.mapeditor.Exporter;
 import co.uk.epicguru.screens.mapeditor.GunEditor;
 import co.uk.epicguru.screens.mapeditor.MapEditorInput;
@@ -433,7 +436,7 @@ public final class MapEditor extends GameScreen {
 			if(selected != null && VisUIHandler.propertiesOpen)
 				selected = null;
 
-			if(Input.clickLeft() && Input.getMouseX() > objectsRenderX && !VisUIHandler.propertiesOpen){			
+			if(Input.clickLeft() && Input.getMouseX() > objectsRenderX && !VisUIHandler.propertiesOpen && !VisUIHandler.inIndividualProperties()){			
 
 				stack.clear();
 				boolean found = false;
@@ -827,6 +830,25 @@ public final class MapEditor extends GameScreen {
 				}
 			}
 		}
+		
+		for(PhysicsData data : PhysicsData.loaded){
+			int i = 0;
+			if((i = ConvexSeparator.validate(new Array<Vector2>(data.points))) != 0){
+				switch(i){
+				case 1:
+					exportFailures.add("There are overlapping lines in the shape '" + data.file.getName() + "'");
+					break;
+				case 2:
+					exportFailures.add("The points are NOT in clockwise order in shape'" + data.file.getName() + "'");
+					break;
+				case 3:
+					exportFailures.add("If there ARE overlapping lines and the points are NOT in clockwise order in shape '" + data.file.getName() + "'");
+					break;
+				}
+			}
+		}
+		
+		displayErrors();
 
 		Log.info(TAG, "Found " + loadedObjects.size() + " objects for the map " + selectedMap + ".");
 	}
@@ -939,7 +961,7 @@ public final class MapEditor extends GameScreen {
 			rect.set(runX, runY, 32, 32);
 			if(rect.contains(Input.getMousePosYFlip())){
 				if(Input.clickLeft() && !VisUIHandler.propertiesOpen && !VisUIHandler.colourOpen){
-					run();
+					run(Input.isKeyDown(Keys.SPACE));
 				}
 			}
 
@@ -1017,13 +1039,13 @@ public final class MapEditor extends GameScreen {
 
 			// Individual Properties
 			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
-				smallFont.setColor(Color.BLUE);
-				smallFont.draw(batch, "Individual Properties : \n" + selected.parent.name, width - 220, height - 60);
+				// Nah
 			}else{	
 				VisUIHandler.closeIndividualProperties();
 			}
 			
-			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0 && Input.clickLeft()){
+			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0 && Input.clickLeft() && !VisUIHandler.inIndividualProperties()){
+				VisUIHandler.closeIndividualProperties();				
 				VisUIHandler.openIndividualProperties(selected);				
 			}
 
@@ -1130,7 +1152,7 @@ public final class MapEditor extends GameScreen {
 
 	}
 
-	private void run() {
+	private void run(boolean networked) {
 
 		if(state == State.EXPORTING || state != State.CREATION)
 			return;
@@ -1168,16 +1190,36 @@ public final class MapEditor extends GameScreen {
 
 				exportStatus = "Building map...";
 				sleep(60);
-				Gdx.app.postRunnable(new Runnable() {					
+				Gdx.app.postRunnable(new Runnable() {
 					public void run() {
 						runMap.loadFromFile();						
 					}
 				});
 
+				if(networked){
+					exportStatus = "Networking...";
+					sleep(60);
+					// Networking : open server
+					NetUtils.createServer();			
+				}
+				
 				exportStatus = "Creating player...";
 				sleep(60);
 				Day100.player = new PlayerController(new Vector2(10, 5));
-
+				
+				if(!Day100.client.isConnected()){
+					// Failed to connect
+					exportFailures.add("Failed to join server '" + Day100.client.getIP() + "' on ports " + Day100.client.getTCP() + ", " + Day100.client.getUDP());
+					
+					runMap.dispose();
+					runMap = null;
+					
+					state = State.CREATION;
+					displayErrors();
+					doneExporting = true;
+					return;
+				}
+				
 				exportStatus = "Done!";
 
 				state = State.RUNNING;
@@ -1220,6 +1262,11 @@ public final class MapEditor extends GameScreen {
 		VehicleEditor.resize(width, height);
 		if(state == State.RUNNING){
 			runMap.resize(width, height);
+		}else if(state == State.CREATION){
+			if(selected != null && !largeSelection && largeSelectionObjects.size() == 0){
+				VisUIHandler.closeIndividualProperties();
+				VisUIHandler.openIndividualProperties(selected);
+			}
 		}
 	}
 

@@ -106,7 +106,7 @@ public final class GameClient extends Client {
 	 * Gets the TCP connection port.
 	 * @see {@link #isConnected()}
 	 */
-	public int getTcp() {
+	public int getTCP() {
 		return tcp;
 	}
 
@@ -114,7 +114,7 @@ public final class GameClient extends Client {
 	 * Gets the UDP connection port.
 	 * @see {@link #isConnected()}
 	 */
-	public int getUdp() {
+	public int getUDP() {
 		return udp;
 	}
 	
@@ -129,7 +129,7 @@ public final class GameClient extends Client {
 	 * Gets the remote IP address that was specified in the constructor.
 	 * @return
 	 */
-	public String getIp() {
+	public String getIP() {
 		return ip;
 	}
 	

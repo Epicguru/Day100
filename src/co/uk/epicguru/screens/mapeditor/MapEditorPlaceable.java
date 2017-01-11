@@ -32,6 +32,8 @@ public class MapEditorPlaceable {
 		this.position = position;
 		this.color = new Color(parent.setupColour);
 		this.shader = parent.shader;
+		this.light = true;
+		this.solid = true;
 	}
 	
 	public MapEditorPlaceable(JLineReader reader){
@@ -45,6 +47,8 @@ public class MapEditorPlaceable {
 		this.position = reader.readVector2("Position", Vector2.Zero);
 		this.size = reader.readVector2("Size", Vector2.Zero);
 		this.shader = reader.readString("Shader", "Default");
+		this.light = reader.readBoolean("Light", true);
+		this.solid = reader.readBoolean("Solid", true);
 	}
 	
 	public boolean verify(){

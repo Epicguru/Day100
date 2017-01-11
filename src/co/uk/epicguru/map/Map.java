@@ -158,9 +158,6 @@ public final class Map {
 		}
 		
 		resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		
-		// Networking : open server
-		NetUtils.createServer();
 	}
 
 	private void setupWorld(){
@@ -190,6 +187,7 @@ public final class Map {
 
 	private void setupLighting(){
 		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0.5f);
 		sun = new DirectionalLight(rayHandler, GameSettings.getLightQuality().getValue() * 2, new Color(0.0f, 0.0f, 0.0f, 0.3f), -90);
 		Filter f = new Filter();
 		f.groupIndex = -123;
@@ -216,19 +214,24 @@ public final class Map {
 	}
 	
 	public void dispose(){
-		objects.clear();
-		Entity.clearAllEntities();
-		BuildingManager.reset();
-		world.dispose();
-		world = null;
-		rayHandler.dispose();
-		debugRenderer.dispose();
-		atlas.dispose();
+		try{
+			objects.clear();
+			Entity.clearAllEntities();
+			BuildingManager.reset();
+			world.dispose();
+			world = null;
+			rayHandler.dispose();
+			debugRenderer.dispose();
+			atlas.dispose();
+		}catch(Exception e){
+			Log.error(TAG, "Error in dispose.", e);
+		}finally{
+			// Net
+			NetUtils.shutDownServer();
+			
+			System.gc();			
+		}
 		
-		// Net
-		NetUtils.shutDownServer();
-		
-		System.gc();
 	}
 
 	public String getName() {

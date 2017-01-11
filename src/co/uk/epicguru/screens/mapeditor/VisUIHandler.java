@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -29,6 +30,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
+import co.uk.epicguru.input.Input;
 import co.uk.epicguru.main.Constants;
 import co.uk.epicguru.main.Day100;
 import co.uk.epicguru.main.Log;
@@ -64,6 +66,7 @@ public final class VisUIHandler {
 	public static VisCheckBox solid;
 	public static VisCheckBox castShadows;
 	public static VisCheckBox light;
+	public static VisWindow individual;
 	
 	private VisUIHandler(){}
 	
@@ -436,26 +439,42 @@ public final class VisUIHandler {
 	}
 	
 	public static void openIndividualProperties(MapEditorPlaceable object){
+		
+		if(individual != null)
+			return;
+		
 		int width = Gdx.graphics.getWidth();
 		int height = Gdx.graphics.getHeight();
 		
-		solid = new VisCheckBox("Solid", object.solid);
-		solid.setPosition(width - 200, height - 50);
-		stage.addActor(solid);
+		individual = new VisWindow("Individual Properties");
+		individual.setPosition(width - 200, height - 50);
+		stage.addActor(individual);
 		
+		solid = new VisCheckBox("Solid", object.solid);		
 		light = new VisCheckBox("Sun Light", object.light);
-		light.setPosition(width - 200, height - 70);
-		stage.addActor(light);
+		
+		individual.add(solid);
+		individual.row();
+		individual.add(light);
+		individual.row();
+		
+		individual.setSize(200, 100);
+	}
+	
+	private static Rectangle rect = new Rectangle();
+	public static boolean inIndividualProperties(){
+		if(individual == null){
+			return false;
+		}
+		return rect.set(individual.getX(), individual.getY(), individual.getWidth(), individual.getHeight()).contains(Input.getMousePosYFlip());
 	}
 	
 	public static void closeIndividualProperties(){
-		if(solid == null)
+		if(individual == null)
 			return;
 		
-		solid.remove();
-		solid = null;
-		light.remove();
-		light = null;
+		individual.fadeOut();
+		individual = null;
 	}
 	
 	public static void updateIndividualProperties(MapEditorPlaceable object){

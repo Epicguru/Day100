@@ -21,6 +21,7 @@ public final class GameServer extends Server {
 		super();
 		this.tcp = tcp;
 		this.udp = udp;
+		Log.info(TAG, "Created new game server object.");
 	}
 	
 	/**
